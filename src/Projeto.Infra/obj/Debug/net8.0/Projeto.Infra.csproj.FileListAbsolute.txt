@@ -1,0 +1,16 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\bin\Debug\net8.0\Projeto.Infra.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\bin\Debug\net8.0\Projeto.Infra.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\bin\Debug\net8.0\Projeto.Infra.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\bin\Debug\net8.0\Projeto.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\bin\Debug\net8.0\Projeto.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.csproj.AssemblyReference.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto..11D22185.Up2Date
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\refint\Projeto.Infra.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\Projeto.Infra.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.Infra\obj\Debug\net8.0\ref\Projeto.Infra.dll

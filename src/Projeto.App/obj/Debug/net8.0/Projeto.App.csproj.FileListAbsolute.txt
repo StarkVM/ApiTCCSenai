@@ -1,0 +1,16 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\bin\Debug\net8.0\Projeto.App.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\bin\Debug\net8.0\Projeto.App.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\bin\Debug\net8.0\Projeto.App.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\bin\Debug\net8.0\Projeto.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\bin\Debug\net8.0\Projeto.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.csproj.AssemblyReference.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto..9E07BE44.Up2Date
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\refint\Projeto.App.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\Projeto.App.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Projeto.App\obj\Debug\net8.0\ref\Projeto.App.dll
