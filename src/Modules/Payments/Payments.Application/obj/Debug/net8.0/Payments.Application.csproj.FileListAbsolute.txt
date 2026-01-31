@@ -1,0 +1,16 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\bin\Debug\net8.0\Payments.Application.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\bin\Debug\net8.0\Payments.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\bin\Debug\net8.0\Payments.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\bin\Debug\net8.0\Payments.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\bin\Debug\net8.0\Payments.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.csproj.AssemblyReference.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.3FD144D3.Up2Date
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\refint\Payments.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\Payments.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Payments\Payments.Application\obj\Debug\net8.0\ref\Payments.Application.dll

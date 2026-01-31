@@ -1,0 +1,56 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Rentals.Infrastructure/1.0.0": {
+        "dependencies": {
+          "Rentals.Application": "1.0.0",
+          "Rentals.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Rentals.Infrastructure.dll": {}
+        }
+      },
+      "Rentals.Application/1.0.0": {
+        "dependencies": {
+          "Rentals.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Rentals.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Rentals.Domain/1.0.0": {
+        "runtime": {
+          "Rentals.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Rentals.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Rentals.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Rentals.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "UserAccess.Infrastructure/1.0.0": {
+        "dependencies": {
+          "UserAccess.Application": "1.0.0",
+          "UserAccess.Domain": "1.0.0"
+        },
+        "runtime": {
+          "UserAccess.Infrastructure.dll": {}
+        }
+      },
+      "UserAccess.Application/1.0.0": {
+        "dependencies": {
+          "UserAccess.Domain": "1.0.0"
+        },
+        "runtime": {
+          "UserAccess.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "UserAccess.Domain/1.0.0": {
+        "runtime": {
+          "UserAccess.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UserAccess.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserAccess.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserAccess.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

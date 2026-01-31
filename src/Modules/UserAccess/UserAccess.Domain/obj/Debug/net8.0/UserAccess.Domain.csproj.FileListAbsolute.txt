@@ -1,0 +1,12 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\bin\Debug\net8.0\UserAccess.Domain.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\bin\Debug\net8.0\UserAccess.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\bin\Debug\net8.0\UserAccess.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\refint\UserAccess.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\UserAccess.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Domain\obj\Debug\net8.0\ref\UserAccess.Domain.dll

@@ -1,0 +1,12 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\bin\Debug\net8.0\Rentals.Domain.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\bin\Debug\net8.0\Rentals.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\bin\Debug\net8.0\Rentals.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\refint\Rentals.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\Rentals.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Domain\obj\Debug\net8.0\ref\Rentals.Domain.dll

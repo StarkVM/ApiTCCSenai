@@ -1,0 +1,16 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\bin\Debug\net8.0\UserAccess.Application.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\bin\Debug\net8.0\UserAccess.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\bin\Debug\net8.0\UserAccess.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\bin\Debug\net8.0\UserAccess.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\bin\Debug\net8.0\UserAccess.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.csproj.AssemblyReference.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAcce.BD105B67.Up2Date
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\refint\UserAccess.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\UserAccess.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Application\obj\Debug\net8.0\ref\UserAccess.Application.dll

@@ -1,0 +1,844 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj": {}
+  },
+  "projects": {
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj",
+        "projectName": "Api",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\Listings.Infrastructure.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\Listings.Infrastructure.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\Payments.Infrastructure.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\Payments.Infrastructure.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\Rentals.Infrastructure.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\Rentals.Infrastructure.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\UserAccess.Infrastructure.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\UserAccess.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.18, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj",
+        "projectName": "Listings.Application",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj",
+        "projectName": "Listings.Domain",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\Listings.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\Listings.Infrastructure.csproj",
+        "projectName": "Listings.Infrastructure",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\Listings.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj",
+        "projectName": "Payments.Application",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj",
+        "projectName": "Payments.Domain",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\Payments.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\Payments.Infrastructure.csproj",
+        "projectName": "Payments.Infrastructure",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\Payments.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Application\\Payments.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Payments\\Payments.Domain\\Payments.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj",
+        "projectName": "Rentals.Application",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj",
+        "projectName": "Rentals.Domain",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\Rentals.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\Rentals.Infrastructure.csproj",
+        "projectName": "Rentals.Infrastructure",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\Rentals.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Application\\Rentals.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Rentals\\Rentals.Domain\\Rentals.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj",
+        "projectName": "UserAccess.Application",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj",
+        "projectName": "UserAccess.Domain",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\UserAccess.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\UserAccess.Infrastructure.csproj",
+        "projectName": "UserAccess.Infrastructure",
+        "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\UserAccess.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
+        "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj"
+              },
+              "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj": {
+                "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.18" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\UserAccess\UserAccess.Application\UserAccess.Application.csproj" />
+    <ProjectReference Include="..\Modules\UserAccess\UserAccess.Infrastructure\UserAccess.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Listings\Listings.Application\Listings.Application.csproj" />
+    <ProjectReference Include="..\Modules\Listings\Listings.Infrastructure\Listings.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Rentals\Rentals.Application\Rentals.Application.csproj" />
+    <ProjectReference Include="..\Modules\Rentals\Rentals.Infrastructure\Rentals.Infrastructure.csproj" />
+    <ProjectReference Include="..\Modules\Payments\Payments.Application\Payments.Application.csproj" />
+    <ProjectReference Include="..\Modules\Payments\Payments.Infrastructure\Payments.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

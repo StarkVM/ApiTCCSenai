@@ -1,0 +1,12 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\bin\Debug\net8.0\Listings.Domain.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\bin\Debug\net8.0\Listings.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\bin\Debug\net8.0\Listings.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\refint\Listings.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\Listings.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Domain\obj\Debug\net8.0\ref\Listings.Domain.dll

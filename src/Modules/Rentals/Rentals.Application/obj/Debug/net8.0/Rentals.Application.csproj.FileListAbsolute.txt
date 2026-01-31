@@ -1,0 +1,16 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Rentals.Application.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Rentals.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Rentals.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Rentals.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Rentals.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.csproj.AssemblyReference.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals..3A801F23.Up2Date
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\refint\Rentals.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\ref\Rentals.Application.dll
