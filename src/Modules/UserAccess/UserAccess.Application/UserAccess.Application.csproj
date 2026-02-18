@@ -5,7 +5,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
+    <Folder Include="Auth\Login\" />
+    <Folder Include="Auth\Logout\" />
+    <Folder Include="Auth\VerifyEmail\" />
   </ItemGroup>
 
   <PropertyGroup>
