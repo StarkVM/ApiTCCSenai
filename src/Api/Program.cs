@@ -1,3 +1,6 @@
+//--version 8.0.*
+using UserAccess.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
@@ -6,6 +9,8 @@ if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException("Connection string not found");
 }
+
+builder.Services.AddUserAccessInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

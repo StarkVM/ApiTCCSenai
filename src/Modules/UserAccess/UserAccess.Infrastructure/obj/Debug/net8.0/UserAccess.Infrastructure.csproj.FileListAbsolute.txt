@@ -1,4 +1,5 @@
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\bin\Debug\net8.0\UserAccess.Infrastructure.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\bin\Debug\net8.0\UserAccess.Infrastructure.runtimeconfig.json
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\bin\Debug\net8.0\UserAccess.Infrastructure.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\bin\Debug\net8.0\UserAccess.Infrastructure.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\bin\Debug\net8.0\UserAccess.Application.dll
@@ -15,4 +16,5 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructu
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\obj\Debug\net8.0\UserAccess.Infrastructure.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\obj\Debug\net8.0\refint\UserAccess.Infrastructure.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\obj\Debug\net8.0\UserAccess.Infrastructure.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\obj\Debug\net8.0\UserAccess.Infrastructure.genruntimeconfig.cache
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Infrastructure\obj\Debug\net8.0\ref\UserAccess.Infrastructure.dll
