@@ -10,8 +10,17 @@ public static class DependencyInjection
     public static IServiceCollection AddUserAccessInfrastructure(this IServiceCollection services, 
         IConfiguration configuration)
     {
+        var userAccessConnectionString = configuration.GetConnectionString("UserAccessDb");
+
+        if (string.IsNullOrWhiteSpace(userAccessConnectionString))
+        {
+            throw new InvalidOperationException("User Access Connection string not found");
+        }
+
+        
         services.AddDbContext<UserAccessDbContext>(opt =>
-            opt.UseNpgsql(configuration.GetConnectionString("UserAccessDb")));
+            opt.UseNpgsql(userAccessConnectionString));
+        
         
         return services;
     }
