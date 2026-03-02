@@ -1,3 +1,5 @@
+using UserAccess.Domain.Interfaces;
+
 namespace UserAccess.Domain.Entities;
 
 public class User
@@ -12,6 +14,8 @@ public class User
     public string CpfHash { get; private set; } = default!;
 
     public string PasswordHash { get; private set; } = default!;
+    
+    public DateTime? PasswordChangedAt { get; private set; }
 
     public DateTime? EmailVerifiedAt { get; private set; }
 
@@ -37,6 +41,17 @@ public class User
     public void SetAddress(Address address)
     {
         Address = address;
+    }
+
+    public void ChangePassword(string newPasswordHash, DateTime changedAtUtc)
+    {
+        if (string.IsNullOrWhiteSpace(newPasswordHash))
+        {
+            throw new ArgumentException("Password Hash cannot be empty.");
+        }
+        
+        PasswordHash = newPasswordHash;
+        PasswordChangedAt = changedAtUtc;
     }
     
     public void MarkEmailVerified(DateTime verifiedAt) => EmailVerifiedAt = verifiedAt;

@@ -22,6 +22,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         b.HasIndex(x => x.CpfHash).IsUnique();
         
         b.Property(x => x.PasswordHash).HasMaxLength(255).IsRequired();
+        b.Property(x => x.PasswordChangedAt).IsRequired();
         b.Property(x => x.EmailVerifiedAt);
         b.Property(x => x.CreatedAt).IsRequired();
         
