@@ -1,3 +1,4 @@
+using UserAccess.Domain.Enums;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Domain.Entities;
@@ -20,6 +21,8 @@ public class User
     public DateTime? EmailVerifiedAt { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
+    
+    public UserStatus Status { get; private set; } = UserStatus.PendingEmailVerification;
 
     public Address? Address { get; private set; }
 
@@ -53,9 +56,15 @@ public class User
         PasswordHash = newPasswordHash;
         PasswordChangedAt = changedAtUtc;
     }
-    
-    public void MarkEmailVerified(DateTime verifiedAt) => EmailVerifiedAt = verifiedAt;
+
+    public void MarkEmailVerified(DateTime verifiedAt)
+    {
+        EmailVerifiedAt = verifiedAt;
+        Status = UserStatus.Active;
+    } 
     
     public bool IsEmailVerified() => EmailVerifiedAt.HasValue;
+
+    public void Disable() => Status = UserStatus.Disabled;
     
 }

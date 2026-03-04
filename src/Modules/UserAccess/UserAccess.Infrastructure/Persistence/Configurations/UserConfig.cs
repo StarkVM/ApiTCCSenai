@@ -25,6 +25,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         b.Property(x => x.PasswordChangedAt).IsRequired();
         b.Property(x => x.EmailVerifiedAt);
         b.Property(x => x.CreatedAt).IsRequired();
+        b.Property(x => x.Status).HasConversion<int>().IsRequired();
         
         b.HasOne(x => x.Address)
             .WithOne(x => x.User)
