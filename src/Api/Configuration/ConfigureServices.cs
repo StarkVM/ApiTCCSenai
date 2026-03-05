@@ -1,4 +1,5 @@
 using Api.Infrastructure.Health;
+using Api.Routes.UserAccess;
 using UserAccess.Infrastructure;
 
 namespace Api.Configuration;
@@ -43,6 +44,7 @@ public static class ConfigureServices
         // Endpoints por módulo (quando implementar):
         // Module endpoints (when you implement them):
         // app.MapUserAccessRoutes();
+        app.MapUserAccessRoutes();
         
         return app;
     }
