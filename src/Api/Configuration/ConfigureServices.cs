@@ -41,10 +41,16 @@ public static class ConfigureServices
         // Host-level endpoints (host infrastructure)
         app.MapAppHealthChecks();
         
+        // Português
+        // Grupo raiz versionado (padrão para todos os módulos)
+        // English
+        // Versioned root group (standard for all modules)
+        var v1 = app.MapGroup("/api/v1");
+        
         // Endpoints por módulo (quando implementar):
         // Module endpoints (when you implement them):
         // app.MapUserAccessRoutes();
-        app.MapUserAccessRoutes();
+        v1.MapUserAccessRoutes();
         
         return app;
     }
