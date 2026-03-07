@@ -14,7 +14,8 @@ public static class UserAccessRoutes
         // Grupo de rotas para manter organização e facilitar versionamento
         // English
         // Route group to keep endpoints organized and allow future versioning
-        var group = endpoints.MapGroup("/user-access");
+        var group = endpoints.MapGroup("/user-access")
+            .RequireRateLimiting("public");
 
         group.MapGet("/health/db", async (UserAccessDbContext db) =>
         {

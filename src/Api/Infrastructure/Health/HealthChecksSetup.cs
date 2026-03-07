@@ -33,10 +33,10 @@ public static class HealthChecksSetup
     {
         endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
         {
-            Predicate = r => r.Tags.Contains("ready"),
+            Predicate = r => r.Tags.Contains("live"),
         });
         
-        endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
+        endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
         {
             Predicate = r => r.Tags.Contains("ready"),
             ResponseWriter = WriteJsonResponse

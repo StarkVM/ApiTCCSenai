@@ -1,5 +1,6 @@
 using Api.Infrastructure.Health;
 using Api.Routes.UserAccess;
+using Api.Infrastructure.RateLimiting;
 using UserAccess.Infrastructure;
 
 namespace Api.Configuration;
@@ -22,6 +23,7 @@ public static class ConfigureServices
         // Health checks (infra do host)
         // Health checks (host infrastructure)
         builder.Services.AddHealthChecks();
+        builder.Services.AddAppRateLimiting();
 
         return builder;
     }
@@ -37,6 +39,8 @@ public static class ConfigureServices
         }
 
         app.UseHttpsRedirection();
+
+        app.UseRateLimiter();
 
         // Host-level endpoints (host infrastructure)
         app.MapAppHealthChecks();
