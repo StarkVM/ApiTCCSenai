@@ -2,6 +2,8 @@ using Api.Infrastructure.Health;
 using Api.Routes.UserAccess;
 using Api.Infrastructure.RateLimiting;
 using UserAccess.Infrastructure;
+using Api.Infrastructure.Logging;
+using Serilog;
 
 namespace Api.Configuration;
 
@@ -11,6 +13,10 @@ public static class ConfigureServices
     // 1) Everything related to "service registration" (DI) goes here
     public static WebApplicationBuilder AddApiServices(this WebApplicationBuilder builder)
     {
+        // Configura o pipeline de logging da aplicação centralizando Serilog e suas configurações
+        // Configures the application's logging pipeline centralizing Serilog and its settings
+        builder.AddAppLogging();
+        
         // Swagger / OpenAPI (infra do host)
         // Swagger / OpenAPI (host infrastructure)
         builder.Services.AddEndpointsApiExplorer();
@@ -39,6 +45,10 @@ public static class ConfigureServices
         }
 
         app.UseHttpsRedirection();
+        
+        // Adiciona middleware que registra cada requisição HTTP em um único log resumido (método, rota, status e tempo de execução).
+        // Adds middleware that logs each HTTP request as a single summarized log entry (method, route, status code, and execution time).
+        app.UseSerilogRequestLogging();
 
         app.UseRateLimiter();
 

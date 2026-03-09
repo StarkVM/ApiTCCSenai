@@ -46,12 +46,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "centralPackageVersions": {
-            "Microsoft.EntityFrameworkCore": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Design": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Relational": "8.0.24",
-            "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.4"
-          },
           "imports": [
             "net461",
             "net462",
@@ -110,12 +104,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "centralPackageVersions": {
-            "Microsoft.EntityFrameworkCore": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Design": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Relational": "8.0.24",
-            "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.4"
-          },
           "imports": [
             "net461",
             "net462",
@@ -181,12 +169,6 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "centralPackageVersions": {
-            "Microsoft.EntityFrameworkCore": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Design": "8.0.24",
-            "Microsoft.EntityFrameworkCore.Relational": "8.0.24",
-            "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.4"
-          },
           "imports": [
             "net461",
             "net462",
