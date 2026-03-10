@@ -3,7 +3,9 @@ using Api.Routes.UserAccess;
 using Api.Infrastructure.RateLimiting;
 using UserAccess.Infrastructure;
 using Api.Infrastructure.Logging;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
+using Serilog.Extensions.Hosting;
 
 namespace Api.Configuration;
 
@@ -22,13 +24,31 @@ public static class ConfigureServices
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         
+        // Português
+        // Define quais headers encaminhados por proxies confiáveis devem ser processados pelo ASP.NET Core.
+        // X-Forwarded-For: identifica o IP real do cliente.
+        // X-Forwarded-Proto: indica o protocolo original da requisição (HTTP ou HTTPS).
+        //
+        // English
+        // Specifies which forwarded headers from trusted proxies should be processed by ASP.NET Core.
+        // X-Forwarded-For: identifies the real client IP.
+        // X-Forwarded-Proto: indicates the original request protocol (HTTP or HTTPS).
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+            });
+        
         // Módulos (cada módulo registra sua própria infra)
         // Modules (each module registers its own infrastructure)
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
         
         // Health checks (infra do host)
         // Health checks (host infrastructure)
-        builder.Services.AddHealthChecks();
+        builder.Services.AddAppHealthChecks();
+        
+        
         builder.Services.AddAppRateLimiting();
 
         return builder;
@@ -43,12 +63,38 @@ public static class ConfigureServices
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        
+        // Português
+        // Habilita processamento de headers encaminhados antes de middlewares que dependem do IP real
+        // English
+        // Enables processing of forwarded headers before middlewares that depend on the real client IP
+        
+        app.UseForwardedHeaders();
 
         app.UseHttpsRedirection();
         
-        // Adiciona middleware que registra cada requisição HTTP em um único log resumido (método, rota, status e tempo de execução).
-        // Adds middleware that logs each HTTP request as a single summarized log entry (method, route, status code, and execution time).
-        app.UseSerilogRequestLogging();
+        // Português:
+        // Gera ou reaproveita um RequestId e o injeta no contexto da requisição.
+        // English:
+        // Generates or reuses a RequestId and injects it into the request context.
+        app.UseRequestId();
+        
+        // Português:
+        // Registra cada requisição HTTP em um log resumido.
+        // English:
+        // Logs each HTTP request as a summarized log entry.
+        app.UseSerilogRequestLogging(options =>
+        {
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            {
+                diagnosticContext.Set("RequestId", httpContext.TraceIdentifier);
+                diagnosticContext.Set("RequestMethod", httpContext.Request.Method);
+                diagnosticContext.Set("RequestPath", httpContext.Request.Path);
+                diagnosticContext.Set("QueryString", httpContext.Request.QueryString.Value);
+                diagnosticContext.Set("ClientIp", httpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString());
+                diagnosticContext.Set("UserAgent", httpContext.Request.Headers.UserAgent.ToString());
+            };
+        } );
 
         app.UseRateLimiter();
 

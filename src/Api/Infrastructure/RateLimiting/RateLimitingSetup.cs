@@ -89,12 +89,6 @@ public static class RateLimitingSetup
     // Generates the key used to separate limits by IdUser or IP
     private static string GetPartitionKey(HttpContext httpContext)
     {
-        var ip = httpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
-        
-        if (!string.IsNullOrEmpty(ip))
-        {
-            return $"ip: {ip}";
-        }
         
         var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)?? 
                      httpContext.User.FindFirstValue("sub");
@@ -102,6 +96,21 @@ public static class RateLimitingSetup
         if (!string.IsNullOrEmpty(userId))
         {
             return $"user: {userId}";
+        }
+        
+        var email = httpContext.User.FindFirstValue(ClaimTypes.Email)??
+                    httpContext.User.FindFirstValue("email");
+
+        if (!string.IsNullOrEmpty(email))
+        {
+            return $"email: {email}";
+        }
+        
+        var ip = httpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+        
+        if (!string.IsNullOrEmpty(ip))
+        {
+            return $"ip: {ip}";
         }
 
         return "anonymous";

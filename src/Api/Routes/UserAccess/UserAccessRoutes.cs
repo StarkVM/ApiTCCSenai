@@ -17,7 +17,7 @@ public static class UserAccessRoutes
         var group = endpoints.MapGroup("/user-access")
             .RequireRateLimiting("public");
 
-        group.MapGet("/health/db", async (UserAccessDbContext db, ILoggerFactory loggerFactory) =>
+        group.MapGet("/health/db", async (HttpContext httpContext,UserAccessDbContext db, ILoggerFactory loggerFactory) =>
         {
             // Português
             // Cria um logger específico para este endpoint
@@ -29,17 +29,37 @@ public static class UserAccessRoutes
             // Log indicando início da verificação do banco
             // English
             // Log indicating start of database connectivity check
-            logger.LogInformation("Checking database connectivity for UserAccess module");
-            
-            var canConnect = await db.Database.CanConnectAsync();
-            
-            logger.LogInformation("Database connectivity result for UserAccess: {Connect}", canConnect);
+            logger.LogInformation("Checking database connectivity for UserAccess module." +
+                                  " RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.Ok( new
+            try
             {
+                var canConnect = await db.Database.CanConnectAsync();
+            
+                logger.LogInformation("Database connectivity result for UserAccess." +
+                    " RequestId: {RequestId}. Connected {Connected}", httpContext.TraceIdentifier,canConnect);
+
+                return Results.Ok( new
+                {
                     database = "UserAccess",
-                    connected = canConnect
-            });
+                    connected = canConnect,
+                    requestId = httpContext.TraceIdentifier
+                }); 
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "Error while checking UserAccess database connectivity." +
+                                    " RequestId: {RequestId}", httpContext.TraceIdentifier);
+
+                return Results.Problem(
+                    title: "Error while checking UserAccess database connectivity.",
+                    detail: $"Error while checking UserAccess database connectivity.",
+                    statusCode: StatusCodes.Status500InternalServerError,
+                    extensions: new Dictionary<string, object?>
+                    {
+                        ["requestId"] = httpContext.TraceIdentifier
+                    });
+            }
         });
         return endpoints;
     }
