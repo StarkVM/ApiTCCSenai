@@ -162,3 +162,4 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWS.Logger.Core.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWS.Logger.SeriLog.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.CloudWatchLogs.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.Core.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\BCrypt.Net-Next.dll
