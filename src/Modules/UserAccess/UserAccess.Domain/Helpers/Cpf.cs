@@ -1,27 +1,12 @@
-namespace UserAccess.Domain.ValueObjects;
+namespace UserAccess.Domain.Helpers;
 
-using System.Linq;
-
-public sealed class Cpf
+public static class Cpf
 {
-    public string Value { get; private set; }
-
-    public Cpf(string value)
+    public static bool CpfIsValid(this string cpf)
     {
-        var cleaned = Clean(value);
 
-        if (!IsValid(cleaned))
-        {
-            throw new ArgumentException("Invalid CPF");
-        }
+        cpf = cpf.Clean();
         
-        Value = cleaned;
-    }
-    
-    private static string Clean(string cpf) => cpf.Replace(".", "").Replace("-", "").Replace(" ", "");
-
-    private static bool IsValid(string cpf)
-    {
         if (cpf.Length != 11){ return false;}
         if (cpf.All(c => c == cpf[0])){ return false;}
 
@@ -44,8 +29,10 @@ public sealed class Cpf
 
         sum = 0;
         for (int i = 0; i < 10; i++)
+        {
             sum += (temp[i] - '0') * mult2[i];
-
+        }
+        
         rem = sum % 11;
         rem = rem < 2 ? 0 : 11 - rem;
 
@@ -53,6 +40,15 @@ public sealed class Cpf
         var calc = temp[9].ToString() + rem.ToString();
 
         return dv == calc;
+    }
+
+    public static string Clean(this string cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf))
+        {
+            return string.Empty;
+        }
+        return cpf = new string(cpf.Where(char.IsDigit).ToArray());
     }
     
 }

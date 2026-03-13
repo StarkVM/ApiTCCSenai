@@ -4,10 +4,8 @@ namespace UserAccess.Domain.Interfaces;
 
 public interface IUserRepository
 {
-    Task<bool> ExistsByEmailAsync(string email);
-    Task<bool> ExistsByCpfHashAsync(string cpfHash);
-    
-    Task AddAsync(User user, Address address);
-    
-    Task<User?> GetByEmailAsync(string email);
+    Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken);
+    Task<bool> CpfHashExistsAsync(string cpfHash, CancellationToken cancellationToken);
+    Task AddAsync(User user, CancellationToken cancellationToken);
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }
