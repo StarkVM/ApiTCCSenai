@@ -2,5 +2,6 @@ namespace UserAccess.Domain.Interfaces;
 
 public interface IVerificationCodeHasher
 {
-    string Hash(string code);
+    string Hash(string  code);
+    bool Verify(string password, string passwordHash);
 }

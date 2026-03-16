@@ -103,3 +103,6 @@ C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\obj\Debug\net8.0\refint\UnitTe
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\obj\Debug\net8.0\UnitTests.pdb
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\obj\Debug\net8.0\UnitTests.genruntimeconfig.cache
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\obj\Debug\net8.0\ref\UnitTests.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll

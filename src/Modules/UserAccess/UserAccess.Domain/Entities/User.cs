@@ -46,6 +46,17 @@ public class User
         Address = address;
     }
 
+    public void RestartPendingVerification(string firstName, string lastName, DateTime birthDate, string cpfHash,
+        string passwordHash)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        BirthDate = birthDate;
+        CpfHash = cpfHash;
+        PasswordHash = passwordHash;
+        Status = UserStatus.PendingEmailVerification;
+    }
+
     public void ChangePassword(string newPasswordHash, DateTime changedAtUtc)
     {
         if (string.IsNullOrWhiteSpace(newPasswordHash))

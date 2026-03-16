@@ -4,5 +4,5 @@ namespace UserAccess.Domain.Interfaces;
 
 public interface IEmailVerificationRepository
 {
-    Task AddAsync(EmailVerificationCode code);
+    Task AddAsync(EmailVerificationCode code, CancellationToken cancellationToken);
 }

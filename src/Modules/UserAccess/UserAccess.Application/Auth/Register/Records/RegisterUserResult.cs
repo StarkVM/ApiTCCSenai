@@ -1,4 +1,4 @@
-namespace UserAccess.Application.Auth.Register;
+namespace UserAccess.Application.Auth.Register.Records;
 
 public record RegisterUserResult(
     Guid UserId,

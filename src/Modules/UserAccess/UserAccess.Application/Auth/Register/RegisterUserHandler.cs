@@ -1,6 +1,9 @@
+using Microsoft.Extensions.Logging;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Helpers;
+using UserAccess.Application.Auth.Register.Records;
+using UserAccess.Domain.Enums;
 
 namespace UserAccess.Application.Auth.Register;
 
@@ -10,20 +13,31 @@ public sealed class RegisterUserHandler
     private readonly IPasswordHasher _passwordHasher;
     private readonly ICpfHasher _cpfHasher;
     private readonly IClock _clock;
+    private readonly IEmailSender _emailSender;
+    private readonly IVerificationCodeHasher _verificationCodeHasher;
+    private readonly IEmailVerificationRepository _emailVerificationRepository;
+    private readonly IUniIUnitOfWork _unitOfWork;
+    private readonly ILogger<RegisterUserHandler> _logger;
     
     
-    public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher,
-        ICpfHasher cpfHasher, IClock clock)
+    public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
+        IClock clock, IEmailSender emailSender, IVerificationCodeHasher verificationCodeHasher,
+        IEmailVerificationRepository emailVerificationRepository,
+        IUniIUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _cpfHasher = cpfHasher;
         _clock = clock;
+        _emailSender = emailSender;
+        _verificationCodeHasher = verificationCodeHasher;
+        _emailVerificationRepository = emailVerificationRepository;
+        _unitOfWork = unitOfWork;
+        _logger = logger;
     }
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        
         var firstName = command.FirstName?.Trim();
         var lastName = command.LastName?.Trim();
         var email = command.Email?.Trim().ToLowerInvariant();
@@ -33,34 +47,116 @@ public sealed class RegisterUserHandler
         var nowUtc = _clock.UtcNow;
         
         Validate(firstName, lastName, email, cpf, password, command.BirthDate, nowUtc);
-
-        if (await _userRepository.EmailExistsAsync(email!, cancellationToken))
-        {
-            throw new InvalidOperationException("EMAIL_ALREADY_REGISTERED");
-        }
-
+        
+        //user
+        _logger.LogInformation("Starting user registration flow for email {Email}", email);
+        
         var cpfHash = _cpfHasher.Hash(cpf!);
-        
-        if (await _userRepository.CpfHashExistsAsync(cpfHash, cancellationToken))
-        {
-            throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
-        }
-
         var passwordHash = _passwordHasher.Hash(password!);
-
-        var user = new User(
-            Guid.NewGuid(),
-            firstName!,
-            lastName!,
-            command.BirthDate,
-            email!,
-            cpfHash,
-            passwordHash,
-            nowUtc);
         
-        await _userRepository.AddAsync(user, cancellationToken);
-        await _userRepository.SaveChangesAsync(cancellationToken);
+        var existingUser = await _userRepository.GetByEmailAsync(email!, cancellationToken);
 
+        User user;
+
+        if (existingUser is null)
+        {
+            if (await _userRepository.CpfHashExistsAsync(cpfHash, cancellationToken))
+            {
+                _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
+                throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
+            }
+                user = new User(
+                Guid.NewGuid(),
+                firstName!,
+                lastName!,
+                command.BirthDate,
+                email!,
+                cpfHash,
+                passwordHash,
+                nowUtc);
+                
+                _logger.LogInformation("Creating new pending user registration for email {Email}", email);
+
+        
+            await _userRepository.AddAsync(user, cancellationToken);
+        }
+        else
+        {
+            if (existingUser.Status == UserStatus.Active)
+            {
+                _logger.LogWarning("Registration blocked because email is already active. Email: {Email}", email);
+                throw new InvalidOperationException("EMAIL_ALREADY_REGISTERED");
+            }
+            if (await _userRepository.CpfHashExistsForAnotherUserAsync(cpfHash, existingUser.Id, cancellationToken))
+            {
+                _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
+                throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
+            }
+            existingUser.RestartPendingVerification(
+                firstName!,
+                lastName!,
+                command.BirthDate,
+                cpfHash,
+                passwordHash
+                );
+            
+            _logger.LogInformation("Existing non-active user found for email {Email}. Restarting pending verification flow.", email);
+            
+            user = existingUser;
+        }
+        
+        
+        //email
+        var code = Email.Code();
+        
+        var codeHash = _verificationCodeHasher.Hash(code);
+        var expiresAt = nowUtc.AddMinutes(5);
+
+        var emailVerificationCode = new EmailVerificationCode(
+            Guid.NewGuid(),
+                user.Id,
+                codeHash,
+                nowUtc,
+                expiresAt
+                );
+        
+        await _emailVerificationRepository.AddAsync( emailVerificationCode, cancellationToken);
+            
+        //
+        try
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Registration data saved successfully for email {Email}", email);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save registration data for email {Email}", email);
+            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+        }
+        
+        var body =$"""
+                   Hello,
+
+                   Your verification code is: {code}
+
+                   This code expires in 5 minutes.
+
+                   If you did not request this, ignore this email.
+                   """;
+        
+        var subject = "Your Email Verification Code";
+
+        try
+        {
+            await _emailSender.SendAsync(email!, subject, body, cancellationToken);
+            _logger.LogInformation("Verification code sent successfully for email {Email}", email);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send verification email for email {Email}", email);
+            throw new InvalidOperationException("EMAIL_SEND_FAILED", ex);
+        }
+        
         return new RegisterUserResult(
             user.Id,
             user.Email,
@@ -135,7 +231,7 @@ public sealed class RegisterUserHandler
             throw new ArgumentException("BIRTH_DATE_REQUIRED");
         }
         if (birthDate.Date > nowUtc.Date)
-        {
+        { 
             throw new ArgumentException("BIRTH_DATE_INVALID");
         }
         if (!birthDate.IsAdult(nowUtc.Date))
