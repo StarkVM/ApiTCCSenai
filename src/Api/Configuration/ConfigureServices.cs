@@ -6,6 +6,7 @@ using Api.Infrastructure.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Serilog.Extensions.Hosting;
+using UserAccess.Application;
 
 namespace Api.Configuration;
 
@@ -43,6 +44,7 @@ public static class ConfigureServices
         // Módulos (cada módulo registra sua própria infra)
         // Modules (each module registers its own infrastructure)
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
+        builder.Services.AddUserAccessApplication();
         
         // Health checks (infra do host)
         // Health checks (host infrastructure)

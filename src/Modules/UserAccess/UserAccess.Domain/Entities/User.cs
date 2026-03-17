@@ -39,6 +39,7 @@ public class User
         CpfHash = cpfHash;
         PasswordHash = passwordHash;
         CreatedAt = createdAt;
+        PasswordChangedAt = createdAt;
     }
 
     public void SetAddress(Address address)

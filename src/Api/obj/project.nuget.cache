@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "olVmT/dYFoE=",
+  "dgSpecHash": "QiyLETsZj6E=",
   "success": true,
-  "projectFilePath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj",
+  "projectFilePath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\api\\Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vitor\\.nuget\\packages\\aws.logger.core\\4.0.2\\aws.logger.core.4.0.2.nupkg.sha512",
     "C:\\Users\\vitor\\.nuget\\packages\\aws.logger.serilog\\4.0.2\\aws.logger.serilog.4.0.2.nupkg.sha512",

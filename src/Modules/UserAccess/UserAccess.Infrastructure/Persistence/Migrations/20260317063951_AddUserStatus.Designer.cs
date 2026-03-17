@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UserAccess.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using UserAccess.Infrastructure.Persistence;
 namespace UserAccess.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(UserAccessDbContext))]
-    partial class UserAccessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260317063951_AddUserStatus")]
+    partial class AddUserStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
