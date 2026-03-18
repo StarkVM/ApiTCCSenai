@@ -16,11 +16,8 @@ public class Address
     
     private Address() {}
     
-    public Address(Guid userId, string state, string city, string district, string street, string zipCode, DateTime nowUtc)
+    public Address(string state, string city, string district, string street, string zipCode, DateTime nowUtc)
     {
-        UserId = userId;
-        
-        
         State = state.Trim();
         City = city.Trim();
         District = district.Trim();
@@ -29,6 +26,11 @@ public class Address
         
         CreatedAt = nowUtc;
         UpdatedAt = nowUtc;
+    }
+
+    public void SetUserId(Guid userId)
+    {
+        UserId = userId;
     }
 
     public void Update(string state, string city, string district, string street, string zipCode, DateTime nowUtc)

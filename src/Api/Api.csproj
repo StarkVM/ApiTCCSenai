@@ -35,4 +35,8 @@
     <ProjectReference Include="..\Modules\Payments\Payments.Infrastructure\Payments.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Exceptions\Setup\" />
+  </ItemGroup>
+
 </Project>

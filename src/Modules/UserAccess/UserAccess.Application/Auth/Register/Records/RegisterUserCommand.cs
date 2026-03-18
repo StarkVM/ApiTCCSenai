@@ -1,3 +1,5 @@
+using UserAccess.Application.Auth.Register.Records;
+
 namespace UserAccess.Application.Auth.Register.Records;
 
 public record RegisterUserCommand(
@@ -6,5 +8,6 @@ public record RegisterUserCommand(
     DateTime BirthDate,
     string Email,
     string Cpf,
-    string Password
+    string Password,
+    RegisterUserAddress address
     );

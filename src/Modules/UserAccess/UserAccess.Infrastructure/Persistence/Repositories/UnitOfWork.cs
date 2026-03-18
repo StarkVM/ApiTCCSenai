@@ -4,7 +4,7 @@ using UserAccess.Domain.Entities;
 
 namespace UserAccess.Infrastructure.Persistence.Repositories;
 
-public class UnitOfWork : IUniIUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly UserAccessDbContext _userAccessDbContext;
 

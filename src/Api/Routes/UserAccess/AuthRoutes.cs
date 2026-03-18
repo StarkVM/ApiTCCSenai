@@ -2,6 +2,7 @@ using Api.Routes.UserAccess.Records;
 using Microsoft.AspNetCore.Http.HttpResults;
 using UserAccess.Application.Auth.Register;
 using UserAccess.Application.Auth.Register.Records;
+using UserAccess.Domain.Entities;
 
 namespace Api.Routes.UserAccess;
 
@@ -30,6 +31,14 @@ public static class AuthRoutes
         var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
         
         logger.LogInformation("Starting user registration. RequestId: {requestId}", httpContext.TraceIdentifier);
+        
+        var address = new RegisterUserAddress(
+            request.Address.State,
+            request.Address.City,
+            request.Address.District,
+            request.Address.Street,
+            request.Address.ZipCode
+        );
 
         var command = new RegisterUserCommand(
             request.FirstName,
@@ -37,8 +46,10 @@ public static class AuthRoutes
             request.BirthDate,
             request.Email,
             request.Cpf,
-            request.Password
+            request.Password,
+            address
         );
+        
 
         try
         {

@@ -27,11 +27,12 @@ public static class DependencyInjection
             opt.UseNpgsql(userAccessConnectionString));
         
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
         services.AddScoped<IClock, SystemClock>();
         services.AddScoped<IEmailSender, EmailSenderFake>();
-        services.AddScoped<IUniIUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IVerificationCodeHasher, VerificationCodeHasher>();
         
         var cpfSecretKey = configuration["Security:CpfProtectionKey"];

@@ -16,14 +16,15 @@ public sealed class RegisterUserHandler
     private readonly IEmailSender _emailSender;
     private readonly IVerificationCodeHasher _verificationCodeHasher;
     private readonly IEmailVerificationRepository _emailVerificationRepository;
-    private readonly IUniIUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RegisterUserHandler> _logger;
+    private readonly IAddressRepository _addressRepository;
     
     
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
         IClock clock, IEmailSender emailSender, IVerificationCodeHasher verificationCodeHasher,
-        IEmailVerificationRepository emailVerificationRepository,
-        IUniIUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger)
+        IEmailVerificationRepository emailVerificationRepository, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
+        IAddressRepository addressRepository)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -34,6 +35,7 @@ public sealed class RegisterUserHandler
         _emailVerificationRepository = emailVerificationRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _addressRepository = addressRepository;
     }
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -45,8 +47,11 @@ public sealed class RegisterUserHandler
         var password = command.Password?.Trim();
         
         var nowUtc = _clock.UtcNow;
+
+        var address = new Address(command.address.State, command.address.City, command.address.District,
+            command.address.Street,command.address.ZipCode, nowUtc);
         
-        Validate(firstName, lastName, email, cpf, password, command.BirthDate, nowUtc);
+        Validate(firstName, lastName, email, cpf, password, command.BirthDate,address ,nowUtc);
         
         //user
         _logger.LogInformation("Starting user registration flow for email {Email}", email);
@@ -65,6 +70,11 @@ public sealed class RegisterUserHandler
                 _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
                 throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
             }
+            /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
+            {
+                _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
+                throw new InvalidOperationException("ADDRESS_NOT_VALID");
+            }*/
                 user = new User(
                 Guid.NewGuid(),
                 firstName!,
@@ -74,6 +84,10 @@ public sealed class RegisterUserHandler
                 cpfHash,
                 passwordHash,
                 nowUtc);
+                
+                address.SetUserId(user.Id);
+                user.SetAddress(address);
+                await _addressRepository.AddAddressAsync(address, cancellationToken);
                 
                 _logger.LogInformation("Creating new pending user registration for email {Email}", email);
 
@@ -92,6 +106,11 @@ public sealed class RegisterUserHandler
                 _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
                 throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
             }
+            /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
+            {
+                _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
+                throw new InvalidOperationException("ADDRESS_NOT_VALID");
+            }*/
             existingUser.RestartPendingVerification(
                 firstName!,
                 lastName!,
@@ -100,7 +119,20 @@ public sealed class RegisterUserHandler
                 passwordHash
                 );
             
+            var existingAddress = await  _addressRepository.GetAddressByUserIdAsync(existingUser.Id, cancellationToken);
+            
+            if (existingAddress is null)
+            {
+                _logger.LogWarning("Registration blocked because Addrress was not found. UserId {UserId}", existingUser.Id );
+                throw new InvalidOperationException("ADDRESS_NOT_FOUND");
+            }
+            
+            address.SetUserId(existingUser.Id);
+            existingAddress!.Update(address.State,address.City,address.District,address.Street,address.ZipCode, nowUtc);
+            existingUser.SetAddress(existingAddress);
+            
             _logger.LogInformation("Existing non-active user found for email {Email}. Restarting pending verification flow.", email);
+            
             
             user = existingUser;
         }
@@ -165,7 +197,7 @@ public sealed class RegisterUserHandler
     }
 
     private static void Validate(string? firstName, string? lastName,
-        string? email, string? cpf, string? password, DateTime birthDate, DateTime nowUtc)
+        string? email, string? cpf, string? password, DateTime birthDate, Address address, DateTime nowUtc)
     {
         //Names verification
         if (string.IsNullOrWhiteSpace(firstName))
@@ -237,6 +269,36 @@ public sealed class RegisterUserHandler
         if (!birthDate.IsAdult(nowUtc.Date))
         {
             throw new ArgumentException("TOO_YOUNG");
+        }
+        //Address
+        if (address is null)
+        {
+            throw new ArgumentException("ADDRESS_REQUIRED");
+        }
+
+        if (string.IsNullOrWhiteSpace(address.State))
+        {
+            throw new ArgumentException("ADDRESS_STATE_REQUIRED");
+        }
+
+        if (string.IsNullOrWhiteSpace(address.City))
+        {
+            throw new ArgumentException("ADDRESS_CITY_REQUIRED");
+        }
+
+        if (string.IsNullOrWhiteSpace(address.District))
+        {
+            throw new ArgumentException("ADDRESS_DISTRICT_REQUIRED");
+        }
+
+        if (string.IsNullOrWhiteSpace(address.Street))
+        {
+            throw new ArgumentException("ADDRESS_STREET_REQUIRED");
+        }
+
+        if (string.IsNullOrWhiteSpace(address.ZipCode))
+        {
+            throw new ArgumentException("ADDRESS_ZIPCODE_REQUIRED");
         }
     }
 }
