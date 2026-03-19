@@ -94,7 +94,7 @@ public sealed class RegisterUserHandler
         }
         else
         {
-            if (existingUser.Status == UserStatus.Active)
+            if (existingUser.Status == UserStatus.Active || existingUser.Status == UserStatus.Disabled)
             {
                 _logger.LogWarning("Registration blocked because email is already active. Email: {Email}", email);
                 throw new InvalidOperationException("EMAIL_ALREADY_REGISTERED");

@@ -11,17 +11,20 @@ public class SendEmailVerificationCode
     private readonly IEmailSender _emailSender;
     private readonly IVerificationCodeHasher _verificationCodeHasher;
     private readonly IClock _clock;
+    private readonly IUnitOfWork _unitOfWork;
 
     public SendEmailVerificationCode(
         IEmailVerificationRepository emailVerificationRepository,
         IEmailSender emailSender,
         IVerificationCodeHasher verificationCodeHasher,
-        IClock clock)
+        IClock clock,
+        IUnitOfWork unitOfWork)
     {
         _emailVerificationRepository = emailVerificationRepository;
         _emailSender = emailSender;
         _verificationCodeHasher = verificationCodeHasher;
         _clock = clock;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task HandleAsync(SenderEmailCommand command, CancellationToken cancellationToken)
@@ -68,5 +71,7 @@ public class SendEmailVerificationCode
                    """;
 
         await _emailSender.SendAsync(email, subject, body, cancellationToken );
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
