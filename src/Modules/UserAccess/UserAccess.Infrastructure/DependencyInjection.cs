@@ -33,7 +33,6 @@ public static class DependencyInjection
         services.AddScoped<IClock, SystemClock>();
         services.AddScoped<IEmailSender, EmailSenderFake>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IVerificationCodeHasher, VerificationCodeHasher>();
         
         var cpfSecretKey = configuration["Security:CpfProtectionKey"];
 
@@ -41,8 +40,15 @@ public static class DependencyInjection
         {
             throw new InvalidOperationException("CPF Secret Key not configured");
         }
+        var codeSecretKey = configuration["Security:CodeProtectionKey"];
+
+        if (string.IsNullOrWhiteSpace(codeSecretKey))
+        {
+            throw new InvalidOperationException("Code Secret Key not configured");
+        }
 
         services.AddSingleton<ICpfHasher>(_ => new CpfHasher(cpfSecretKey));
+        services.AddSingleton<IVerificationCodeHasher>(_ => new VerificationCodeHasher(codeSecretKey));
         
         return services;
     }

@@ -3,7 +3,9 @@ using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Helpers;
 using UserAccess.Application.Auth.Register.Records;
+using UserAccess.Application.Auth.VerifyEmail;
 using UserAccess.Domain.Enums;
+using UserAccess.Application.Auth.VerifyEmail.Records;
 
 namespace UserAccess.Application.Auth.Register;
 
@@ -13,29 +15,25 @@ public sealed class RegisterUserHandler
     private readonly IPasswordHasher _passwordHasher;
     private readonly ICpfHasher _cpfHasher;
     private readonly IClock _clock;
-    private readonly IEmailSender _emailSender;
-    private readonly IVerificationCodeHasher _verificationCodeHasher;
-    private readonly IEmailVerificationRepository _emailVerificationRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RegisterUserHandler> _logger;
     private readonly IAddressRepository _addressRepository;
+    private readonly SendEmailVerificationCode _sendEmailVerificationCode;
     
     
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
         IClock clock, IEmailSender emailSender, IVerificationCodeHasher verificationCodeHasher,
         IEmailVerificationRepository emailVerificationRepository, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
-        IAddressRepository addressRepository)
+        IAddressRepository addressRepository, SendEmailVerificationCode sendEmailVerificationCode)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _cpfHasher = cpfHasher;
         _clock = clock;
-        _emailSender = emailSender;
-        _verificationCodeHasher = verificationCodeHasher;
-        _emailVerificationRepository = emailVerificationRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _addressRepository = addressRepository;
+        _sendEmailVerificationCode = sendEmailVerificationCode;
     }
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -137,24 +135,6 @@ public sealed class RegisterUserHandler
             user = existingUser;
         }
         
-        
-        //email
-        var code = Email.Code();
-        
-        var codeHash = _verificationCodeHasher.Hash(code);
-        var expiresAt = nowUtc.AddMinutes(5);
-
-        var emailVerificationCode = new EmailVerificationCode(
-            Guid.NewGuid(),
-                user.Id,
-                codeHash,
-                nowUtc,
-                expiresAt
-                );
-        
-        await _emailVerificationRepository.AddAsync( emailVerificationCode, cancellationToken);
-            
-        //
         try
         {
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -165,22 +145,17 @@ public sealed class RegisterUserHandler
             _logger.LogError(ex, "Failed to save registration data for email {Email}", email);
             throw new InvalidOperationException("DB_SAVE_FAILED", ex);
         }
+
+        //email
         
-        var body =$"""
-                   Hello,
-
-                   Your verification code is: {code}
-
-                   This code expires in 5 minutes.
-
-                   If you did not request this, ignore this email.
-                   """;
+        var emailSenderCommand = new SenderEmailCommand(
+            email!,
+            user.Id
+        );
         
-        var subject = "Your Email Verification Code";
-
         try
         {
-            await _emailSender.SendAsync(email!, subject, body, cancellationToken);
+            await _sendEmailVerificationCode.HandleAsync(emailSenderCommand, cancellationToken);
             _logger.LogInformation("Verification code sent successfully for email {Email}", email);
         }
         catch(Exception ex)

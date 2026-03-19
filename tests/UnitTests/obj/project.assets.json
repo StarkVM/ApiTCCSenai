@@ -5751,6 +5751,12 @@
             "version": "[2.5.3, )"
           }
         },
+        "centralPackageVersions": {
+          "Microsoft.EntityFrameworkCore": "8.0.24",
+          "Microsoft.EntityFrameworkCore.Design": "8.0.24",
+          "Microsoft.EntityFrameworkCore.Relational": "8.0.24",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.4"
+        },
         "imports": [
           "net461",
           "net462",
