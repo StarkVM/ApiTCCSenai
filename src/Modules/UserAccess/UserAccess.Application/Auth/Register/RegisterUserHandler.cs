@@ -150,7 +150,8 @@ public sealed class RegisterUserHandler
         
         var emailSenderCommand = new SenderEmailCommand(
             email!,
-            user.Id
+            user.Id,
+            VerificationCodePurpose.EmailVerification
         );
         
         try

@@ -1,3 +1,5 @@
+using UserAccess.Domain.Enums;
+
 namespace UserAccess.Domain.Entities;
 
 public class EmailVerificationCode
@@ -13,11 +15,18 @@ public class EmailVerificationCode
     public DateTime? ConsumedAt { get; private set; }
     public int Attempts { get; private set; }
     
+    public VerificationCodePurpose Purpose { get; private set; }
+    
     public DateTime CreatedAt { get; private set; }
     
     private EmailVerificationCode() {}
 
-    public EmailVerificationCode(Guid id, Guid userId, string codeHash, DateTime createdAtUtc, DateTime expiresAtUtc)
+    public EmailVerificationCode(Guid id,
+        Guid userId,
+        string codeHash,
+        DateTime createdAtUtc,
+        DateTime expiresAtUtc,
+        VerificationCodePurpose purpose)
     {
         Id = id;
         UserId = userId;
@@ -25,6 +34,8 @@ public class EmailVerificationCode
         
         CreatedAt = createdAtUtc;
         ExpiresAt = expiresAtUtc;
+        
+        Purpose = purpose;
         
         Attempts = 0;
     }

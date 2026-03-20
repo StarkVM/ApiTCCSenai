@@ -17,6 +17,7 @@ public class EmailVerificationCodeConfig : IEntityTypeConfiguration<EmailVerific
         b.Property(x => x.ConsumedAt);
         b.Property(x => x.Attempts).IsRequired();
         b.Property(x => x.CreatedAt).IsRequired();
+        b.Property(x => x.Purpose).HasConversion<int>().IsRequired();
         
         b.HasOne(x => x.User)
             .WithMany()

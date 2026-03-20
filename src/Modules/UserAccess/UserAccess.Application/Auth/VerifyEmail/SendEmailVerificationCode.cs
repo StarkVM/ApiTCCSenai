@@ -45,10 +45,13 @@ public class SendEmailVerificationCode
             userId,
             codeHash,
             nowUtc,
-            expiresAt
+            expiresAt,
+            command.Purpose
         );
         
         await _emailVerificationRepository.AddAsync( emailVerificationCode, cancellationToken);
+        
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var subject = "Verify your email – your code is inside";
 
@@ -71,7 +74,5 @@ public class SendEmailVerificationCode
                    """;
 
         await _emailSender.SendAsync(email, subject, body, cancellationToken );
-        
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
