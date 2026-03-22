@@ -1,11 +1,10 @@
 using Microsoft.Extensions.Logging;
+using UserAccess.Domain.Senders;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Helpers;
 using UserAccess.Application.Auth.Register.Records;
-using UserAccess.Application.Auth.VerifyEmail;
 using UserAccess.Domain.Enums;
-using UserAccess.Application.Auth.VerifyEmail.Records;
 
 namespace UserAccess.Application.Auth.Register;
 
@@ -18,13 +17,13 @@ public sealed class RegisterUserHandler
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RegisterUserHandler> _logger;
     private readonly IAddressRepository _addressRepository;
-    private readonly SendEmailVerificationCode _sendEmailVerificationCode;
+    private readonly IVerificationCodeSender _verificationCodeSender;
     
     
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
         IClock clock, IEmailSender emailSender, IVerificationCodeHasher verificationCodeHasher,
-        IEmailVerificationRepository emailVerificationRepository, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
-        IAddressRepository addressRepository, SendEmailVerificationCode sendEmailVerificationCode)
+        IVerificationCodeRepository verificationCodeRepository, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
+        IAddressRepository addressRepository, IVerificationCodeSender  verificationCodeSender)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -33,7 +32,7 @@ public sealed class RegisterUserHandler
         _unitOfWork = unitOfWork;
         _logger = logger;
         _addressRepository = addressRepository;
-        _sendEmailVerificationCode = sendEmailVerificationCode;
+        _verificationCodeSender = verificationCodeSender;
     }
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -148,7 +147,7 @@ public sealed class RegisterUserHandler
 
         //email
         
-        var emailSenderCommand = new SenderEmailCommand(
+        var emailSenderCommand = new SendVerificationCodeRequest(
             email!,
             user.Id,
             VerificationCodePurpose.EmailVerification
@@ -156,7 +155,7 @@ public sealed class RegisterUserHandler
         
         try
         {
-            await _sendEmailVerificationCode.HandleAsync(emailSenderCommand, cancellationToken);
+            await _verificationCodeSender.SendCodeAsync(emailSenderCommand, cancellationToken);
             _logger.LogInformation("Verification code sent successfully for email {Email}", email);
         }
         catch(Exception ex)

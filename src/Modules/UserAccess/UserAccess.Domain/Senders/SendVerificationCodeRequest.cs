@@ -1,9 +1,9 @@
 using UserAccess.Domain.Enums;
 
-namespace UserAccess.Application.Auth.VerifyEmail.Records;
+namespace UserAccess.Domain.Senders;
 
-public record SenderEmailCommand(
+public record SendVerificationCodeRequest(
     string Email,
     Guid UserId,
     VerificationCodePurpose Purpose
-    );
+);

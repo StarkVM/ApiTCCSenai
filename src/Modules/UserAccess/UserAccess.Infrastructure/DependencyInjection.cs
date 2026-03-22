@@ -29,7 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
-        services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+        services.AddScoped<IVerificationCodeRepository, VerificationCodeRepository>();
         services.AddScoped<IClock, SystemClock>();
         services.AddScoped<IEmailSender, EmailSenderFake>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
