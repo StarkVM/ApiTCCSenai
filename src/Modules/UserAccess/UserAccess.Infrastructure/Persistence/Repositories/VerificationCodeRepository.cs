@@ -28,7 +28,8 @@ public class VerificationCodeRepository  : IVerificationCodeRepository
         (x => x.UserId == userId &&
               x.Purpose == purpose &&
               x.ConsumedAt == null &&
-              x.ExpiresAt > _clock.UtcNow)
+              x.ExpiresAt > _clock.UtcNow &&
+              x.User.Status == UserStatus.Active)
             .OrderByDescending(x => x.ExpiresAt)
             .FirstOrDefaultAsync(cancellationToken);
     }

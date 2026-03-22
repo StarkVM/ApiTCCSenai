@@ -1,8 +1,10 @@
-using Api.Routes.UserAccess.Records;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity.Data;
 using UserAccess.Application.Auth.Register;
+
 using UserAccess.Application.Auth.Register.Records;
-using UserAccess.Domain.Entities;
+using Api.Routes.UserAccess.Records;
+using UserAccess.Application.Auth.ResetPassword;
+using UserAccess.Application.Auth.ResetPassword.Records;
 
 namespace Api.Routes.UserAccess;
 
@@ -17,11 +19,21 @@ public static class AuthRoutes
             .WithName("RegisterUser")
             .WithTags("Auth");
         
+        authGroup.MapPost("/forgot-password", ForgotPasswordAsync)
+            .RequireRateLimiting("public")
+            .WithName("ForgotPassword")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/reset-password", ResetPasswordAsync)
+            .RequireRateLimiting("public")
+            .WithName("ResetPassword")
+            .WithTags("Auth");
+        
         return group;
     }
 
     private static async Task<IResult> RegisterAsync(
-        RegisterRequest request,
+        RegisterUserRequest request,
         RegisterUserHandler handler,
         HttpContext httpContext,
         ILoggerFactory loggerFactory,
@@ -113,6 +125,96 @@ public static class AuthRoutes
                     message = "CPF already exists.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        }
+    }
+
+    private static async Task<IResult> ForgotPasswordAsync(
+        ForgotPasswordRequest  request,
+        RequestPasswordResetHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+        )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting forgot password request flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+
+        var command = new RequestPasswordResetCommand(
+            request.Email
+        );
+
+        try
+        {
+            var result = await  handler.HandleAsync(command, cancellationToken);
+            
+            logger.LogInformation("Forgot password request processed. Success: {Success}. RequestId: {RequestId}",
+                result.Success,
+                httpContext.TraceIdentifier);
+            
+            return Results.Ok(new
+            {
+                success = result.Success,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User forgot-password request failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
+        }
+    }
+    
+    private static async Task<IResult> ResetPasswordAsync(
+        ResetUserPasswordRequest  request,
+        ResetPasswordHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting reset password request flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+
+        var command = new ResetPasswordCommand(
+            request.Email,
+            request.NewPassword,
+            request.Code
+        );
+
+        try
+        {
+            var result = await  handler.HandleAsync(command, cancellationToken);
+            
+            logger.LogInformation("Reset password request processed. Success: {Success}. RequestId: {RequestId}",
+                result.Success,
+                httpContext.TraceIdentifier);
+            
+            return Results.Ok(new
+            {
+                success = result.Success,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User reset password request failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
         }
     }
 }

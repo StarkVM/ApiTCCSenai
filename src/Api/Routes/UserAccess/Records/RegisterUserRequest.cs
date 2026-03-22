@@ -1,8 +1,6 @@
-using UserAccess.Domain.Entities;
-
 namespace Api.Routes.UserAccess.Records;
 
-public sealed record RegisterRequest(
+public sealed record RegisterUserRequest(
     string FirstName,
     string LastName,
     DateTime BirthDate,

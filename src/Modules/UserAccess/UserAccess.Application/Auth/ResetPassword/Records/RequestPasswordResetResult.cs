@@ -1,3 +1,3 @@
 namespace UserAccess.Application.Auth.ResetPassword.Records;
 
-public record RequestPasswordResetResult(bool Sucess);
+public record RequestPasswordResetResult(bool Success);

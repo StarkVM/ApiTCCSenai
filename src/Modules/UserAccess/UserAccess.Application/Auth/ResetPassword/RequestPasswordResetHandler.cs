@@ -4,8 +4,6 @@ using UserAccess.Application.Auth.ResetPassword.Records;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
 using UserAccess.Domain.Interfaces;
-using UserAccess.Application.Auth.VerificationCodes;
-
 
 namespace UserAccess.Application.Auth.ResetPassword;
 
@@ -29,9 +27,9 @@ public sealed class RequestPasswordResetHandler
         _verificationCodeSender = verificationCodeSender;
     }
     
-    public async Task<RequestPasswordResetResult> HandleAsync(ResetPasswordCommand command, CancellationToken cancellationToken)
+    public async Task<RequestPasswordResetResult> HandleAsync(RequestPasswordResetCommand resetCommand, CancellationToken cancellationToken)
     {
-        var email = command.Email?.Trim().ToLowerInvariant();
+        var email = resetCommand.Email?.Trim().ToLowerInvariant();
         
         var nouUtc = _clock.UtcNow;
         
