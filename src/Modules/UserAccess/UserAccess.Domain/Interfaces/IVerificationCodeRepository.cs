@@ -8,4 +8,10 @@ public interface IVerificationCodeRepository
     Task AddAsync(EmailVerificationCode code, CancellationToken cancellationToken);
     
     Task<EmailVerificationCode?> GetLatestActiveAsync(Guid userId, VerificationCodePurpose purpose ,CancellationToken cancellationToken);
+    
+    Task<EmailVerificationCode?> GetLatestAsync(Guid userId, VerificationCodePurpose purpose ,CancellationToken cancellationToken);
+    
+    Task InvalidateActiveCodesAsync(Guid userId, VerificationCodePurpose purpose, CancellationToken cancellationToken);
+    
+    
 }

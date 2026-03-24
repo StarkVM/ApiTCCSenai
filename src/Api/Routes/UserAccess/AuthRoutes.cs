@@ -5,6 +5,8 @@ using UserAccess.Application.Auth.Register.Records;
 using Api.Routes.UserAccess.Records;
 using UserAccess.Application.Auth.ResetPassword;
 using UserAccess.Application.Auth.ResetPassword.Records;
+using UserAccess.Application.Auth.VerifyEmail;
+using UserAccess.Application.Auth.VerifyEmail.Records;
 
 namespace Api.Routes.UserAccess;
 
@@ -29,9 +31,17 @@ public static class AuthRoutes
             .WithName("ResetPassword")
             .WithTags("Auth");
         
+        authGroup.MapPost("/email-verification/request-new-code", RequestNewEmailVerificationCodeAsync)
+            .RequireRateLimiting("public")
+            .WithName("RequestNewVerificationCode")
+            .WithTags("Auth");
+        
         return group;
     }
 
+    /// <summary>
+    /// REGISTER
+    /// </summary>
     private static async Task<IResult> RegisterAsync(
         RegisterUserRequest request,
         RegisterUserHandler handler,
@@ -127,7 +137,58 @@ public static class AuthRoutes
                 });
         }
     }
+    
+    /// <summary>
+    /// REQUEST NEW EMAIL VERIFICATION CODE
+    /// </summary>
+   
+    private static async Task<IResult> RequestNewEmailVerificationCodeAsync(
+        NewRegisterEmailVerificationCodeRequest  request,
+        RequestNewRegisterEmailVerificationCodeHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting request new verification code flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
+        var command = new RequestNewRegisterEmailVerificationCodeCommand(
+            request.Email
+        );
+
+        try
+        {
+            var result = await  handler.HandleAsync(command, cancellationToken);
+            
+            logger.LogInformation("Request new email verification code processed. Success: {Success}. RequestId: {RequestId}",
+                result.Success,
+                httpContext.TraceIdentifier);
+            
+            return Results.Ok(new
+            {
+                success = result.Success,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User request new email verification code failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
+        }
+    }
+
+    /// <summary>
+    /// FORGOT PASSWORD
+    /// </summary>
     private static async Task<IResult> ForgotPasswordAsync(
         ForgotPasswordRequest  request,
         RequestPasswordResetHandler handler,
@@ -171,6 +232,10 @@ public static class AuthRoutes
             });
         }
     }
+    
+    /// <summary>
+    /// RESET PASSWORD
+    /// </summary>
     
     private static async Task<IResult> ResetPasswordAsync(
         ResetUserPasswordRequest  request,

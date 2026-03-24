@@ -28,9 +28,32 @@ public class VerificationCodeRepository  : IVerificationCodeRepository
         (x => x.UserId == userId &&
               x.Purpose == purpose &&
               x.ConsumedAt == null &&
-              x.ExpiresAt > _clock.UtcNow &&
-              x.User.Status == UserStatus.Active)
+              x.ExpiresAt >= _clock.UtcNow)
             .OrderByDescending(x => x.ExpiresAt)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+    
+    public async Task<EmailVerificationCode?> GetLatestAsync(Guid userId, VerificationCodePurpose purpose,
+        CancellationToken cancellationToken)
+    {
+        return await _userAccessDbContext.EmailVerificationCodes.Where
+            (x =>
+                x.UserId == userId &&
+                x.Purpose == purpose)
+            .OrderByDescending(x => x.ExpiresAt)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task InvalidateActiveCodesAsync(Guid userId,VerificationCodePurpose purpose ,CancellationToken cancellationToken)
+    {
+        var nowUtc = _clock.UtcNow;
+
+        await _userAccessDbContext.EmailVerificationCodes.Where(x =>
+            x.UserId == userId &&
+            x.ConsumedAt == null &&
+            x.Purpose == purpose &&
+            x.ExpiresAt <= nowUtc
+        ).ExecuteUpdateAsync(s =>
+            s.SetProperty(x => x.ConsumedAt, nowUtc), cancellationToken);
     }
 }

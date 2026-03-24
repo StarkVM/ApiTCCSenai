@@ -12,17 +12,19 @@ public sealed class RequestPasswordResetHandler
     private readonly IUserRepository _userRepository;
     private readonly ILogger<RequestPasswordResetHandler> _logger;
     private readonly IClock _clock;
+    private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IVerificationCodeSender _verificationCodeSender;
 
     public RequestPasswordResetHandler(
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork,
+        IVerificationCodeRepository verificationCodeRepository,
         ILogger<RequestPasswordResetHandler> logger,
         IClock clock,
         IVerificationCodeSender verificationCodeSender)
     {
         _userRepository = userRepository;
         _logger = logger;
+        _verificationCodeRepository = verificationCodeRepository;
         _clock = clock;
         _verificationCodeSender = verificationCodeSender;
     }
@@ -41,10 +43,18 @@ public sealed class RequestPasswordResetHandler
 
         if (user is null)
         {
-            _logger.LogError("User not found");
+            _logger.LogInformation("User not found");
             return new RequestPasswordResetResult(false);
         }
-
+        
+        if (user.Status != UserStatus.Active)
+        {
+            _logger.LogInformation("Invalid user");
+            return new RequestPasswordResetResult(false);
+        }
+        
+        await _verificationCodeRepository.InvalidateActiveCodesAsync(user.Id, VerificationCodePurpose.PasswordReset, cancellationToken);
+        
         var senderEmailCommand = new SendVerificationCodeRequest(
             email!,
             user.Id,

@@ -8,7 +8,6 @@
     <Folder Include="Auth\Common\" />
     <Folder Include="Auth\Login\" />
     <Folder Include="Auth\Logout\" />
-    <Folder Include="Auth\VerifyEmail\Records\" />
   </ItemGroup>
 
   <ItemGroup>

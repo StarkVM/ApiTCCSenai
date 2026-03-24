@@ -22,10 +22,10 @@ public class VerificationCodeValidationResult
         Code = code;
     }
 
-    public static VerificationCodeValidationResult Sucess(EmailVerificationCode code)
+    public static VerificationCodeValidationResult Success(EmailVerificationCode code)
     => new (true, null, code);
     
-    public static VerificationCodeValidationResult Faliure(string error)
+    public static VerificationCodeValidationResult Failure(string error)
     => new  (false, error, null);
     
 }

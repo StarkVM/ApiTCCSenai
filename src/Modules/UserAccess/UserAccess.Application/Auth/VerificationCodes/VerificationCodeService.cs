@@ -10,15 +10,18 @@ public sealed class VerificationCodeService : IVerificationCodeService
     private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IVerificationCodeHasher _verificationCodeHasher;
     private readonly IClock _clock;
+    private readonly IUnitOfWork _unitOfWork;
 
     public VerificationCodeService(
         IVerificationCodeRepository verificationCodeRepository,
         IVerificationCodeHasher verificationCodeHasher,
-        IClock clock)
+        IClock clock,
+        IUnitOfWork unitOfWork)
     {
         _verificationCodeRepository = verificationCodeRepository;
         _verificationCodeHasher = verificationCodeHasher;
         _clock = clock;
+        _unitOfWork = unitOfWork;
     }
     public async Task<VerificationCodeValidationResult> ValidateAsync(
         User user,
@@ -30,26 +33,29 @@ public sealed class VerificationCodeService : IVerificationCodeService
         // Busca o código mais recente para aquele usuário e propósito
         // Get latest code for user and purpose
         var utcNow = _clock.UtcNow;
-        var verificationCode =
-            await _verificationCodeRepository.GetLatestActiveAsync(user.Id, purpose, cancellationToken);
 
+        var independentCode = await _verificationCodeRepository.GetLatestAsync(user.Id, purpose, cancellationToken);
+        
+        if (independentCode is not null)
+        {
+            if (independentCode.CreatedAt > utcNow.AddMinutes(-2))
+            {
+                return VerificationCodeValidationResult.Failure("VERY_FAST_ATTEMPTS");
+            }
+        }
+        
+        var verificationCode = await _verificationCodeRepository.GetLatestActiveAsync(user.Id, purpose, cancellationToken);
+        
         if (verificationCode is null)
         {
-            return VerificationCodeValidationResult.Faliure("CODE_NOT_FOUND");
+            return VerificationCodeValidationResult.Failure("VALID_CODE_NOT_FOUND");
         }
         
-        // Verifica se já foi usado
-        // Check if already used
-        if (verificationCode.IsConsumed())
+        if (verificationCode.Attempts >= 5)
         {
-            return VerificationCodeValidationResult.Faliure("CODE_ALREADY_USED");
-        }
-        
-        // Verifica expiração
-        // Check expiration
-        if (verificationCode.IsExpired(utcNow))
-        {
-            return VerificationCodeValidationResult.Faliure("CODE_EXPIRED");
+            verificationCode.Consume(utcNow);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return VerificationCodeValidationResult.Failure("TOO_MANY_ATTEMPTS");
         }
         
         // Valida hash
@@ -58,12 +64,19 @@ public sealed class VerificationCodeService : IVerificationCodeService
 
         if (!isValid)
         {
-            return VerificationCodeValidationResult.Faliure("CODE_INVALID");
+            verificationCode.IncrementAttempts();
+            if (verificationCode.Attempts >= 5)
+            {
+                verificationCode.Consume(utcNow);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
+                return VerificationCodeValidationResult.Failure("TOO_MANY_ATTEMPTS");
+            }
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return VerificationCodeValidationResult.Failure("CODE_INVALID");
         }
         
         // Sucesso
         // Success
-        
-        return VerificationCodeValidationResult.Sucess(verificationCode);
+        return VerificationCodeValidationResult.Success(verificationCode);
     }
 }
