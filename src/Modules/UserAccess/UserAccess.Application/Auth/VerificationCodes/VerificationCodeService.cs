@@ -36,14 +36,6 @@ public sealed class VerificationCodeService : IVerificationCodeService
 
         var independentCode = await _verificationCodeRepository.GetLatestAsync(user.Id, purpose, cancellationToken);
         
-        if (independentCode is not null)
-        {
-            if (independentCode.CreatedAt > utcNow.AddMinutes(-2))
-            {
-                return VerificationCodeValidationResult.Failure("VERY_FAST_ATTEMPTS");
-            }
-        }
-        
         var verificationCode = await _verificationCodeRepository.GetLatestActiveAsync(user.Id, purpose, cancellationToken);
         
         if (verificationCode is null)

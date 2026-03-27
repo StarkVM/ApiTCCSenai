@@ -1,6 +1,6 @@
 namespace UserAccess.Domain.Entities;
 
-public class Address
+public sealed class Address
 {
     public Guid UserId { get; private set; }
     public User User { get; private set; } = default!;

@@ -2,7 +2,7 @@ using UserAccess.Domain.Enums;
 
 namespace UserAccess.Domain.Entities;
 
-public class EmailVerificationCode
+public sealed class EmailVerificationCode
 {
     public Guid Id { get; private set; }
     

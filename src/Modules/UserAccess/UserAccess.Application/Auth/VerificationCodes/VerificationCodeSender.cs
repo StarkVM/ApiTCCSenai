@@ -33,19 +33,29 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         var userId = command.UserId;
         var email = command.Email;
         
-        var nowUtc = _clock.UtcNow;
-
+        var utcNow = _clock.UtcNow;
+        
+        var independentCode = await _verificationCodeRepository.GetLatestAsync(userId, command.Purpose, cancellationToken);
+        
+        if (independentCode is not null)
+        {
+            if (independentCode.CreatedAt > utcNow.AddMinutes(-2))
+            {
+                throw new ArgumentException("VERY_FAST_ATTEMPTS");
+            }
+        }
+        
         var code = Email.Code();
 
         var codeHash = _verificationCodeHasher.Hash(code);
         
-        var expiresAt = nowUtc.AddMinutes(5);
+        var expiresAt = utcNow.AddMinutes(5);
         
         var emailVerificationCode = new EmailVerificationCode(
             Guid.NewGuid(),
             userId,
             codeHash,
-            nowUtc,
+            utcNow,
             expiresAt,
             command.Purpose
         );

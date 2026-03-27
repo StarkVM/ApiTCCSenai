@@ -3,7 +3,7 @@ using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Domain.Entities;
 
-public class User
+public sealed class User
 {
     public Guid Id { get; private set; }
 
