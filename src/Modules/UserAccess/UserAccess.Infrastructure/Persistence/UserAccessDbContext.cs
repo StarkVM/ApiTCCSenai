@@ -10,6 +10,8 @@ public class UserAccessDbContext : DbContext
      public  DbSet<User> Users =>  Set<User>();
      public DbSet<Address> Addresses =>  Set<Address>();
      public DbSet<EmailVerificationCode> EmailVerificationCodes =>  Set<EmailVerificationCode>();
+     
+     public DbSet<RefreshToken> RefreshTokens =>  Set<RefreshToken>();
 
      protected override void OnModelCreating(ModelBuilder modelBuilder) =>
          modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserAccessDbContext).Assembly);

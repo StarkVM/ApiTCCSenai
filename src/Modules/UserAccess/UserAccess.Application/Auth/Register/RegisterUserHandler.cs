@@ -42,13 +42,13 @@ public sealed class RegisterUserHandler
         var email = command.Email?.Trim().ToLowerInvariant();
         var cpf = command.Cpf?.Clean().Trim();
         var password = command.Password?.Trim();
-        
+        var birthDate = DateTime.SpecifyKind(command.BirthDate, DateTimeKind.Utc);
         var nowUtc = _clock.UtcNow;
 
         var address = new Address(command.address.State, command.address.City, command.address.District,
             command.address.Street,command.address.ZipCode, nowUtc);
         
-        Validate(firstName, lastName, email, cpf, password, command.BirthDate,address ,nowUtc);
+        Validate(firstName, lastName, email, cpf, password, birthDate,address ,nowUtc);
         
         //user
         _logger.LogInformation("Starting user registration flow for email {Email}", email);
@@ -72,11 +72,12 @@ public sealed class RegisterUserHandler
                 _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
                 throw new InvalidOperationException("ADDRESS_NOT_VALID");
             }*/
+                
                 user = new User(
                 Guid.NewGuid(),
                 firstName!,
                 lastName!,
-                command.BirthDate,
+                birthDate,
                 email!,
                 cpfHash,
                 passwordHash,
@@ -111,7 +112,7 @@ public sealed class RegisterUserHandler
             existingUser.RestartPendingVerification(
                 firstName!,
                 lastName!,
-                command.BirthDate,
+                birthDate,
                 cpfHash,
                 passwordHash
                 );

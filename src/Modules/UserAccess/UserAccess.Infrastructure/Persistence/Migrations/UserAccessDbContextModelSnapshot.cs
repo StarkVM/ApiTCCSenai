@@ -86,6 +86,9 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Purpose")
+                        .HasColumnType("integer");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -94,6 +97,49 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId", "CreatedAt", "ExpiresAt");
 
                     b.ToTable("email_verification_codes", (string)null);
+                });
+
+            modelBuilder.Entity("UserAccess.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReplacedByTokenHash")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RevokedReason")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "ExpiresAtUtc");
+
+                    b.ToTable("refresh_tokens", (string)null);
                 });
 
             modelBuilder.Entity("UserAccess.Domain.Entities.User", b =>
@@ -166,6 +212,17 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("UserAccess.Domain.Entities.EmailVerificationCode", b =>
+                {
+                    b.HasOne("UserAccess.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UserAccess.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("UserAccess.Domain.Entities.User", "User")
                         .WithMany()

@@ -6,7 +6,7 @@ public interface IRefreshTokenRepository
 {
     Task AddAsync(RefreshToken token, CancellationToken cancellationToken);
     
-    Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken);
+    Task<RefreshToken?> GetByTokenHashAsync(string tokenHash, CancellationToken cancellationToken);
     
-     Task<List<RefreshToken>> GetActiveByUserid(Guid userId ,CancellationToken cancellationToken);
+     Task<List<RefreshToken>> GetActiveByUseridAsync(Guid userId ,CancellationToken cancellationToken);
 }
