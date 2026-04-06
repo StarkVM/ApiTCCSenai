@@ -163,3 +163,9 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWS.Logger.SeriLog.dl
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.CloudWatchLogs.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.Core.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

@@ -19,5 +19,10 @@ public class AddressConfig : IEntityTypeConfiguration<Address>
         
         b.Property(x => x.CreatedAt).IsRequired();
         b.Property(x => x.UpdatedAt).IsRequired();
+        
+        b.HasOne(x => x.User)
+            .WithOne(x => x.Address)
+            .HasForeignKey<Address>(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -48,7 +48,7 @@ public sealed class User
     }
 
     public void RestartPendingVerification(string firstName, string lastName, DateTime birthDate, string cpfHash,
-        string passwordHash)
+        string passwordHash, DateTime createdAt)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -56,6 +56,7 @@ public sealed class User
         CpfHash = cpfHash;
         PasswordHash = passwordHash;
         Status = UserStatus.PendingEmailVerification;
+        CreatedAt = createdAt;
     }
 
     public void ChangePassword(string newPasswordHash, DateTime changedAtUtc)

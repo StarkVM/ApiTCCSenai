@@ -21,8 +21,7 @@ public sealed class RegisterUserHandler
     
     
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
-        IClock clock, IEmailSender emailSender, IVerificationCodeHasher verificationCodeHasher,
-        IVerificationCodeRepository verificationCodeRepository, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
+        IClock clock, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
         IAddressRepository addressRepository, IVerificationCodeSender  verificationCodeSender)
     {
         _userRepository = userRepository;
@@ -85,6 +84,7 @@ public sealed class RegisterUserHandler
                 
                 address.SetUserId(user.Id);
                 user.SetAddress(address);
+                
                 await _addressRepository.AddAddressAsync(address, cancellationToken);
                 
                 _logger.LogInformation("Creating new pending user registration for email {Email}", email);
@@ -96,7 +96,7 @@ public sealed class RegisterUserHandler
         {
             if (existingUser.Status == UserStatus.Active || existingUser.Status == UserStatus.Disabled)
             {
-                _logger.LogWarning("Registration blocked because email is already active. Email: {Email}", email);
+                _logger.LogWarning("Registration blocked because email is already used. Email: {Email}", email);
                 throw new InvalidOperationException("EMAIL_ALREADY_REGISTERED");
             }
             if (await _userRepository.CpfHashExistsForAnotherUserAsync(cpfHash, existingUser.Id, cancellationToken))
@@ -109,12 +109,20 @@ public sealed class RegisterUserHandler
                 _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
                 throw new InvalidOperationException("ADDRESS_NOT_VALID");
             }*/
+
+            if (existingUser.CreatedAt.AddMinutes(5) > nowUtc)
+            {
+                _logger.LogWarning("Registration blocked because a registration already in progress. Email: {Email}", email);
+                throw new InvalidOperationException("REGISTRATION_IN_PROGRESS");
+            }
+            
             existingUser.RestartPendingVerification(
                 firstName!,
                 lastName!,
                 birthDate,
                 cpfHash,
-                passwordHash
+                passwordHash,
+                nowUtc
                 );
             
             var existingAddress = await  _addressRepository.GetAddressByUserIdAsync(existingUser.Id, cancellationToken);
