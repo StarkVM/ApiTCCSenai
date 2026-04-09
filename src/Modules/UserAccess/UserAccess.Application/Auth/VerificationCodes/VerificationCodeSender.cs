@@ -64,53 +64,89 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        string subject;
+        var subject = """ """;
 
-        string body;
+        var body= """ """;
         
         if (command.Purpose == VerificationCodePurpose.EmailVerification)
         {
             subject = "Verify your email – your code is inside";
 
             body = $"""
-                        Hello,
+                    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+                      
+                      <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 8px;">
+                        
+                        <h2 style="margin-top: 0;">Verify your email</h2>
 
-                        Thanks for signing up.
+                        <p>Hello,</p>
 
-                        Your verification code is:
+                        <p>Thanks for signing up to <strong>HeavyRent</strong>.</p>
 
-                        {code}
+                        <p>Your verification code is:</p>
 
-                        This code will expire in 5 minutes.
+                        <div style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            letter-spacing: 6px;
+                            text-align: center;
+                            margin: 20px 0;
+                        ">
+                            {code}
+                        </div>
 
-                        If you didn’t request this, you can safely ignore this email.
+                        <p>This code will expire in <strong>5 minutes</strong>.</p>
 
-                        For security reasons, do not share this code with anyone.
+                        <p style="color: #555;">
+                          If you didn’t request this, you can safely ignore this email.
+                        </p>
 
-                        HeavyRent — Team
-                        """;
+                        <p style="font-size: 12px; color: #888;">
+                          For security reasons, do not share this code with anyone.
+                        </p>
+
+                        <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
+
+                        <p style="font-size: 12px; color: #888; text-align: center;">
+                          — HeavyRent Team
+                        </p>
+
+                      </div>
+
+                    </div>
+                    """;
         }
         else
         {
             subject = "Reset your password – your code is inside";
 
-            body = $"""
-                        Hello,
+            body = body = $"""
+                           <div style="font-family: Arial, sans-serif; padding: 20px;">
+                             <h2>Reset your password</h2>
 
-                        We received a request to reset your password.
+                             <p>We received a request to reset your password.</p>
 
-                        Your password reset code is:
+                             <p>Your password reset code is:</p>
 
-                        {code}
+                             <div style="font-size: 28px; font-weight: bold; letter-spacing: 4px; margin: 20px 0;">
+                               {code}
+                             </div>
 
-                        This code will expire in 5 minutes.
+                             <p>This code will expire in 5 minutes.</p>
 
-                        If you did not request a password reset, you can safely ignore this email. Your account will remain secure.
+                             <p style="color: gray;">
+                               If you didn’t request this, you can safely ignore this email.
+                             </p>
 
-                        For security reasons, do not share this code with anyone.
+                             <p style="font-size: 12px; color: gray;">
+                               For security reasons, never share this code with anyone.
+                             </p>
 
-                        HeavyRent — Team
-                        """;
+                             <br/>
+
+                             <p>— HeavyRent Team</p>
+                           </div>
+                           """;
         }
 
         await _emailSender.SendAsync(email, subject, body, cancellationToken );
