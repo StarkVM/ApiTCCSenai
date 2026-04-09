@@ -8,6 +8,8 @@ using UserAccess.Infrastructure.Persistence;
 using UserAccess.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Security;
 using UserAccess.Infrastructure.Time;
+using Microsoft.Extensions.Http;
+using Resend;
 
 namespace UserAccess.Infrastructure;
 
@@ -41,7 +43,7 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         
         services.AddScoped<IClock, SystemClock>();
-        services.AddScoped<IEmailSender, EmailSenderFake>();
+        
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         var cpfSecretKey = configuration["Security:CpfProtectionKey"];
@@ -50,6 +52,7 @@ public static class DependencyInjection
         {
             throw new InvalidOperationException("CPF Secret Key not configured");
         }
+        
         var codeSecretKey = configuration["Security:CodeProtectionKey"];
 
         if (string.IsNullOrWhiteSpace(codeSecretKey))
@@ -57,6 +60,28 @@ public static class DependencyInjection
             throw new InvalidOperationException("Code Secret Key not configured");
         }
 
+        services.AddOptions();
+
+        services.AddHttpClient<ResendClient>();
+
+        services.Configure<ResendClientOptions>(options =>
+        {
+            options.ApiToken = configuration["Email:ApiKey"]
+                               ?? throw new InvalidOperationException("Resend API key is not configured.");
+        });
+
+        services.AddTransient<IResend, ResendClient>();
+
+        services.AddScoped<IEmailSender>(sp =>
+        {
+            var resend = sp.GetRequiredService<IResend>();
+            
+            var fromEmail = configuration["Email:From"]
+                            ?? throw new InvalidOperationException("Sender email is not configured.");
+
+            return new EmailSender(resend, fromEmail);
+        });
+        
         services.AddSingleton<ICpfHasher>(_ => new CpfHasher(cpfSecretKey));
         services.AddSingleton<IVerificationCodeHasher>(_ => new VerificationCodeHasher(codeSecretKey));
         

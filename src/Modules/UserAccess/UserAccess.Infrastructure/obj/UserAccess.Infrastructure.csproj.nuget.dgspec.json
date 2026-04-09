@@ -196,6 +196,10 @@
               "target": "Package",
               "version": "[8.0.*, )"
             },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[10.0.5, )"
+            },
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
               "version": "[10.0.5, )"
@@ -203,6 +207,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.11, )"
+            },
+            "Resend": {
+              "target": "Package",
+              "version": "[0.2.2, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

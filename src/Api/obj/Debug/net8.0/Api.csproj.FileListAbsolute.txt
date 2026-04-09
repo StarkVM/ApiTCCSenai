@@ -169,3 +169,8 @@ C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityMod
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.AspNetCore.WebUtilities.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.Net.Http.Headers.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Resend.dll
