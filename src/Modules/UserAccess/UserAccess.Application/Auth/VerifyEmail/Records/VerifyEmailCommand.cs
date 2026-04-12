@@ -1,6 +1,6 @@
 namespace UserAccess.Application.Auth.VerifyEmail.Records;
 
-public record ResquestEmailVerificationCommand(
+public record VerifyEmailCommand(
     string Email,
     string Code
     );

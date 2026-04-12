@@ -3,10 +3,10 @@ using UserAccess.Application.Auth.Register;
 
 using UserAccess.Application.Auth.Register.Records;
 using Api.Routes.UserAccess.Records;
+using UserAccess.Application.Auth.VerifyEmail.Records;
 using UserAccess.Application.Auth.ResetPassword;
 using UserAccess.Application.Auth.ResetPassword.Records;
 using UserAccess.Application.Auth.VerifyEmail;
-using UserAccess.Application.Auth.VerifyEmail.Records;
 
 namespace Api.Routes.UserAccess;
 
@@ -34,6 +34,11 @@ public static class AuthRoutes
         authGroup.MapPost("/email-verification/request-new-code", RequestNewEmailVerificationCodeAsync)
             .RequireRateLimiting("public")
             .WithName("RequestNewVerificationCode")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/email-verification/verify-email", VerifyEmailAsync)
+            .RequireRateLimiting("public")
+            .WithName("VerifyEmail")
             .WithTags("Auth");
         
         return group;
@@ -81,21 +86,21 @@ public static class AuthRoutes
                 result.UserId,
                 httpContext.TraceIdentifier);
 
-            return Results.Ok(new
+            /*return Results.Ok(new
             {
                 id = result.UserId,
                 email = result.Email,
                 createdAt = result.CreatedAtUtc,
                 requestId = httpContext.TraceIdentifier,
-            });
+            });*/
 
-            /*return Results.Created($"/api/v1/user-access/users/{result.UserId}",new
+            return Results.Created($"/api/v1/user-access/users/me",new
             {
                 id = result.UserId,
                 email = result.Email,
                 createdAt = result.CreatedAtUtc,
                 requestId = httpContext.TraceIdentifier,
-            }) ;*/
+            }) ;
         }
         catch (ArgumentException ex)
         {
@@ -137,6 +142,67 @@ public static class AuthRoutes
                 });
         }
     }
+
+    /// <summary>
+    /// VERIFY EMAIL VERIFICATION CODE
+    /// </summary>
+    private static async Task<IResult> VerifyEmailAsync(
+        VerifyEmailRequest request,
+        VerifyEmailHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting verification code flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+        
+        var command = new VerifyEmailCommand(request.Email, request.Code);
+
+        try
+        {
+            var result = await handler.HandleAsync(command, cancellationToken);
+
+            logger.LogInformation("Email verification code processed successfully. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+
+            return Results.Ok(new
+            {
+                accessToken = result.AccessToken,
+                refreshToken = result.RefreshToken,
+                accessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc,
+                refreshTokenExpiresAtUtc = result.RefreshTokenExpiresAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "Email verification request validation failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "INVALID_CREDENTIALS")
+        {
+            logger.LogWarning(
+                "Email verification failed. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.BadRequest(
+                new
+                {
+                    message = "Unable to verify email.",
+                    requestId = httpContext.TraceIdentifier 
+                });
+        }
+    }
+    
     
     /// <summary>
     /// REQUEST NEW EMAIL VERIFICATION CODE

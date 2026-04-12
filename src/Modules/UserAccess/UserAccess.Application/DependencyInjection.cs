@@ -6,6 +6,7 @@ using UserAccess.Application.Auth.VerificationCodes;
 using UserAccess.Application.Auth.VerifyEmail;
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
+using UserAccess.Application.Auth.Common.Services;
 
 namespace UserAccess.Application;
 
@@ -17,7 +18,10 @@ public static class DependencyInjection
         
         services.AddScoped<RequestPasswordResetHandler>();
         services.AddScoped<ResetPasswordHandler>();
+
+        services.AddScoped<TokenIssuer>();
         
+        services.AddScoped<VerifyEmailHandler>();
         services.AddScoped<RequestNewRegisterEmailVerificationCodeHandler>();
         
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();

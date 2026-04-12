@@ -1,10 +1,9 @@
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
-using UserAccess.Domain.Entities;
 using UserAccess.Application.Auth.ResetPassword.Records;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
-using UserAccess.Domain.Results;
+
 
 namespace UserAccess.Application.Auth.ResetPassword;
 
@@ -57,9 +56,17 @@ public sealed class ResetPasswordHandler
 
         if (user is null )
         {
-            _logger.LogError("User not found");
+            _logger.LogWarning("User not found");
             // Não revelar que o usuário não existe
             // Do not reveal user existence
+            return new ResetPasswordResult(false);
+        }
+
+        if (user.Status == UserStatus.PendingEmailVerification || user.Status == UserStatus.Disabled)
+        {
+            _logger.LogWarning("User exists but is not valid");
+            // Não revelar que o usuário existe mas nao eh valido
+            // Do not reveal that user exist but is not valid
             return new ResetPasswordResult(false);
         }
 

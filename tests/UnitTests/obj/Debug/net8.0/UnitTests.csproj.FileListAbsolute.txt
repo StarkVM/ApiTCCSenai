@@ -106,3 +106,9 @@ C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\obj\Debug\net8.0\ref\UnitTests
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\TCC Senai\Projeto\Back\Projeto\tests\UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
