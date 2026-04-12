@@ -1,5 +1,3 @@
-
-
 using UserAccess.Domain.Entities;
 
 namespace UserAccess.Domain.Results;
@@ -9,7 +7,7 @@ namespace UserAccess.Domain.Results;
 /// Resultado da validação do código.
 /// Result of verification code validation.
 /// </summary>
-public class VerificationCodeValidationResult
+public sealed class VerificationCodeValidationResult
 {
     public bool IsValid { get; }
     public string? Error { get; }

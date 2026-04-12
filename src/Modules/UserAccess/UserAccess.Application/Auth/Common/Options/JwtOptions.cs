@@ -1,4 +1,4 @@
-namespace UserAccess.Infrastructure.Auth;
+namespace UserAccess.Application.Auth.Common.Options;
 
 public sealed class JwtOptions
 {

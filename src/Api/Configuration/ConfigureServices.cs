@@ -44,7 +44,7 @@ public static class ConfigureServices
         // Módulos (cada módulo registra sua própria infra)
         // Modules (each module registers its own infrastructure)
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
-        builder.Services.AddUserAccessApplication();
+        builder.Services.AddUserAccessApplication(builder.Configuration);
         
         // Health checks (infra do host)
         // Health checks (host infrastructure)

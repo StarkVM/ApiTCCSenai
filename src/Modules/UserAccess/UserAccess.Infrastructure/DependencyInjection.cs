@@ -8,7 +8,6 @@ using UserAccess.Infrastructure.Persistence;
 using UserAccess.Infrastructure.Persistence.Repositories;
 using UserAccess.Infrastructure.Security;
 using UserAccess.Infrastructure.Time;
-using Microsoft.Extensions.Http;
 using Resend;
 
 namespace UserAccess.Infrastructure;
@@ -28,8 +27,6 @@ public static class DependencyInjection
         
         services.AddDbContext<UserAccessDbContext>(opt =>
             opt.UseNpgsql(userAccessConnectionString));
-        
-        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         
         services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddSingleton<IRefreshTokenGenerator, RefreshTokenGenerator>();
