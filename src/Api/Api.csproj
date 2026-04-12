@@ -39,4 +39,8 @@
     <Folder Include="Infrastructure\Exceptions\Setup\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Routes\UserAccess\Records\RequestNewRegisterEmailVerificationCodeResponse.cs" />
+  </ItemGroup>
+
 </Project>

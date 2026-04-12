@@ -116,7 +116,7 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
                     </div>
                     """;
         }
-        else
+        else if (command.Purpose == VerificationCodePurpose.PasswordReset)
         {
             subject = "Reset your password – your code is inside";
 
@@ -147,6 +147,58 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
                              <p>— HeavyRent Team</p>
                            </div>
                            """;
+        }
+        else
+        {
+            subject = "Verify your email – your code is inside";
+            
+            body = $"""
+                    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+                      
+                      <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 8px;">
+                        
+                        <h2 style="margin-top: 0;">Verify your login</h2>
+
+                        <p>Hello,</p>
+
+                        <p>We detected a login attempt to your <strong>HeavyRent</strong> account.</p>
+
+                        <p>Use the verification code below to continue:</p>
+
+                        <div style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            letter-spacing: 6px;
+                            text-align: center;
+                            margin: 20px 0;
+                        ">
+                            {code}
+                        </div>
+
+                        <p>This code will expire in <strong>5 minutes</strong>.</p>
+
+                        <p style="color: #555;">
+                          If this was you, enter the code to complete your login.
+                        </p>
+
+                        <p style="color: #555;">
+                          If you did not attempt to log in, you can safely ignore this email. Your account remains secure.
+                        </p>
+
+                        <p style="font-size: 12px; color: #888;">
+                          For security reasons, never share this code with anyone.
+                        </p>
+
+                        <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
+
+                        <p style="font-size: 12px; color: #888; text-align: center;">
+                          — HeavyRent Team
+                        </p>
+
+                      </div>
+
+                    </div>
+                    """;
         }
 
         await _emailSender.SendAsync(email, subject, body, cancellationToken );

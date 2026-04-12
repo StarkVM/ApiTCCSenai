@@ -12,28 +12,27 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
     private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<RequestNewRegisterEmailVerificationCodeHandler> _logger;
-    private readonly IClock _clock;
     private readonly IVerificationCodeSender _verificationCodeSender;
+    private readonly IUnitOfWork _unitOfWork;
 
     public RequestNewRegisterEmailVerificationCodeHandler(
         IUserRepository userRepository,
         IVerificationCodeRepository verificationCodeRepository,
         ILogger<RequestNewRegisterEmailVerificationCodeHandler> logger,
-        IClock clock,
-        IVerificationCodeSender verificationCodeSender)
+        IVerificationCodeSender verificationCodeSender,
+        IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _verificationCodeRepository = verificationCodeRepository;
         _logger = logger;
-        _clock = clock;
         _verificationCodeSender = verificationCodeSender;
+        _unitOfWork = unitOfWork;
     }
     
     public async Task<RequestNewRegisterEmailVerificationCodeResult> HandleAsync(RequestNewRegisterEmailVerificationCodeCommand newCommand, CancellationToken cancellationToken)
     {
         var email = newCommand.Email?.Trim().ToLowerInvariant();
         
-        var nowUtc = _clock.UtcNow;
         
         Validate(email);
         
@@ -65,6 +64,16 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
         }
         
         await _verificationCodeRepository.InvalidateActiveCodesAsync(user.Id, VerificationCodePurpose.EmailVerification, cancellationToken);
+        try
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Data saved successfully for email {Email}", email);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save data for email {Email}", email);
+            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+        }
         
         var senderEmailCommand = new SendVerificationCodeRequest(
             email!,
@@ -76,6 +85,10 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
         {
             await _verificationCodeSender.SendCodeAsync(senderEmailCommand, cancellationToken);
             _logger.LogInformation("Resend email verification code sent successfully for email {Email}", email);
+        }
+        catch (ArgumentException ex) when (ex.Message == "VERY_FAST_ATTEMPTS")
+        {
+            return new RequestNewRegisterEmailVerificationCodeResult(false);
         }
         catch (Exception ex)
         {

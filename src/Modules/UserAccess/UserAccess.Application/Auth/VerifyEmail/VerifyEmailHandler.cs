@@ -40,7 +40,7 @@ public sealed class VerifyEmailHandler
         
         var utcNow = _clock.UtcNow;
         
-        _logger.LogInformation("Starting vefiry email by code flow");
+        _logger.LogInformation("Starting verify email by code flow");
         
         Validate(email, code);
         

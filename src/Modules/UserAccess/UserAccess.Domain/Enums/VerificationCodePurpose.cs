@@ -4,4 +4,5 @@ public enum VerificationCodePurpose
 {
     EmailVerification = 0,
     PasswordReset = 1,
+    LoginVerification = 2,
 }

@@ -14,19 +14,23 @@ public sealed class RequestPasswordResetHandler
     private readonly IClock _clock;
     private readonly IVerificationCodeRepository _verificationCodeRepository;
     private readonly IVerificationCodeSender _verificationCodeSender;
+    IUnitOfWork _unitOfWork;
 
     public RequestPasswordResetHandler(
         IUserRepository userRepository,
         IVerificationCodeRepository verificationCodeRepository,
         ILogger<RequestPasswordResetHandler> logger,
         IClock clock,
-        IVerificationCodeSender verificationCodeSender)
+        IVerificationCodeSender verificationCodeSender,
+        IUnitOfWork unitOfWork
+        )
     {
         _userRepository = userRepository;
         _logger = logger;
         _verificationCodeRepository = verificationCodeRepository;
         _clock = clock;
         _verificationCodeSender = verificationCodeSender;
+        _unitOfWork = unitOfWork;
     }
     
     public async Task<RequestPasswordResetResult> HandleAsync(RequestPasswordResetCommand resetCommand, CancellationToken cancellationToken)
@@ -54,6 +58,16 @@ public sealed class RequestPasswordResetHandler
         }
         
         await _verificationCodeRepository.InvalidateActiveCodesAsync(user.Id, VerificationCodePurpose.PasswordReset, cancellationToken);
+        try
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Data saved successfully for email {Email}", email);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save data for email {Email}", email);
+            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+        }
         
         var senderEmailCommand = new SendVerificationCodeRequest(
             email!,
@@ -65,6 +79,10 @@ public sealed class RequestPasswordResetHandler
         {
             await _verificationCodeSender.SendCodeAsync(senderEmailCommand, cancellationToken);
             _logger.LogInformation("Reset password code sent successfully for email {Email}", email);
+        }
+        catch (ArgumentException ex) when (ex.Message == "VERY_FAST_ATTEMPTS")
+        {
+            return new RequestPasswordResetResult(false);
         }
         catch (Exception ex)
         {
