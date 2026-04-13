@@ -23,6 +23,8 @@ public sealed class User
     public DateTime CreatedAt { get; private set; }
     
     public UserStatus Status { get; private set; } = UserStatus.PendingEmailVerification;
+    
+    public UserType Type { get; private set; } = UserType.Renter;
 
     public Address? Address { get; private set; }
 
@@ -70,11 +72,21 @@ public sealed class User
         PasswordChangedAt = changedAtUtc;
     }
 
+    public void MarkAsProvider()
+    {
+        Type =  UserType.Provider;
+    }
+    
     public void MarkEmailVerified(DateTime verifiedAt)
     {
         EmailVerifiedAt = verifiedAt;
+        Status = UserStatus.PendingIdentityVerification;
+    }
+
+    public void ActivateUser()
+    {
         Status = UserStatus.Active;
-    } 
+    }
     
     public bool IsEmailVerified() => EmailVerifiedAt.HasValue;
 

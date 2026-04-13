@@ -51,7 +51,7 @@ public sealed class RequestPasswordResetHandler
             return new RequestPasswordResetResult(false);
         }
         
-        if (user.Status != UserStatus.Active)
+        if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)
         {
             _logger.LogInformation("Invalid user");
             return new RequestPasswordResetResult(false);

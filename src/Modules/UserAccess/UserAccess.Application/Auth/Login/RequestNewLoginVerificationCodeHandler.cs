@@ -45,7 +45,7 @@ public sealed class RequestNewLoginVerificationCodeHandler
             return new RequestNewLoginVerificationCodeResult(false);
         }
 
-        if (user.Status != UserStatus.Active)
+        if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)
         {
             _logger.LogInformation("User is not active. UserId: {UserId}", user.Id);
             return new RequestNewLoginVerificationCodeResult(false);

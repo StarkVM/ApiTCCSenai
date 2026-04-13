@@ -57,7 +57,7 @@ public sealed class VerifyLoginHandler
             throw new InvalidOperationException("INVALID_CREDENTIALS");
         }
         
-        if (user.Status != UserStatus.Active)
+        if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)
         {
             _logger.LogWarning("User {Email} is not Active.", email);
             // Não revelar que o usuário existe mas nao eh valido

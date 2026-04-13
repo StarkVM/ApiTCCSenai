@@ -46,7 +46,7 @@ public sealed class LoginHandler
             return new LoginResult(false);
         }
         
-        if (user.Status != UserStatus.Active)//Add new status after new verification
+        if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)//Add new status after new verification
         {
             _logger.LogInformation("Invalid user");
             return new LoginResult(false);

@@ -62,7 +62,7 @@ public sealed class ResetPasswordHandler
             return new ResetPasswordResult(false);
         }
 
-        if (user.Status == UserStatus.PendingEmailVerification || user.Status == UserStatus.Disabled)
+        if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)
         {
             _logger.LogWarning("User exists but is not valid");
             // Não revelar que o usuário existe mas nao eh valido

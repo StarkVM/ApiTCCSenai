@@ -26,6 +26,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
         b.Property(x => x.EmailVerifiedAt).IsRequired(false);
         b.Property(x => x.CreatedAt).IsRequired();
         b.Property(x => x.Status).HasConversion<int>().IsRequired();
+        b.Property(x => x.Type).HasConversion<int>().IsRequired();
         
         b.HasOne(x => x.Address)
             .WithOne(x => x.User)
