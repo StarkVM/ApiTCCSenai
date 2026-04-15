@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using UserAccess.Application.Auth.Common.Options;
 using UserAccess.Application.Auth.Register;
 using UserAccess.Application.Auth.ResetPassword;
 using UserAccess.Application.Auth.VerificationCodes;
@@ -30,11 +29,6 @@ public static class DependencyInjection
         
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IVerificationCodeSender, VerificationCodeSender>();
-        
-        
-        services.Configure<RefreshTokenOptions>(configuration.GetSection(RefreshTokenOptions.SectionName));
-        
-        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         
         return services;
     }

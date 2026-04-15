@@ -1,8 +1,6 @@
-using Microsoft.Extensions.Options;
 using UserAccess.Application.Auth.Common.Records;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Interfaces;
-using UserAccess.Application.Auth.Common.Options;
 
 namespace UserAccess.Application.Auth.Common.Services;
 
@@ -14,8 +12,8 @@ public sealed class TokenIssuer
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IClock _clock;
-    private readonly JwtOptions _jwtOptions;
-    private readonly RefreshTokenOptions _refreshTokenOptions;
+    private readonly IAccessTokenLifetimeProvider _jwtProvider;
+    private readonly IRefreshTokenLifetimeProvider _refreshTokenProvider;
 
     public TokenIssuer(
         IAccessTokenGenerator accessTokenGenerator,
@@ -24,8 +22,8 @@ public sealed class TokenIssuer
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWork unitOfWork,
         IClock clock,
-        IOptions<JwtOptions> jwtOptions,
-        IOptions<RefreshTokenOptions> refreshTokenOptions )
+        IAccessTokenLifetimeProvider jwtProvider,
+        IRefreshTokenLifetimeProvider refreshTokenProvider)
     {
         _accessTokenGenerator = accessTokenGenerator;
         _refreshTokenGenerator = refreshTokenGenerator;
@@ -33,8 +31,8 @@ public sealed class TokenIssuer
         _refreshTokenRepository = refreshTokenRepository;
         _unitOfWork = unitOfWork;
         _clock = clock;
-        _jwtOptions = jwtOptions.Value;
-        _refreshTokenOptions = refreshTokenOptions.Value;
+        _jwtProvider = jwtProvider;
+        _refreshTokenProvider = refreshTokenProvider;
     }
 
     public async Task<AuthTokensResult> IssueAsync(User? user, CancellationToken cancellationToken)
@@ -46,8 +44,8 @@ public sealed class TokenIssuer
         
         var nowUtc = _clock.UtcNow;
 
-        var accessTokenExpiresAtUtc = nowUtc.AddMinutes(_jwtOptions.AccessTokenMinutes);
-        var refreshTokenExpiresAtUtc = nowUtc.AddDays(_refreshTokenOptions.RefreshTokenDays);
+        var accessTokenExpiresAtUtc = _jwtProvider.GetExpirationDateUtc(nowUtc);
+        var refreshTokenExpiresAtUtc = _refreshTokenProvider.GetExpirationDateUtc(nowUtc);
 
         var accessToken = _accessTokenGenerator.Generate(user);
 

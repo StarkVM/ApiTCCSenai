@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Interfaces;
-using UserAccess.Application.Auth.Common.Options;
+using UserAccess.Infrastructure.Auth.Options;
 
 namespace UserAccess.Infrastructure.Auth;
 

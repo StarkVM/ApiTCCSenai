@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Payments.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0df9889b7ca99cdcaabaa000b2996e986ed7f4a0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f3248302b6dcee52f00e02df654d637d003ec73")]
 [assembly: System.Reflection.AssemblyProductAttribute("Payments.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Payments.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
