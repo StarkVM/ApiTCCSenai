@@ -5,8 +5,9 @@ using UserAccess.Application.Auth.VerificationCodes;
 using UserAccess.Application.Auth.VerifyEmail;
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
-using UserAccess.Application.Auth.Common.Services;
+using UserAccess.Application.Auth.Tokens;
 using UserAccess.Application.Auth.Login;
+using UserAccess.Application.Auth.RefreshTokens;
 
 namespace UserAccess.Application;
 
@@ -14,6 +15,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddUserAccessApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped<RefreshTokensHandler>();
+        
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<VerifyEmailHandler>();
         services.AddScoped<RequestNewRegisterEmailVerificationCodeHandler>();
@@ -25,7 +28,7 @@ public static class DependencyInjection
         services.AddScoped<RequestPasswordResetHandler>();
         services.AddScoped<ResetPasswordHandler>();
 
-        services.AddScoped<TokenIssuer>();
+        services.AddScoped<ITokenIssuer, TokenIssuer>();
         
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IVerificationCodeSender, VerificationCodeSender>();

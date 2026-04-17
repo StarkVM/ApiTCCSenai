@@ -1,6 +1,5 @@
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
-using UserAccess.Application.Auth.Common.Services;
 using UserAccess.Application.Auth.VerifyEmail.Records;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
@@ -13,20 +12,20 @@ public sealed class VerifyEmailHandler
     private readonly IVerificationCodeService _verificationCodeService;
     private readonly IClock _clock;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly TokenIssuer _tokenIssuer;
+    private readonly ITokenIssuer _tokenIssuer;
     private readonly ILogger<VerifyEmailHandler> _logger;
     public VerifyEmailHandler(
         IUserRepository userRepository,
         IVerificationCodeService verificationCodeService,
         IClock clock,
         IUnitOfWork unitOfWork,
-        TokenIssuer tokenIssuer,
+        ITokenIssuer tokenIssuer,
         ILogger<VerifyEmailHandler> logger)
     {
         _userRepository = userRepository;
         _verificationCodeService = verificationCodeService;
         _clock = clock;
-        _unitOfWork =  unitOfWork;
+        _unitOfWork = unitOfWork;
         _tokenIssuer = tokenIssuer;
         _logger = logger;
     }

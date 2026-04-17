@@ -1,0 +1,104 @@
+using UserAccess.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
+using UserAccess.Application.Auth.RefreshTokens.Records;
+
+namespace UserAccess.Application.Auth.RefreshTokens;
+
+public sealed class RefreshTokensHandler
+{
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IRefreshTokenHasher _refreshTokenHasher;
+    private readonly ITokenIssuer _tokenIssuer;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IClock _clock;
+    private readonly ILogger<RefreshTokensHandler> _logger;
+    
+    public RefreshTokensHandler(
+        IRefreshTokenRepository refreshTokenRepository,
+        IRefreshTokenHasher refreshTokenHasher,
+        ITokenIssuer tokenIssuer,
+        IUnitOfWork unitOfWork,
+        IClock clock,
+        ILogger<RefreshTokensHandler> logger
+        )
+    {
+        _refreshTokenRepository = refreshTokenRepository;
+        _refreshTokenHasher = refreshTokenHasher;
+        _tokenIssuer = tokenIssuer;
+        _unitOfWork = unitOfWork;
+        _clock = clock;
+        _logger = logger;
+        
+    }
+
+    public async Task<RefreshTokensResult> RefreshAsync(RefreshTokensCommand command, CancellationToken cancellationToken)
+    {
+        var refreshTokenString = command.RefreshToken?.Trim();
+        
+        var nowUtc = _clock.UtcNow;
+        
+        if (string.IsNullOrWhiteSpace(refreshTokenString))
+        {
+            _logger.LogWarning("Refresh token request failed: token is empty.");
+            throw new ArgumentException("REFRESH_TOKEN_REQUIRED.");
+        }
+        
+        _logger.LogInformation("Starting user refresh tokens flow for token {Token}", refreshTokenString);
+        
+        var refreshTokenHash = _refreshTokenHasher.Hash(refreshTokenString);    
+        
+        var refreshToken = await _refreshTokenRepository.GetByTokenHashAsync(refreshTokenHash, cancellationToken);
+
+        if (refreshToken is null)
+        {
+            _logger.LogWarning(
+                "Refresh token not found. Token: {Token}", refreshTokenString);
+            throw new InvalidOperationException("REFRESH_TOKEN_NOT_FOUND.");
+        }
+
+        if (!refreshToken.IsActive(nowUtc))
+        {
+            _logger.LogWarning(
+                "Refresh token is not active (expired or revoked). UserId: {UserId}.",
+                refreshToken.UserId
+                );
+
+            throw new InvalidOperationException("REFRESH_TOKEN_NOT_ACTIVE.");
+        }
+        
+        
+        var result = await _tokenIssuer.IssueAsync(refreshToken.User, cancellationToken);
+        
+        refreshToken.Revoke(nowUtc, result.RefreshTokenHash, "REFRESH_TOKEN_ROTATED");
+        
+        try
+        {
+            _logger.LogInformation(
+                "Refresh token rotation persisted successfully for user {UserId}.",
+                refreshToken.UserId
+                );
+           await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to persist refresh token rotation for user {UserId}.",
+                refreshToken.UserId
+                );
+            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+        }
+
+        return new RefreshTokensResult(
+            result.AccessToken,
+            result.RefreshToken,
+            result.AccessTokenExpiresAtUtc,
+            result.RefreshTokenExpiresAtUtc
+        );
+    }
+
+    /*private void Validate(string refreshToken)
+    {
+       
+    }*/
+}

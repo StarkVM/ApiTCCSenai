@@ -46,6 +46,12 @@ public static class ConfigureServices
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
         builder.Services.AddUserAccessApplication(builder.Configuration);
         
+        
+        //Add the Access Token Settings
+        builder.Services.AddAccessTokenConfiguration(builder.Configuration);
+        
+        builder.Services.AddAuthorization();
+        
         // Health checks (infra do host)
         // Health checks (host infrastructure)
         builder.Services.AddAppHealthChecks();
@@ -100,6 +106,9 @@ public static class ConfigureServices
 
         app.UseRateLimiter();
 
+        app.UseAuthentication();
+        app.UseAuthorization();
+        
         // Host-level endpoints (host infrastructure)
         app.MapAppHealthChecks();
         

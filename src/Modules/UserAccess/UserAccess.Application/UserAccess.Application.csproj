@@ -5,7 +5,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Auth\Logout\" />
+    <Folder Include="Auth\Common\" />
+    <Folder Include="Auth\Logout\Records\" />
+    <Folder Include="Auth\Me\Records\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,5 @@
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
-using UserAccess.Application.Auth.Common.Services;
 using UserAccess.Application.Auth.Login.Records;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
@@ -13,14 +12,14 @@ public sealed class VerifyLoginHandler
     private readonly IVerificationCodeService _verificationCodeService;
     private readonly IClock _clock;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly TokenIssuer _tokenIssuer;
+    private readonly ITokenIssuer _tokenIssuer;
     private readonly ILogger<VerifyLoginHandler> _logger;
     public VerifyLoginHandler(
         IUserRepository userRepository,
         IVerificationCodeService verificationCodeService,
         IClock clock,
         IUnitOfWork unitOfWork,
-        TokenIssuer tokenIssuer,
+        ITokenIssuer tokenIssuer,
         ILogger<VerifyLoginHandler> logger)
     {
         _userRepository = userRepository;

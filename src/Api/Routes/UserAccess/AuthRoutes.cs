@@ -5,6 +5,8 @@ using UserAccess.Application.Auth.Register.Records;
 using Api.Routes.UserAccess.Records;
 using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.Login.Records;
+using UserAccess.Application.Auth.RefreshTokens;
+using UserAccess.Application.Auth.RefreshTokens.Records;
 using UserAccess.Application.Auth.VerifyEmail.Records;
 using UserAccess.Application.Auth.ResetPassword;
 using UserAccess.Application.Auth.ResetPassword.Records;
@@ -59,11 +61,90 @@ public static class AuthRoutes
             .WithName("VerifyLogin")
             .WithTags("Auth");
         
+        authGroup.MapPost("/refresh-tokens", RefreshTokensAsync)
+            .RequireRateLimiting("public")
+            .WithName("RefreshTokens")
+            .WithTags("Auth");
+        
         return group;
+    }
+    
+    /// <summary>
+    /// REFRESH TOKENS
+    /// </summary>
+    
+    private static async Task<IResult> RefreshTokensAsync(
+        RefreshTokensRequest request,
+        RefreshTokensHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting refresh tokens flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+        
+        var command = new RefreshTokensCommand(request.RefreshToken);
+
+        try
+        {
+            var result = await handler.RefreshAsync(command, cancellationToken);
+
+            logger.LogInformation("Refresh Token processed successfully. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+
+            return Results.Ok(new
+            {
+                accessToken = result.AccessToken,
+                refreshToken = result.RefreshToken,
+                accessTokenExpiresAtUtc = result.AccessTokenExpiresAtUtc,
+                refreshTokenExpiresAtUtc = result.RefreshTokenExpiresAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_FOUND.")
+        {
+            logger.LogWarning(
+                "Refresh Token failed. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.BadRequest(
+                new
+                {
+                    message = "Refresh Token not found.",
+                    requestId = httpContext.TraceIdentifier 
+                });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_ACTIVE.")
+        {
+            logger.LogWarning(
+                "Refresh Token failed. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.BadRequest(
+                new
+                {
+                    message = "Refresh Token not active.",
+                    requestId = httpContext.TraceIdentifier 
+                });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "Refresh Token failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
+        }
     }
 
     /// <summary>
-    /// REGISTER
+    /// LOGIN
     /// </summary>
 
     private static async Task<IResult> LoginAsync(
@@ -141,18 +222,6 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "Login verification request validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-            {
-                ["request"] = new[] { ex.Message }
-            });
-        }
         catch (InvalidOperationException ex) when (ex.Message == "INVALID_CREDENTIALS")
         {
             logger.LogWarning(
@@ -165,6 +234,18 @@ public static class AuthRoutes
                     message = "Unable to complete login.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "Login verification request validation failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
         }
     }
 
@@ -274,18 +355,6 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier,
             }) ;
         }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-            {
-                ["register"] = new[] { ex.Message }
-            });
-        }
         catch (InvalidOperationException ex) when (ex.Message == "EMAIL_ALREADY_REGISTERED")
         {
             logger.LogWarning(
@@ -312,6 +381,18 @@ public static class AuthRoutes
                     message = "CPF already exists.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["register"] = new[] { ex.Message }
+            });
         }
     }
 
@@ -348,18 +429,6 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "Email verification request validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-            {
-                ["request"] = new[] { ex.Message }
-            });
-        }
         catch (InvalidOperationException ex) when (ex.Message == "INVALID_CREDENTIALS")
         {
             logger.LogWarning(
@@ -372,6 +441,18 @@ public static class AuthRoutes
                     message = "Unable to verify email.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "Email verification request validation failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+            {
+                ["request"] = new[] { ex.Message }
+            });
         }
     }
     

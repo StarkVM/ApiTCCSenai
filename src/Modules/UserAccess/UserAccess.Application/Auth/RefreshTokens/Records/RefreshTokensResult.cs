@@ -1,9 +1,8 @@
-namespace UserAccess.Application.Auth.Common.Records;
+namespace UserAccess.Application.Auth.RefreshTokens.Records;
 
-public record AuthTokensResult(
+public record RefreshTokensResult(
     string AccessToken,
     string RefreshToken,
-    string RefreshTokenHash,
     DateTime AccessTokenExpiresAtUtc,
     DateTime RefreshTokenExpiresAtUtc
     );

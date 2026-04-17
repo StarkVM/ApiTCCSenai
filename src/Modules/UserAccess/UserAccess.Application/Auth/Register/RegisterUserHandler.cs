@@ -19,7 +19,6 @@ public sealed class RegisterUserHandler
     private readonly IAddressRepository _addressRepository;
     private readonly IVerificationCodeSender _verificationCodeSender;
     
-    
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
         IClock clock, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
         IAddressRepository addressRepository, IVerificationCodeSender  verificationCodeSender)

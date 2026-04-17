@@ -1,16 +1,18 @@
-using UserAccess.Application.Auth.Common.Records;
+using Microsoft.Extensions.Logging;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Interfaces;
+using UserAccess.Domain.Results;
 
-namespace UserAccess.Application.Auth.Common.Services;
+namespace UserAccess.Application.Auth.Tokens;
 
-public sealed class TokenIssuer
+public sealed class TokenIssuer : ITokenIssuer
 {
     private readonly IAccessTokenGenerator _accessTokenGenerator;
     private readonly IRefreshTokenGenerator _refreshTokenGenerator;
     private readonly IRefreshTokenHasher _refreshTokenHasher;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ILogger<TokenIssuer> _logger;
     private readonly IClock _clock;
     private readonly IAccessTokenLifetimeProvider _jwtProvider;
     private readonly IRefreshTokenLifetimeProvider _refreshTokenProvider;
@@ -21,6 +23,7 @@ public sealed class TokenIssuer
         IRefreshTokenHasher refreshTokenHasher,
         IRefreshTokenRepository refreshTokenRepository,
         IUnitOfWork unitOfWork,
+        ILogger<TokenIssuer> logger,
         IClock clock,
         IAccessTokenLifetimeProvider jwtProvider,
         IRefreshTokenLifetimeProvider refreshTokenProvider)
@@ -29,6 +32,7 @@ public sealed class TokenIssuer
         _refreshTokenGenerator = refreshTokenGenerator;
         _refreshTokenHasher = refreshTokenHasher;
         _refreshTokenRepository = refreshTokenRepository;
+        _logger = logger;
         _unitOfWork = unitOfWork;
         _clock = clock;
         _jwtProvider = jwtProvider;
@@ -52,7 +56,7 @@ public sealed class TokenIssuer
         var refreshToken = _refreshTokenGenerator.Generate();
         var refreshTokenHash = _refreshTokenHasher.Hash(refreshToken);
 
-        var refreshTokenEntity = new RefreshToken(
+        var refreshTokenEntity = new Domain.Entities.RefreshToken(
             Guid.NewGuid(),
             user.Id,
             refreshTokenHash,
@@ -60,8 +64,17 @@ public sealed class TokenIssuer
             refreshTokenExpiresAtUtc
         );
 
-        await _refreshTokenRepository.AddAsync(refreshTokenEntity, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _refreshTokenRepository.AddAsync(refreshTokenEntity, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to persist refresh token for email {Email}.", user.Email);
+            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+        }
+        
 
         return new AuthTokensResult(
             accessToken,
