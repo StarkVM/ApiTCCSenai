@@ -16,8 +16,7 @@ namespace UserAccess.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddUserAccessInfrastructure(this IServiceCollection services, 
-        IConfiguration configuration)
+    public static IServiceCollection AddUserAccessInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var userAccessConnectionString = configuration.GetConnectionString("UserAccessDb");
 

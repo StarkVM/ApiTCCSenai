@@ -129,6 +129,21 @@ public static class AuthRoutes
                     requestId = httpContext.TraceIdentifier 
                 });
         }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
         catch (ArgumentException ex)
         {
             logger.LogWarning(
@@ -173,6 +188,36 @@ public static class AuthRoutes
                 success = result.Success,
                 requestId = httpContext.TraceIdentifier
             });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Send verification code failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
         catch (ArgumentException ex)
         {
@@ -234,6 +279,20 @@ public static class AuthRoutes
                     message = "Unable to complete login.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        } catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
         catch (ArgumentException ex)
         {
@@ -281,6 +340,36 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Send verification code failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
         catch (ArgumentException ex)
         {
             logger.LogWarning(
@@ -294,6 +383,7 @@ public static class AuthRoutes
             });
         }
     }
+    
     
 
     /// <summary>
@@ -355,32 +445,76 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier,
             }) ;
         }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_ALREADY_REGISTERED")
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_AND_CPF_CONFLICT")
         {
             logger.LogWarning(
-                "User registration failed because email already exists. RequestId: {RequestId}",
+                "User registration failed because a conflict. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Conflict(
                 new
                 {
-                    message = "Email already exists.",
+                    message = "Email and Cpf conflict.",
+                    requestId = httpContext.TraceIdentifier
+                }
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_OR_CPF_CONFLICT")
+        {
+            logger.LogWarning(
+                "User registration failed because a conflict. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Conflict(
+                new
+                {
+                    message = "Email or Cpf conflict.",
                     requestId = httpContext.TraceIdentifier
                 }
                 );
         }
-        catch (InvalidOperationException ex) when (ex.Message == "CPF_ALREADY_REGISTERED")
+        catch (InvalidOperationException ex) when (ex.Message == "REGISTRATION_IN_PROGRESS")
         {
             logger.LogWarning(
-                "User registration failed because CPF already exists. RequestId: {RequestId}",
+                "User registration failed because registration already in progress. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Conflict(
                 new
                 {
-                    message = "CPF already exists.",
+                    message = "Registration in progress.",
                     requestId = httpContext.TraceIdentifier 
                 });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+            new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                    new
+                    {
+                        message = "Send verification code failed.",
+                        requestId = httpContext.TraceIdentifier
+                    },
+                    statusCode: StatusCodes.Status500InternalServerError
+                );
         }
         catch (ArgumentException ex)
         {
@@ -442,6 +576,36 @@ public static class AuthRoutes
                     requestId = httpContext.TraceIdentifier 
                 });
         }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Send verification code failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
         catch (ArgumentException ex)
         {
             logger.LogWarning(
@@ -491,6 +655,36 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Send verification code failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
         catch (ArgumentException ex)
         {
             logger.LogWarning(
@@ -537,6 +731,36 @@ public static class AuthRoutes
                 success = result.Success,
                 requestId = httpContext.TraceIdentifier
             });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
+        {
+            logger.LogWarning(
+                "Send verification code failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Send verification code failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
         catch (ArgumentException ex)
         {
@@ -587,6 +811,21 @@ public static class AuthRoutes
                 success = result.Success,
                 requestId = httpContext.TraceIdentifier
             });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User registration failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
         }
         catch (ArgumentException ex)
         {

@@ -42,66 +42,43 @@ public sealed class RegisterUserHandler
         var password = command.Password?.Trim();
         var birthDate = DateTime.SpecifyKind(command.BirthDate, DateTimeKind.Utc);
         var nowUtc = _clock.UtcNow;
-
+        
         var address = new Address(command.address.State, command.address.City, command.address.District,
             command.address.Street,command.address.ZipCode, nowUtc);
         
         Validate(firstName, lastName, email, cpf, password, birthDate,address ,nowUtc);
         
         //user
-        _logger.LogInformation("Starting user registration flow for email {Email}", email);
+        _logger.LogInformation(
+            "Starting user registration flow for email {Email}.", email);
         
         var cpfHash = _cpfHasher.Hash(cpf!);
         var passwordHash = _passwordHasher.Hash(password!);
         
-        var existingUser = await _userRepository.GetByEmailAsync(email!, cancellationToken);
+        var existingUserByEmail = await _userRepository.GetByEmailAsync(email!, cancellationToken);
+        var existingUserByCpf = await _userRepository.GetByCpfAsync(cpfHash, cancellationToken);
+        
+        var existingUser =  existingUserByEmail ?? existingUserByCpf;
 
         User user;
-
-        if (existingUser is null)
-        {
-            if (await _userRepository.CpfHashExistsAsync(cpfHash, cancellationToken))
-            {
-                _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
-                throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
-            }
-            /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
-            {
-                _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
-                throw new InvalidOperationException("ADDRESS_NOT_VALID");
-            }*/
-                
-                user = new User(
-                Guid.NewGuid(),
-                firstName!,
-                lastName!,
-                birthDate,
-                email!,
-                cpfHash,
-                passwordHash,
-                nowUtc);
-                
-                address.SetUserId(user.Id);
-                user.SetAddress(address);
-                
-                await _addressRepository.AddAddressAsync(address, cancellationToken);
-                
-                _logger.LogInformation("Creating new pending user registration for email {Email}", email);
-
         
-            await _userRepository.AddAsync(user, cancellationToken);
-        }
-        else
+        if (existingUser is not null)
         {
-            if (existingUser.Status == UserStatus.Active || existingUser.Status == UserStatus.Disabled)
+            if (existingUserByEmail is not null && existingUserByCpf is not null &&
+                existingUserByEmail.Id != existingUserByCpf.Id)
             {
-                _logger.LogWarning("Registration blocked because email is already used. Email: {Email}", email);
-                throw new InvalidOperationException("EMAIL_ALREADY_REGISTERED");
+                _logger.LogWarning(
+                    "Registration blocked because email and CPF belong to different users. Email: {Email}. EmailUserId: {EmailUserId}. CpfUserId: {CpfUserId}",
+                    email,
+                    existingUserByEmail?.Id,
+                    existingUserByCpf?.Id);
+
+                throw new InvalidOperationException("EMAIL_AND_CPF_CONFLICT");
             }
-            if (await _userRepository.CpfHashExistsForAnotherUserAsync(cpfHash, existingUser.Id, cancellationToken))
+            if (existingUser.Status != UserStatus.PendingEmailVerification)
             {
-                _logger.LogWarning("Registration blocked because CPF is already registered. Email: {Email}", email);
-                throw new InvalidOperationException("CPF_ALREADY_REGISTERED");
+                _logger.LogWarning("Registration blocked because email or cpf already used. Email: {Email}", existingUser.Email);
+                throw new InvalidOperationException("EMAIL_OR_CPF_CONFLICT");
             }
             /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
             {
@@ -111,7 +88,7 @@ public sealed class RegisterUserHandler
 
             if (existingUser.CreatedAt.AddMinutes(5) > nowUtc)
             {
-                _logger.LogWarning("Registration blocked because a registration already in progress. Email: {Email}", email);
+                _logger.LogWarning("Registration blocked because a registration already in progress. Email: {Email}", existingUser.Email);
                 throw new InvalidOperationException("REGISTRATION_IN_PROGRESS");
             }
             
@@ -119,6 +96,7 @@ public sealed class RegisterUserHandler
                 firstName!,
                 lastName!,
                 birthDate,
+                email!,
                 cpfHash,
                 passwordHash,
                 nowUtc
@@ -132,14 +110,40 @@ public sealed class RegisterUserHandler
                 throw new InvalidOperationException("ADDRESS_NOT_FOUND");
             }
             
-            address.SetUserId(existingUser.Id);
             existingAddress!.Update(address.State,address.City,address.District,address.Street,address.ZipCode, nowUtc);
             existingUser.SetAddress(existingAddress);
             
-            _logger.LogInformation("Existing non-active user found for email {Email}. Restarting pending verification flow.", email);
+            _logger.LogInformation("Existing non-active user found for email {Email}. Restarting pending verification flow.", existingUser.Email);
             
             
             user = existingUser;
+        }
+        else
+        {
+            /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
+            {
+                _logger.LogWarning("Registration blocked because Address is not Valid. Email: {Email}", email);
+                throw new InvalidOperationException("ADDRESS_NOT_VALID");
+            }*/
+                
+            user = new User(
+                Guid.NewGuid(),
+                firstName!,
+                lastName!,
+                birthDate,
+                email!,
+                cpfHash,
+                passwordHash,
+                nowUtc);
+                
+            address.SetUserId(user.Id);
+            user.SetAddress(address);
+                
+            await _addressRepository.AddAddressAsync(address, cancellationToken);
+                
+            _logger.LogInformation("Creating new pending user registration for email {Email}", email);
+            
+            await _userRepository.AddAsync(user, cancellationToken);
         }
         
         try
@@ -254,11 +258,6 @@ public sealed class RegisterUserHandler
             throw new ArgumentException("TOO_YOUNG");
         }
         //Address
-        if (address is null)
-        {
-            throw new ArgumentException("ADDRESS_REQUIRED");
-        }
-
         if (string.IsNullOrWhiteSpace(address.State))
         {
             throw new ArgumentException("ADDRESS_STATE_REQUIRED");

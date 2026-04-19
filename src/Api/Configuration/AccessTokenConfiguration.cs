@@ -7,9 +7,9 @@ namespace Api.Configuration;
 
 public static class AccessTokenConfiguration
 {
-    public static IServiceCollection AddAccessTokenConfiguration(this IServiceCollection services, IConfiguration configuration)
+    public static WebApplicationBuilder AddAccessTokenConfiguration(this WebApplicationBuilder builder)
     {
-        var jwtSection = configuration.GetSection(JwtOptions.SectionName);
+        var jwtSection = builder.Configuration.GetSection(JwtOptions.SectionName);
         var jwtOptions = jwtSection.Get<JwtOptions>() ?? throw new InvalidOperationException("JWT configuration section is required.");
 
         if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey))
@@ -32,11 +32,10 @@ public static class AccessTokenConfiguration
             throw new InvalidOperationException("JWT audience is required.");
         }
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = true;
-                //options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+                options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
                 options.SaveToken = true;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -56,6 +55,6 @@ public static class AccessTokenConfiguration
                 };
             });
         
-        return services;
+        return builder;
     }
 }

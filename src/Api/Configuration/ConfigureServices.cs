@@ -48,7 +48,7 @@ public static class ConfigureServices
         
         
         //Add the Access Token Settings
-        builder.Services.AddAccessTokenConfiguration(builder.Configuration);
+        builder.AddAccessTokenConfiguration();
         
         builder.Services.AddAuthorization();
         

@@ -53,6 +53,7 @@ public class ExceptionHandlingMiddleware
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(payload));
         }
+        
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception. RequestId: {RequestId}", context.TraceIdentifier);

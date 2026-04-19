@@ -49,12 +49,13 @@ public sealed class User
         Address = address;
     }
 
-    public void RestartPendingVerification(string firstName, string lastName, DateTime birthDate, string cpfHash,
+    public void RestartPendingVerification(string firstName, string lastName, DateTime birthDate, string email ,string cpfHash,
         string passwordHash, DateTime createdAt)
     {
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;
+        Email = email;
         CpfHash = cpfHash;
         PasswordHash = passwordHash;
         Status = UserStatus.PendingEmailVerification;

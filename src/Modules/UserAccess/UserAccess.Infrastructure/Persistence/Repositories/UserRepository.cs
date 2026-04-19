@@ -63,6 +63,12 @@ public sealed class UserRepository : IUserRepository
          return _userAccessDbContext.Users.
             FirstOrDefaultAsync(x => x.Email == email, cancellationToken);
     }
+    
+    public Task<User?> GetByCpfAsync(string cpfHash, CancellationToken cancellationToken)
+    {
+        return _userAccessDbContext.Users.
+            FirstOrDefaultAsync(x => x.CpfHash == cpfHash, cancellationToken);
+    }
 
     public Task<bool> CpfHashExistsForAnotherUserAsync(string cpfHash, Guid userId, CancellationToken cancellationToken)
     {
