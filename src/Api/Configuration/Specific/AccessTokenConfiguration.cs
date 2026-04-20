@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UserAccess.Infrastructure.Auth.Options;
 
-namespace Api.Configuration;
+namespace Api.Configuration.Specific;
 
 public static class AccessTokenConfiguration
 {
@@ -31,7 +31,7 @@ public static class AccessTokenConfiguration
         {
             throw new InvalidOperationException("JWT audience is required.");
         }
-
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {

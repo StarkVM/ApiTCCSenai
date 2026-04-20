@@ -43,8 +43,8 @@ public sealed class RegisterUserHandler
         var birthDate = DateTime.SpecifyKind(command.BirthDate, DateTimeKind.Utc);
         var nowUtc = _clock.UtcNow;
         
-        var address = new Address(command.address.State, command.address.City, command.address.District,
-            command.address.Street,command.address.ZipCode, nowUtc);
+        var address = new Address(command.Address.State, command.Address.City, command.Address.District,
+            command.Address.Street,command.Address.ZipCode, nowUtc);
         
         Validate(firstName, lastName, email, cpf, password, birthDate,address ,nowUtc);
         

@@ -11,7 +11,7 @@ public class PasswordHasher : IPasswordHasher
             throw new ArgumentException("Password cannot be null or empty");
         }
 
-        return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 11);
+        return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
     }
 
     public bool Verify(string password, string passwordHash)

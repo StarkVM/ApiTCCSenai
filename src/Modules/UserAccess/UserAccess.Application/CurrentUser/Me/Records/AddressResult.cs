@@ -1,6 +1,6 @@
-namespace Api.Routes.UserAccess.Records;
+namespace UserAccess.Application.CurrentUser.Me.Records;
 
-public record AddressRequest(
+public record AddressResult(
     string State,
     string City,
     string District,

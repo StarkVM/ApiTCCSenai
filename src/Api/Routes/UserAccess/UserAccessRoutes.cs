@@ -17,6 +17,7 @@ public static class UserAccessRoutes
         var group = endpoints.MapGroup("/user-access").RequireRateLimiting("public");
 
         group.MapAuthRoutes();
+        group.MapUserRoutes();
 
         group.MapGet("/health/db", async (HttpContext httpContext,UserAccessDbContext db, ILoggerFactory loggerFactory) =>
         {

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using UserAccess.Application.Auth.Tokens;
 using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.RefreshTokens;
+using UserAccess.Application.CurrentUser.Me;
 
 namespace UserAccess.Application;
 
@@ -32,6 +33,8 @@ public static class DependencyInjection
         
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IVerificationCodeSender, VerificationCodeSender>();
+        
+        services.AddScoped<MeHandler>();
         
         return services;
     }

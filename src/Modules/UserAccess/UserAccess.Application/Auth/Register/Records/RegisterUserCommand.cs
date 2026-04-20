@@ -9,5 +9,5 @@ public record RegisterUserCommand(
     string Email,
     string Cpf,
     string Password,
-    RegisterUserAddress address
+    RegisterUserAddress Address
     );

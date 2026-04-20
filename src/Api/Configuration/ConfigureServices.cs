@@ -5,7 +5,7 @@ using UserAccess.Infrastructure;
 using Api.Infrastructure.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
-using Serilog.Extensions.Hosting;
+using Api.Configuration.Specific;
 using UserAccess.Application;
 
 namespace Api.Configuration;
@@ -23,7 +23,7 @@ public static class ConfigureServices
         // Swagger / OpenAPI (infra do host)
         // Swagger / OpenAPI (host infrastructure)
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerConfiguration();
         
         // Português
         // Define quais headers encaminhados por proxies confiáveis devem ser processados pelo ASP.NET Core.

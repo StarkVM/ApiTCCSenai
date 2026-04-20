@@ -14,14 +14,21 @@ public sealed class UserRepository : IUserRepository
         _userAccessDbContext = dbContext;
     }
 
-    public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken)
+    public async Task<User?> GetByIdAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return _userAccessDbContext.Users.AnyAsync(u => u.Email == email, cancellationToken);
+        
+        return await _userAccessDbContext.Users
+            .Include(x => x.Address)
+            .FirstOrDefaultAsync(x => x.Id == userId && x.Status != UserStatus.PendingEmailVerification, cancellationToken);
+    }
+    public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken)
+    {
+        return await _userAccessDbContext.Users.AnyAsync(u => u.Email == email, cancellationToken);
     }
     
-    public Task<bool> CpfHashExistsAsync(string cpfHash, CancellationToken cancellationToken)
+    public async Task<bool> CpfHashExistsAsync(string cpfHash, CancellationToken cancellationToken)
     {
-        return _userAccessDbContext.Users.AnyAsync(u => u.CpfHash == cpfHash, cancellationToken );
+        return await _userAccessDbContext.Users.AnyAsync(u => u.CpfHash == cpfHash, cancellationToken );
     }
 
     public async Task AddAsync(User user, CancellationToken cancellationToken)
@@ -32,30 +39,6 @@ public sealed class UserRepository : IUserRepository
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         return _userAccessDbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task DisableExpiredAsync(DateTime utcNow, CancellationToken cancellationToken)
-    {
-        var users = await _userAccessDbContext.EmailVerificationCodes.
-            Where(x => x.ExpiresAt < utcNow).
-            Select(x => x.User).ToListAsync(cancellationToken);
-
-        foreach (var user in users)
-        {
-            if (user.Status == UserStatus.PendingEmailVerification)
-            {
-                user.Disable();
-            }
-        }
-        
-    }
-    
-    public async Task DeleteDisabledByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        var users = await _userAccessDbContext.Users.
-            Where(x => x.Email == email && x.Status == UserStatus.Disabled).ToListAsync(cancellationToken);
-        
-        _userAccessDbContext.Users.RemoveRange(users);
     }
     
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
