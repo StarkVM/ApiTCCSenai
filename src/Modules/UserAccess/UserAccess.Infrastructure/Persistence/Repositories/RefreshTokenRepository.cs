@@ -27,7 +27,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
             .FirstOrDefaultAsync(x => x.TokenHash == tokenHash,  cancellationToken);
     }
 
-    public async Task<List<RefreshToken>> GetActiveByUseridAsync(Guid userId, CancellationToken cancellationToken)
+    public async Task<List<RefreshToken>> GetActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken)
     {
         var nowUtc = _clock.UtcNow;
         

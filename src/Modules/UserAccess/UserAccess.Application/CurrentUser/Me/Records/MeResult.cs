@@ -6,7 +6,7 @@ public record MeResult(
     Guid Id,
     string FirstName,
     string LastName,
-    DateTime BirthDate,
+    DateOnly BirthDate,
     string Email,
     UserStatus Status,
     UserType Type,

@@ -4,6 +4,8 @@ using UserAccess.Application.Auth.Register.Records;
 using Api.Routes.UserAccess.AuthRecords;
 using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.Login.Records;
+using UserAccess.Application.Auth.Logout;
+using UserAccess.Application.Auth.Logout.Records;
 using UserAccess.Application.Auth.RefreshTokens;
 using UserAccess.Application.Auth.RefreshTokens.Records;
 using UserAccess.Application.Auth.VerifyEmail.Records;
@@ -11,6 +13,8 @@ using UserAccess.Application.Auth.ResetPassword;
 using UserAccess.Application.Auth.ResetPassword.Records;
 using UserAccess.Application.Auth.VerifyEmail;
 using LoginRequest = Api.Routes.UserAccess.AuthRecords.LoginRequest;
+using System.Security.Claims;
+using UserAccess.Domain.Helpers;
 
 namespace Api.Routes.UserAccess;
 
@@ -65,6 +69,17 @@ public static class AuthRoutes
             .WithName("RefreshTokens")
             .WithTags("Auth");
         
+        authGroup.MapPost("/logout-current-session", LogoutCurrentSessionAsync)
+            .RequireRateLimiting("public")
+            .WithName("LogoutCurrentSession")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/logout-all-sessions", LogoutAllSessionsAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("public")
+            .WithName("LogoutAllSessions")
+            .WithTags("Auth");
+        
         return group;
     }
     
@@ -108,7 +123,7 @@ public static class AuthRoutes
                 "Refresh Token failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
-            return Results.BadRequest(
+            return Results.NotFound(
                 new
                 {
                     message = "Refresh Token not found.",
@@ -131,7 +146,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "User refresh tokens database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -146,26 +161,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User refresh tokens validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+            logger.LogError(
+                "User refresh tokens failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -206,7 +221,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "User Login database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -236,26 +251,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User Login validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                "Login request validation failed. Error: {Error}. RequestId: {RequestId}",
+            logger.LogError(
+                "Login failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -326,26 +341,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User login verification validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                "Login verification request validation failed. Error: {Error}. RequestId: {RequestId}",
+            logger.LogError(
+                "Login verification request failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -387,7 +402,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "User request new verification code database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -423,20 +438,20 @@ public static class AuthRoutes
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
+            logger.LogError(
                 "Request new login verification code failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -582,20 +597,20 @@ public static class AuthRoutes
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+            logger.LogError(
+                "User registration failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -651,7 +666,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "User verify email database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -666,7 +681,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
         {
             logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
+                "Verification code failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -681,26 +696,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User verification code validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
-                "Email verification request validation failed. Error: {Error}. RequestId: {RequestId}",
+            logger.LogError(
+                "Email verification failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -745,7 +760,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "Request new email verification code database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -760,7 +775,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
         {
             logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
+                "Resend verification code failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -775,26 +790,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User request new email verification code validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
+            logger.LogError(
                 "User request new email verification code failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -837,7 +852,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "Forgot password failed database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -852,13 +867,13 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
         {
             logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
+                "Send forgot password email failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
                 new
                 {
-                    message = "Send verification code failed.",
+                    message = "Send forgot password code failed.",
                     requestId = httpContext.TraceIdentifier
                 },
                 statusCode: StatusCodes.Status500InternalServerError
@@ -867,26 +882,26 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User forgot password validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
+            logger.LogError(
                 "User forgot-password request failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );
@@ -932,7 +947,7 @@ public static class AuthRoutes
         catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
         {
             logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
+                "User reset password failed database save failed RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
             
             return Results.Json(
@@ -947,26 +962,236 @@ public static class AuthRoutes
         catch (ArgumentException ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User reset password validation failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.ValidationProblem(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
                 }
             );
         }
         catch (Exception ex)
         {
-            logger.LogWarning(
+            logger.LogError(
                 "User reset password request failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 
             return Results.Json(new Dictionary<string, string[]>
                 {
-                    ["register"] = new[] { ex.Message }
+                    ["problem"] = new[] { ex.Message }
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+    }
+    
+    /// <summary>
+    /// Logout current session
+    /// </summary>
+   
+    
+    private static async Task<IResult> LogoutCurrentSessionAsync(
+        LogoutCurrentSessionRequest  request,
+        LogoutCurrentSessionHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting logout current session flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+
+        var command = new LogoutCurrentSessionCommand(
+           request.RefreshToken
+        );
+
+        try
+        {
+            var result = await  handler.HandleAsync(command, cancellationToken);
+            
+            logger.LogInformation("Logout processed. Success: {Success}. RequestId: {RequestId}",
+                result.Success,
+                httpContext.TraceIdentifier);
+            
+            return Results.Ok(new
+            {
+                success = result.Success,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex) when (ex.Message == "REFRESH_TOKEN_REQUIRED")
+        {
+            logger.LogWarning(
+                "Logout current session failed because refresh token is required. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+
+            return Results.BadRequest(new
+            {
+                message = "Refresh token is required.",
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_FOUND")
+        {
+            logger.LogWarning(
+                "User refresh token not found failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.NotFound(
+                new
+                {
+                    message = "Refresh token not found.",
+                    requestId = httpContext.TraceIdentifier
+                }
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User logout failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User logout failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    ["problem"] = new[] { ex.Message }
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                "User logout failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.Json(new Dictionary<string, string[]>
+                {
+                    ["problem"] = new[] { ex.Message }
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+    }
+    
+    /// <summary>
+    /// Logout all sessions
+    /// </summary>
+    
+    
+    private static async Task<IResult> LogoutAllSessionsAsync(
+        LogoutAllSessionsHandler handler,
+        HttpContext httpContext,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken
+    )
+    {
+        var logger = loggerFactory.CreateLogger(typeof(AuthRoutes).FullName!);
+        
+        logger.LogInformation("Starting logout all sessions flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
+        
+        var userIdString = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)?? 
+                           httpContext.User.FindFirstValue("sub");
+        
+        Guid.TryParse(userIdString, out Guid userId);
+
+        if (!userId.GuidIdIsValid())
+        {
+            logger.LogWarning(
+                "Unauthorized logout all sessions request due to invalid user id. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            return Results.Unauthorized();
+        }
+
+        var command = new LogoutAllSessionsCommand(
+           userId
+        );
+
+        try
+        {
+            var result = await  handler.HandleAsync(command, cancellationToken);
+            
+            logger.LogInformation("Logout processed. Success: {Success}. RequestId: {RequestId}",
+                result.Success,
+                httpContext.TraceIdentifier);
+            
+            return Results.Ok(new
+            {
+                success = result.Success,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (ArgumentException ex) when (ex.Message == "INVALID_USER_ID")
+        {
+            logger.LogWarning(
+                "User id is not valid RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.BadRequest(
+                new
+                {
+                    message = "User id is not valid.",
+                    requestId = httpContext.TraceIdentifier
+                }
+            );
+        }
+        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        {
+            logger.LogWarning(
+                "User logout failed database save failed RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+            
+            return Results.Json(
+                new
+                {
+                    message = "Database save failed.",
+                    requestId = httpContext.TraceIdentifier
+                },
+                statusCode: StatusCodes.Status500InternalServerError
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User logout failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    ["problem"] = new[] { ex.Message }
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                "User logout failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.Json(new Dictionary<string, string[]>
+                {
+                    ["problem"] = new[] { ex.Message }
                 },
                 statusCode: StatusCodes.Status500InternalServerError
             );

@@ -9,7 +9,7 @@ public sealed class User
 
     public string FirstName { get; private set; } = default!;
     public string LastName { get; private set; } = default!;
-    public DateTime BirthDate { get; private set; }
+    public DateOnly BirthDate { get; private set; }
 
     public string Email { get; private set; } = default!;
     public string CpfHash { get; private set; } = default!;
@@ -30,7 +30,7 @@ public sealed class User
 
     private User() { }
 
-    public User(Guid id, string firstName, string lastName, DateTime birthDate, string email, string cpfHash,
+    public User(Guid id, string firstName, string lastName, DateOnly birthDate, string email, string cpfHash,
         string passwordHash, DateTime createdAt)
     {
         Id = id;
@@ -49,7 +49,7 @@ public sealed class User
         Address = address;
     }
 
-    public void RestartPendingVerification(string firstName, string lastName, DateTime birthDate, string email ,string cpfHash,
+    public void RestartPendingVerification(string firstName, string lastName, DateOnly birthDate, string email ,string cpfHash,
         string passwordHash, DateTime createdAt)
     {
         FirstName = firstName;

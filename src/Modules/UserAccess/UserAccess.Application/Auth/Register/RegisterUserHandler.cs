@@ -40,13 +40,16 @@ public sealed class RegisterUserHandler
         var email = command.Email?.Trim().ToLowerInvariant();
         var cpf = command.Cpf?.Clean().Trim();
         var password = command.Password?.Trim();
-        var birthDate = DateTime.SpecifyKind(command.BirthDate, DateTimeKind.Utc);
+        var birthDate = command.BirthDate;
+        
         var nowUtc = _clock.UtcNow;
         
         var address = new Address(command.Address.State, command.Address.City, command.Address.District,
             command.Address.Street,command.Address.ZipCode, nowUtc);
         
-        Validate(firstName, lastName, email, cpf, password, birthDate,address ,nowUtc);
+        var today = DateOnly.FromDateTime(nowUtc);
+        
+        Validate(firstName, lastName, email, cpf, password, birthDate,address ,today);
         
         //user
         _logger.LogInformation(
@@ -182,9 +185,9 @@ public sealed class RegisterUserHandler
             user.CreatedAt
         );
     }
-
+    
     private static void Validate(string? firstName, string? lastName,
-        string? email, string? cpf, string? password, DateTime birthDate, Address address, DateTime nowUtc)
+        string? email, string? cpf, string? password, DateOnly birthDate, Address address, DateOnly today)
     {
         //Names verification
         if (string.IsNullOrWhiteSpace(firstName))
@@ -249,11 +252,11 @@ public sealed class RegisterUserHandler
         {
             throw new ArgumentException("BIRTH_DATE_REQUIRED");
         }
-        if (birthDate.Date > nowUtc.Date)
+        if (birthDate > today)
         { 
             throw new ArgumentException("BIRTH_DATE_INVALID");
         }
-        if (!birthDate.IsAdult(nowUtc.Date))
+        if (!birthDate.IsAdult(today))
         {
             throw new ArgumentException("TOO_YOUNG");
         }

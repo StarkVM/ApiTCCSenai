@@ -104,10 +104,23 @@ public static class UserRoutes
                         requestId = httpContext.TraceIdentifier
                     });
         }
+        catch (ArgumentException ex)
+        {
+            logger.LogWarning(
+                "User request me failed. Error: {Error}. RequestId: {RequestId}",
+                ex.Message,
+                httpContext.TraceIdentifier);
+
+            return Results.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    ["register"] = new[] { ex.Message }
+                }
+            );
+        }
         catch (Exception ex)
         {
             logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
+                "User request me failed. Error: {Error}. RequestId: {RequestId}",
                 ex.Message,
                 httpContext.TraceIdentifier);
 

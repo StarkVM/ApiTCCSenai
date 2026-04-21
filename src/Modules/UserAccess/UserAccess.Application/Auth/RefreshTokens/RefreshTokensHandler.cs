@@ -1,6 +1,7 @@
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.RefreshTokens.Records;
+using UserAccess.Domain.Enums;
 
 namespace UserAccess.Application.Auth.RefreshTokens;
 
@@ -40,7 +41,7 @@ public sealed class RefreshTokensHandler
         if (string.IsNullOrWhiteSpace(refreshTokenString))
         {
             _logger.LogWarning("Refresh token request failed: token is empty.");
-            throw new ArgumentException("REFRESH_TOKEN_REQUIRED.");
+            throw new ArgumentException("REFRESH_TOKEN_REQUIRED");
         }
         
         _logger.LogInformation("Starting user refresh tokens flow for token {Token}", refreshTokenString);
@@ -53,7 +54,15 @@ public sealed class RefreshTokensHandler
         {
             _logger.LogWarning(
                 "Refresh token not found. Token: {Token}", refreshTokenString);
-            throw new InvalidOperationException("REFRESH_TOKEN_NOT_FOUND.");
+            throw new InvalidOperationException("REFRESH_TOKEN_NOT_FOUND");
+        }
+
+        if (refreshToken.User.Status != UserStatus.PendingIdentityVerification &&
+            refreshToken.User.Status != UserStatus.Active)
+        {
+            _logger.LogWarning(
+                "Invalid User. Token: {Token}", refreshTokenString);
+            throw new InvalidOperationException("INVALID_USER");
         }
 
         if (!refreshToken.IsActive(nowUtc))
@@ -63,7 +72,7 @@ public sealed class RefreshTokensHandler
                 refreshToken.UserId
                 );
 
-            throw new InvalidOperationException("REFRESH_TOKEN_NOT_ACTIVE.");
+            throw new InvalidOperationException("REFRESH_TOKEN_NOT_ACTIVE");
         }
         
         

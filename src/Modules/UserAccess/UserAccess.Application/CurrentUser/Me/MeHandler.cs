@@ -1,6 +1,7 @@
 using UserAccess.Domain.Helpers;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.CurrentUser.Me.Records;
+using UserAccess.Domain.Enums;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Application.CurrentUser.Me;
@@ -35,6 +36,14 @@ public sealed class MeHandler
         {
             _logger.LogWarning("User not found for id: {UserId}", command.UserId);
             throw new InvalidOperationException("USER_NOT_FOUND");
+        }
+        
+        if (user.Status != UserStatus.PendingIdentityVerification &&
+            user.Status != UserStatus.Active)
+        {
+            _logger.LogWarning(
+                "Invalid User. Id: {Id}", user.Id);
+            throw new InvalidOperationException("INVALID_USER");
         }
 
         if (user.Address is null)

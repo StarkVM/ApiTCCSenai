@@ -7,6 +7,7 @@ using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 using UserAccess.Application.Auth.Tokens;
 using UserAccess.Application.Auth.Login;
+using UserAccess.Application.Auth.Logout;
 using UserAccess.Application.Auth.RefreshTokens;
 using UserAccess.Application.CurrentUser.Me;
 
@@ -33,6 +34,9 @@ public static class DependencyInjection
         
         services.AddScoped<IVerificationCodeService, VerificationCodeService>();
         services.AddScoped<IVerificationCodeSender, VerificationCodeSender>();
+        
+        services.AddScoped<LogoutCurrentSessionHandler>();
+        services.AddScoped<LogoutAllSessionsHandler>();
         
         services.AddScoped<MeHandler>();
         
