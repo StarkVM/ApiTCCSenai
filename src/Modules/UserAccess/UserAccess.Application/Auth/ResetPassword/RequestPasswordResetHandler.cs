@@ -66,7 +66,7 @@ public sealed class RequestPasswordResetHandler
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to save data for email {Email}", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            return new RequestPasswordResetResult(false);
         }
         
         var senderEmailCommand = new SendVerificationCodeRequest(
@@ -80,14 +80,10 @@ public sealed class RequestPasswordResetHandler
             await _verificationCodeSender.SendCodeAsync(senderEmailCommand, cancellationToken);
             _logger.LogInformation("Reset password code sent successfully for email {Email}", email);
         }
-        catch (ArgumentException ex) when (ex.Message == "VERY_FAST_ATTEMPTS")
-        {
-            return new RequestPasswordResetResult(false);
-        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to send reset password code for email {Email}", email);
-            throw new InvalidOperationException("EMAIL_SEND_FAILED", ex);
+            return new RequestPasswordResetResult(false);
         }
        
         return new RequestPasswordResetResult(true);
@@ -97,11 +93,11 @@ public sealed class RequestPasswordResetHandler
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_IS_REQUIRED");
+            throw new ArgumentException("Email is required.");
         }
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Invalid email format.");
         }
     }
 }

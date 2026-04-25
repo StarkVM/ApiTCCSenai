@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Logout.Records;
+using UserAccess.Application.Common.Exceptions;
+using UserAccess.Domain.Exceptions.Auth;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Application.Auth.Logout;
@@ -38,7 +40,7 @@ public sealed class LogoutCurrentSessionHandler
         if (string.IsNullOrWhiteSpace(refreshTokenString))
         {
             _logger.LogWarning("Logout failed: token is empty.");
-            throw new ArgumentException("REFRESH_TOKEN_REQUIRED");
+            throw new ArgumentException("Refresh token is required.");
         }
             
         var refreshTokenHash = _refreshTokenHasher.Hash(refreshTokenString);
@@ -48,7 +50,7 @@ public sealed class LogoutCurrentSessionHandler
         if (token is null)
         {
             _logger.LogWarning("Logout failed: refresh token not found.");
-            throw new InvalidOperationException("REFRESH_TOKEN_NOT_FOUND");
+            throw new RefreshTokenNotFoundException();
         }
         
         _logger.LogInformation("Starting logout current session flow for UserId: {UserId}", token.UserId);
@@ -71,7 +73,7 @@ public sealed class LogoutCurrentSessionHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to save data for UserId: {Id}", token.UserId);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            throw new DatabaseSaveFailedException(ex);
         }
 
         return new LogoutCurrentSessionResult(true);

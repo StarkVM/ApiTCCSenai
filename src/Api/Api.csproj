@@ -39,11 +39,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Exceptions\Setup\" />
+    <Compile Remove="Routes\UserAccess\Records\RequestNewRegisterEmailVerificationCodeResponse.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Routes\UserAccess\Records\RequestNewRegisterEmailVerificationCodeResponse.cs" />
+    <Folder Include="Infrastructure\Exceptions\Setup\" />
   </ItemGroup>
 
 </Project>

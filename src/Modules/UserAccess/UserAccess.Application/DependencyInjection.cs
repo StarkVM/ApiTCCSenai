@@ -1,16 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
 using UserAccess.Application.Auth.Register;
 using UserAccess.Application.Auth.ResetPassword;
-using UserAccess.Application.Auth.VerificationCodes;
+using UserAccess.Application.Auth.Services.VerificationCodesServices;
 using UserAccess.Application.Auth.VerifyEmail;
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
-using UserAccess.Application.Auth.Tokens;
+using UserAccess.Application.Auth.Services.TokensServices;
 using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.Logout;
 using UserAccess.Application.Auth.RefreshTokens;
 using UserAccess.Application.CurrentUser.Me;
-
 namespace UserAccess.Application;
 
 public static class DependencyInjection

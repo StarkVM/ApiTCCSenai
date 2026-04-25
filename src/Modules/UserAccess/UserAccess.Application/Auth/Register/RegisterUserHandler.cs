@@ -4,7 +4,10 @@ using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Helpers;
 using UserAccess.Application.Auth.Register.Records;
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
+using UserAccess.Domain.Exceptions.Auth;
+using UserAccess.Domain.Exceptions.Users;
 
 namespace UserAccess.Application.Auth.Register;
 
@@ -76,12 +79,12 @@ public sealed class RegisterUserHandler
                     existingUserByEmail?.Id,
                     existingUserByCpf?.Id);
 
-                throw new InvalidOperationException("EMAIL_AND_CPF_CONFLICT");
+                throw new EmailAndCpfConflictException();
             }
             if (existingUser.Status != UserStatus.PendingEmailVerification)
             {
                 _logger.LogWarning("Registration blocked because email or cpf already used. Email: {Email}", existingUser.Email);
-                throw new InvalidOperationException("EMAIL_OR_CPF_CONFLICT");
+                throw new EmailOrCpfConflictException();
             }
             /*if (await _addressRepository.AddressIsValid(address, cancellationToken))
             {
@@ -92,7 +95,7 @@ public sealed class RegisterUserHandler
             if (existingUser.CreatedAt.AddMinutes(5) > nowUtc)
             {
                 _logger.LogWarning("Registration blocked because a registration already in progress. Email: {Email}", existingUser.Email);
-                throw new InvalidOperationException("REGISTRATION_IN_PROGRESS");
+                throw new RegistrationInProgressException();
             }
             
             existingUser.RestartPendingVerification(
@@ -110,7 +113,7 @@ public sealed class RegisterUserHandler
             if (existingAddress is null)
             {
                 _logger.LogWarning("Registration blocked because Addrress was not found. UserId {UserId}", existingUser.Id );
-                throw new InvalidOperationException("ADDRESS_NOT_FOUND");
+                throw new AuthAddressNotFoundException();
             }
             
             existingAddress!.Update(address.State,address.City,address.District,address.Street,address.ZipCode, nowUtc);
@@ -157,7 +160,7 @@ public sealed class RegisterUserHandler
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to save registration data for email {Email}", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            throw new DatabaseSaveFailedException(ex);
         }
 
         //email
@@ -176,7 +179,7 @@ public sealed class RegisterUserHandler
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to send verification email for email {Email}", email);
-            throw new InvalidOperationException("EMAIL_SEND_FAILED", ex);
+            throw new EmailSendFailedException(ex);
         }
         
         return new RegisterUserResult(
@@ -192,98 +195,102 @@ public sealed class RegisterUserHandler
         //Names verification
         if (string.IsNullOrWhiteSpace(firstName))
         {
-            throw new ArgumentException("FIRST_NAME_REQUIRED");
+            throw new ArgumentException("First name is required.");
         }
         if (firstName.Length < 2 || firstName.Length > 100 )
         {
-            throw new ArgumentException("FIRST_NAME_INVALID_LENGTH");
+            throw new ArgumentException("First name must be between 2 and 100 characters.");
         }
         if (string.IsNullOrWhiteSpace(lastName))
         {
-            throw new ArgumentException("LAST_NAME_REQUIRED");
+            throw new ArgumentException("Last name is required.");
         }
         if (lastName.Length < 2 || lastName.Length > 100 )
         {
-            throw new ArgumentException("LAST_NAME_INVALID_LENGTH");
+            throw new ArgumentException("Last name must be between 2 and 100 characters.");
         }
         //Email verification
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_REQUIRED");
+            throw new ArgumentException("Email is required.");
         }
         if (email.Length < 5 || email.Length > 255 )
         {
-            throw new ArgumentException("EMAIL_INVALID_LENGTH");
+            throw new ArgumentException("Email must be between 5 and 255 characters.");
         }
 
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Invalid email format.");
         }
         //Cpf verification
         if (string.IsNullOrWhiteSpace(cpf))
         {
-            throw new ArgumentException("CPF_REQUIRED");
+            throw new ArgumentException("CPF is required.");
         }
         if (cpf.Length != 11)
         {
-            throw new ArgumentException("CPF_INVALID_LENGTH");
+            throw new ArgumentException("CPF must contain exactly 11 digits.");
         }
 
         if (!cpf.CpfIsValid())
         {
-            throw new ArgumentException("CPF_INVALID");
+            throw new ArgumentException("Invalid CPF.");
         }
         //Password verification
         if (string.IsNullOrWhiteSpace(password))
         {
-            throw new ArgumentException("PASSWORD_REQUIRED");
+            throw new ArgumentException("Password is required.");
         }
         if (password.Length < 8)
         {
-            throw new ArgumentException("PASSWORD_TOO_SHORT");
+            throw new ArgumentException("Password must be at least 8 characters long.");
         }
         if (password.Length > 50)
         {
-            throw new ArgumentException("PASSWORD_TOO_LONG");
+            throw new ArgumentException("Password must be at most 50 characters long.");
         }
         //BirthDate Verification
         if (birthDate == default)
         {
-            throw new ArgumentException("BIRTH_DATE_REQUIRED");
+            throw new ArgumentException("Birth date is required.");
         }
         if (birthDate > today)
         { 
-            throw new ArgumentException("BIRTH_DATE_INVALID");
+            throw new ArgumentException("Birth date cannot be in the future.");
         }
         if (!birthDate.IsAdult(today))
         {
-            throw new ArgumentException("TOO_YOUNG");
+            throw new ArgumentException("User must be at least 18 years old.");
         }
         //Address
+        if (address is null)
+        {
+            throw new ArgumentException("Address is required.");
+        }
         if (string.IsNullOrWhiteSpace(address.State))
         {
-            throw new ArgumentException("ADDRESS_STATE_REQUIRED");
+            throw new ArgumentException("Address state is required.");
         }
 
         if (string.IsNullOrWhiteSpace(address.City))
         {
-            throw new ArgumentException("ADDRESS_CITY_REQUIRED");
+            throw new ArgumentException("Address city is required.");
         }
 
         if (string.IsNullOrWhiteSpace(address.District))
         {
-            throw new ArgumentException("ADDRESS_DISTRICT_REQUIRED");
+            throw new ArgumentException("Address district is required.");
         }
 
         if (string.IsNullOrWhiteSpace(address.Street))
         {
-            throw new ArgumentException("ADDRESS_STREET_REQUIRED");
+            throw new ArgumentException("Address street is required.");
         }
 
         if (string.IsNullOrWhiteSpace(address.ZipCode))
         {
-            throw new ArgumentException("ADDRESS_ZIPCODE_REQUIRED");
+            throw new ArgumentException("Address ZIP code is required.");
         }
     }
 }

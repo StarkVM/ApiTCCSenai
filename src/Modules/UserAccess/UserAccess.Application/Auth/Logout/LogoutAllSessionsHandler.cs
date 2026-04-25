@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Logout.Records;
+using UserAccess.Application.Common.Exceptions;
+using UserAccess.Domain.Exceptions.Auth;
 using UserAccess.Domain.Helpers;
 using UserAccess.Domain.Interfaces;
 
@@ -14,7 +16,6 @@ public sealed class LogoutAllSessionsHandler
     
     public LogoutAllSessionsHandler(
         IRefreshTokenRepository refreshTokenRepository,
-        IRefreshTokenHasher refreshTokenHasher,
         IUnitOfWork unitOfWork,
         IClock clock,
         ILogger<LogoutAllSessionsHandler> logger
@@ -35,7 +36,7 @@ public sealed class LogoutAllSessionsHandler
         if (!userId.GuidIdIsValid())
         {
             _logger.LogWarning("Logout failed: invalid user id.");
-            throw new ArgumentException("INVALID_USER_ID");
+            throw new AuthInvalidUserIdException();
         }
         
         
@@ -62,7 +63,7 @@ public sealed class LogoutAllSessionsHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to save data for UserId: {Id}", userId);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            throw new DatabaseSaveFailedException(ex);
         }
 
         return new LogoutAllSessionsResult(true);

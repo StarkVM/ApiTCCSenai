@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Login.Records;
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Senders;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
@@ -75,7 +76,7 @@ public sealed class RequestNewLoginVerificationCodeHandler
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to save data for email {Email}", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            return new RequestNewLoginVerificationCodeResult(false);
         }
         
         var senderEmailCommand = new SendVerificationCodeRequest(
@@ -89,14 +90,10 @@ public sealed class RequestNewLoginVerificationCodeHandler
             await _verificationCodeSender.SendCodeAsync(senderEmailCommand, cancellationToken);
             _logger.LogInformation("Resend login verification code sent successfully for email {Email}", email);
         }
-        catch (ArgumentException ex) when (ex.Message == "VERY_FAST_ATTEMPTS")
-        {
-            return new RequestNewLoginVerificationCodeResult(false);
-        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to resend login verification code for email {Email}", email);
-            throw new InvalidOperationException("EMAIL_SEND_FAILED", ex);
+            return new RequestNewLoginVerificationCodeResult(false);
         }
        
         return new RequestNewLoginVerificationCodeResult(true);
@@ -106,11 +103,11 @@ public sealed class RequestNewLoginVerificationCodeHandler
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_IS_REQUIRED");
+            throw new ArgumentException("Email is required.");
         }
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Email format is invalid.");
         }
     }
 }

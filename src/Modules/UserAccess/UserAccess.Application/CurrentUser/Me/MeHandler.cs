@@ -2,6 +2,7 @@ using UserAccess.Domain.Helpers;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.CurrentUser.Me.Records;
 using UserAccess.Domain.Enums;
+using UserAccess.Domain.Exceptions.Users;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Application.CurrentUser.Me;
@@ -27,7 +28,7 @@ public sealed class MeHandler
         if (!userId.GuidIdIsValid())
         {
             _logger.LogWarning("Invalid user id received in me request.");
-            throw new ArgumentException("ID_IS_REQUIRED");
+            throw new UsersInvalidUserIdException();
         }
         
         var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
@@ -35,7 +36,7 @@ public sealed class MeHandler
         if (user is null)
         {
             _logger.LogWarning("User not found for id: {UserId}", command.UserId);
-            throw new InvalidOperationException("USER_NOT_FOUND");
+            throw new UserNotFoundException();
         }
         
         if (user.Status != UserStatus.PendingIdentityVerification &&
@@ -43,13 +44,13 @@ public sealed class MeHandler
         {
             _logger.LogWarning(
                 "Invalid User. Id: {Id}", user.Id);
-            throw new InvalidOperationException("INVALID_USER");
+            throw new UsersInvalidUserException();
         }
 
         if (user.Address is null)
         {
             _logger.LogWarning("Address not found for user id: {UserId}", command.UserId);
-            throw new InvalidOperationException("ADDRESS_NOT_FOUND");
+            throw new UsersAddressNotFoundException();
         }
 
         var address = new AddressResult(

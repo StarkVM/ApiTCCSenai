@@ -14,6 +14,7 @@ using UserAccess.Application.Auth.ResetPassword.Records;
 using UserAccess.Application.Auth.VerifyEmail;
 using LoginRequest = Api.Routes.UserAccess.AuthRecords.LoginRequest;
 using System.Security.Claims;
+using Api.Common.Errors;
 using UserAccess.Domain.Helpers;
 
 namespace Api.Routes.UserAccess;
@@ -24,9 +25,39 @@ public static class AuthRoutes
     {
         var authGroup = group.MapGroup("/auth");
         
+        authGroup.MapPost("/refresh-tokens", RefreshTokensAsync)
+            .RequireRateLimiting("public")
+            .WithName("RefreshTokens")
+            .WithTags("Auth");
+        
         authGroup.MapPost("/register", RegisterAsync)
             .RequireRateLimiting("public")
             .WithName("RegisterUser")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/email-verification/verify-email", VerifyEmailAsync)
+            .RequireRateLimiting("public")
+            .WithName("VerifyEmail")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/email-verification/request-new-code", RequestNewEmailVerificationCodeAsync)
+            .RequireRateLimiting("public")
+            .WithName("RequestNewVerificationCode")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/login", LoginAsync)
+            .RequireRateLimiting("public")
+            .WithName("Login")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/login/verify", VerifyLoginAsync)
+            .RequireRateLimiting("public")
+            .WithName("VerifyLogin")
+            .WithTags("Auth");
+        
+        authGroup.MapPost("/login/request-new-code", RequestNewLoginVerificationCodeAsync)
+            .RequireRateLimiting("public")
+            .WithName("RequestNewLoginVerificationCode")
             .WithTags("Auth");
         
         authGroup.MapPost("/forgot-password", ForgotPasswordAsync)
@@ -37,36 +68,6 @@ public static class AuthRoutes
         authGroup.MapPost("/reset-password", ResetPasswordAsync)
             .RequireRateLimiting("public")
             .WithName("ResetPassword")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/email-verification/request-new-code", RequestNewEmailVerificationCodeAsync)
-            .RequireRateLimiting("public")
-            .WithName("RequestNewVerificationCode")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/email-verification/verify-email", VerifyEmailAsync)
-            .RequireRateLimiting("public")
-            .WithName("VerifyEmail")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/login", LoginAsync)
-            .RequireRateLimiting("public")
-            .WithName("Login")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/login/request-new-code", RequestNewLoginVerificationCodeAsync)
-            .RequireRateLimiting("public")
-            .WithName("RequestNewLoginVerificationCode")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/login/verify", VerifyLoginAsync)
-            .RequireRateLimiting("public")
-            .WithName("VerifyLogin")
-            .WithTags("Auth");
-        
-        authGroup.MapPost("/refresh-tokens", RefreshTokensAsync)
-            .RequireRateLimiting("public")
-            .WithName("RefreshTokens")
             .WithTags("Auth");
         
         authGroup.MapPost("/logout-current-session", LogoutCurrentSessionAsync)
@@ -117,73 +118,11 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_FOUND.")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Refresh Token failed. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.NotFound(
-                new
-                {
-                    message = "Refresh Token not found.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_ACTIVE.")
-        {
-            logger.LogWarning(
-                "Refresh Token failed. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.BadRequest(
-                new
-                {
-                    message = "Refresh Token not active.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User refresh tokens database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User refresh tokens validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
+            logger.LogWarning(exception, "Refresh tokens failed. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User refresh tokens failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 
@@ -218,62 +157,11 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "User Login database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Send verification code failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User Login validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
+            logger.LogWarning(exception, "Login verification failed. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "Login failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
     
@@ -311,59 +199,11 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "INVALID_CREDENTIALS")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Login verification failed. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.BadRequest(
-                new
-                {
-                    message = "Unable to complete login.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        } catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User login verification validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
+            logger.LogWarning(exception, "Login failed. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "Login verification request failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 
@@ -399,62 +239,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "User request new verification code database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Send verification code failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+            logger.LogWarning(exception, "Request new login verification code failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "Request new login verification code failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 
@@ -517,103 +307,11 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier,
             }) ;
         }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_AND_CPF_CONFLICT")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "User registration failed because a conflict. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Conflict(
-                new
-                {
-                    message = "Email and Cpf conflict.",
-                    requestId = httpContext.TraceIdentifier
-                }
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_OR_CPF_CONFLICT")
-        {
-            logger.LogWarning(
-                "User registration failed because a conflict. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Conflict(
-                new
-                {
-                    message = "Email or Cpf conflict.",
-                    requestId = httpContext.TraceIdentifier
-                }
-                );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "REGISTRATION_IN_PROGRESS")
-        {
-            logger.LogWarning(
-                "User registration failed because registration already in progress. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Conflict(
-                new
-                {
-                    message = "Registration in progress.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User registration failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-            new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Send verification code failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                    new
-                    {
-                        message = "Send verification code failed.",
-                        requestId = httpContext.TraceIdentifier
-                    },
-                    statusCode: StatusCodes.Status500InternalServerError
-                );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User registration validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
+            logger.LogWarning(exception, "User registration failed. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User registration failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 
@@ -650,75 +348,11 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "INVALID_CREDENTIALS")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Email verification failed. RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.BadRequest(
-                new
-                {
-                    message = "Unable to verify email.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User verify email database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Verification code failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Send verification code failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User verification code validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
+            logger.LogWarning(exception, "Email verification failed. RequestId: {RequestId}", httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "Email verification failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
     
@@ -757,62 +391,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Request new email verification code database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Resend verification code failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Send verification code failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User request new email verification code validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+            logger.LogWarning(exception, "Request new email verification code failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User request new email verification code failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 
@@ -849,62 +433,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Forgot password failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "EMAIL_SEND_FAILED")
-        {
-            logger.LogWarning(
-                "Send forgot password email failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Send forgot password code failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User forgot password validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+            logger.LogWarning(exception, "Forgot password request failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User forgot-password request failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
     
@@ -944,47 +478,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "User reset password failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User reset password validation failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+            logger.LogWarning(exception, "Reset password request failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User reset password request failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
     
@@ -1023,73 +522,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (ArgumentException ex) when (ex.Message == "REFRESH_TOKEN_REQUIRED")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "Logout current session failed because refresh token is required. RequestId: {RequestId}",
+            logger.LogWarning(exception, "Logout current session failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.BadRequest(new
-            {
-                message = "Refresh token is required.",
-                requestId = httpContext.TraceIdentifier
-            });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "REFRESH_TOKEN_NOT_FOUND")
-        {
-            logger.LogWarning(
-                "User refresh token not found failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.NotFound(
-                new
-                {
-                    message = "Refresh token not found.",
-                    requestId = httpContext.TraceIdentifier
-                }
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User logout failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User logout failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User logout failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
     
@@ -1140,61 +578,12 @@ public static class AuthRoutes
                 requestId = httpContext.TraceIdentifier
             });
         }
-        catch (ArgumentException ex) when (ex.Message == "INVALID_USER_ID")
+        catch (Exception exception)
         {
-            logger.LogWarning(
-                "User id is not valid RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.BadRequest(
-                new
-                {
-                    message = "User id is not valid.",
-                    requestId = httpContext.TraceIdentifier
-                }
-            );
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "DB_SAVE_FAILED")
-        {
-            logger.LogWarning(
-                "User logout failed database save failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.Json(
-                new
-                {
-                    message = "Database save failed.",
-                    requestId = httpContext.TraceIdentifier
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
-        }
-        catch (ArgumentException ex)
-        {
-            logger.LogWarning(
-                "User logout failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+            logger.LogWarning(exception, "Logout all sessions failed. RequestId: {RequestId}",
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                "User logout failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-                {
-                    ["problem"] = new[] { ex.Message }
-                },
-                statusCode: StatusCodes.Status500InternalServerError
-            );
+            return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 }

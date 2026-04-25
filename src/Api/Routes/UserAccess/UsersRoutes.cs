@@ -2,6 +2,7 @@ using System.Security.Claims;
 using UserAccess.Application.CurrentUser.Me;
 using UserAccess.Application.CurrentUser.Me.Records;
 using UserAccess.Domain.Helpers;
+using Api.Common.Errors;
 
 
 namespace Api.Routes.UserAccess;
@@ -64,72 +65,15 @@ public static class UserRoutes
                     address = result.Address,
                 });
         }
-        catch (InvalidOperationException ex) when (ex.Message == "ADDRESS_NOT_FOUND")
-        {
-            logger.LogWarning(
-                "Request me failed because address not found failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.NotFound(
-                new
-                {
-                    message = "Address not found.",
-                    requestId = httpContext.TraceIdentifier 
-                });
-        }
-        catch (InvalidOperationException ex) when (ex.Message == "USER_NOT_FOUND")
-        {
-            logger.LogWarning(
-                "Request me failed because user not found failed RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.NotFound(
-            new
-                {
-                    message = "User not found.",
-                    requestId = httpContext.TraceIdentifier
-                }
-            );
-        }
-        catch (ArgumentException ex) when (ex.Message == "ID_IS_REQUIRED")
-        {
-            logger.LogWarning(
-                "Id is required to request me RequestId: {RequestId}",
-                httpContext.TraceIdentifier);
-            
-            return Results.BadRequest(
-                    new
-                    {
-                        message = "Id is required failed.",
-                        requestId = httpContext.TraceIdentifier
-                    });
-        }
-        catch (ArgumentException ex)
+        
+        catch (Exception exception)
         {
             logger.LogWarning(
                 "User request me failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
+                exception.Message,
                 httpContext.TraceIdentifier);
 
-            return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    ["register"] = new[] { ex.Message }
-                }
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(
-                "User request me failed. Error: {Error}. RequestId: {RequestId}",
-                ex.Message,
-                httpContext.TraceIdentifier);
-
-            return Results.Json(new Dictionary<string, string[]>
-            {
-                ["register"] = new[] { ex.Message }
-            },
-            statusCode: StatusCodes.Status500InternalServerError
-            );
+           return ApiExceptionMapper.Map(exception, httpContext);
         }
     }
 }

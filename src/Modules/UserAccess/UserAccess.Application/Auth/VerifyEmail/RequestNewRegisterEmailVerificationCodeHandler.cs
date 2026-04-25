@@ -72,7 +72,7 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to save data for email {Email}", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            return new RequestNewRegisterEmailVerificationCodeResult(false);
         }
         
         var senderEmailCommand = new SendVerificationCodeRequest(
@@ -86,14 +86,10 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
             await _verificationCodeSender.SendCodeAsync(senderEmailCommand, cancellationToken);
             _logger.LogInformation("Resend email verification code sent successfully for email {Email}", email);
         }
-        catch (ArgumentException ex) when (ex.Message == "VERY_FAST_ATTEMPTS")
-        {
-            return new RequestNewRegisterEmailVerificationCodeResult(false);
-        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to resend email verification code for email {Email}", email);
-            throw new InvalidOperationException("EMAIL_SEND_FAILED", ex);
+            return new RequestNewRegisterEmailVerificationCodeResult(false);
         }
        
         return new RequestNewRegisterEmailVerificationCodeResult(true);
@@ -103,11 +99,11 @@ public sealed class RequestNewRegisterEmailVerificationCodeHandler
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_IS_REQUIRED");
+            throw new ArgumentException("Email is required.");
         }
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Invalid email format.");
         }
     }
 }

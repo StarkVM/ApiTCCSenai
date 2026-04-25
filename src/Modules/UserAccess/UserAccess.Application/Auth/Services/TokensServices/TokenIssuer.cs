@@ -1,9 +1,10 @@
 using Microsoft.Extensions.Logging;
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Results;
 
-namespace UserAccess.Application.Auth.Tokens;
+namespace UserAccess.Application.Auth.Services.TokensServices;
 
 public sealed class TokenIssuer : ITokenIssuer
 {
@@ -72,7 +73,7 @@ public sealed class TokenIssuer : ITokenIssuer
         catch(Exception ex)
         {
             _logger.LogError(ex, "Failed to persist refresh token for email {Email}.", user.Email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            throw new DatabaseSaveFailedException();
         }
         
 

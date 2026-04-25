@@ -1,6 +1,8 @@
+using System.Security.Authentication;
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Login.Records;
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
 using UserAccess.Domain.Helpers;
 
@@ -53,7 +55,7 @@ public sealed class VerifyLoginHandler
             _logger.LogWarning("Login verification failed: user not found for email {Email}.", email);
             // Não revelar que o usuário não existe
             // Do not reveal user existence
-            throw new InvalidOperationException("INVALID_CREDENTIALS");
+            throw new InvalidCredentialException();
         }
         
         if (user.Status != UserStatus.Active && user.Status != UserStatus.PendingIdentityVerification)
@@ -61,7 +63,7 @@ public sealed class VerifyLoginHandler
             _logger.LogWarning("User {Email} is not Active.", email);
             // Não revelar que o usuário existe mas nao eh valido
             // Do not reveal that user exist but is not valid
-            throw new InvalidOperationException("INVALID_CREDENTIALS");
+            throw new InvalidCredentialException();
         }
 
         var validation = await _verificationCodeService.ValidateAsync(
@@ -75,7 +77,7 @@ public sealed class VerifyLoginHandler
         {
             _logger.LogWarning("Invalid login verification code for email {Email}.", email);
             //Invalid code
-            throw new InvalidOperationException("INVALID_CREDENTIALS");
+            throw new InvalidCredentialException();
         }
 
         var verificationCode = validation.Code;
@@ -90,7 +92,7 @@ public sealed class VerifyLoginHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to persist login verification for email {Email}.", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            throw new DatabaseSaveFailedException(ex);
         }
 
         var tokens = await _tokenIssuer.IssueAsync(user, cancellationToken);
@@ -108,25 +110,21 @@ public sealed class VerifyLoginHandler
         //Email validation
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_REQUIRED");
-        }
-        if (email.Length < 5 || email.Length > 255 )
-        {
-            throw new ArgumentException("EMAIL_INVALID_LENGTH");
+            throw new ArgumentException("Email is required.");
         }
 
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Invalid email format.");
         }
         //Code validation
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new ArgumentException("CODE_IS_REQUIRED");
+            throw new ArgumentException("Verification code is required.");
         }
         if (code.Length != 6)
         {
-            throw new ArgumentException("CODE_INVALID_LENGTH");
+            throw new ArgumentException("Verification code must be exactly 6 characters.");
         }
     }
 }

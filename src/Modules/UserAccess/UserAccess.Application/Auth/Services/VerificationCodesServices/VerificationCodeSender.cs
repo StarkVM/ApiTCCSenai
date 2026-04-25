@@ -1,10 +1,12 @@
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Senders;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Enums;
+using UserAccess.Domain.Exceptions.Auth;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Helpers;
 
-namespace UserAccess.Application.Auth.VerificationCodes;
+namespace UserAccess.Application.Auth.Services.VerificationCodesServices;
 
 public sealed class VerificationCodeSender : IVerificationCodeSender
 {
@@ -41,7 +43,7 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         {
             if (independentCode.CreatedAt > utcNow.AddMinutes(-2))
             {
-                throw new ArgumentException("VERY_FAST_ATTEMPTS");
+                throw new TooManyAttemptsException();
             }
         }
         
@@ -61,8 +63,17 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         );
         
         await _verificationCodeRepository.AddAsync( emailVerificationCode, cancellationToken);
+
+        try
+        {
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            throw new DatabaseSaveFailedException(exception);
+        }
         
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
 
         var subject = """ """;
 
@@ -201,6 +212,13 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
                     """;
         }
 
-        await _emailSender.SendAsync(email, subject, body, cancellationToken );
+        try
+        {
+            await _emailSender.SendAsync(email, subject, body, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            throw new EmailSendFailedException(ex);
+        }
     }
 }

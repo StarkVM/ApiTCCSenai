@@ -1,7 +1,10 @@
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.RefreshTokens.Records;
+using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
+using UserAccess.Domain.Exceptions.Auth;
+using UserAccess.Domain.Exceptions.Users;
 
 namespace UserAccess.Application.Auth.RefreshTokens;
 
@@ -41,7 +44,7 @@ public sealed class RefreshTokensHandler
         if (string.IsNullOrWhiteSpace(refreshTokenString))
         {
             _logger.LogWarning("Refresh token request failed: token is empty.");
-            throw new ArgumentException("REFRESH_TOKEN_REQUIRED");
+            throw new ArgumentException("Refresh token is required.");
         }
         
         _logger.LogInformation("Starting user refresh tokens flow for token {Token}", refreshTokenString);
@@ -54,7 +57,8 @@ public sealed class RefreshTokensHandler
         {
             _logger.LogWarning(
                 "Refresh token not found. Token: {Token}", refreshTokenString);
-            throw new InvalidOperationException("REFRESH_TOKEN_NOT_FOUND");
+            throw new RefreshTokenNotFoundException();
+
         }
 
         if (refreshToken.User.Status != UserStatus.PendingIdentityVerification &&
@@ -62,7 +66,7 @@ public sealed class RefreshTokensHandler
         {
             _logger.LogWarning(
                 "Invalid User. Token: {Token}", refreshTokenString);
-            throw new InvalidOperationException("INVALID_USER");
+            throw new AuthInvalidUserException();
         }
 
         if (!refreshToken.IsActive(nowUtc))
@@ -72,7 +76,7 @@ public sealed class RefreshTokensHandler
                 refreshToken.UserId
                 );
 
-            throw new InvalidOperationException("REFRESH_TOKEN_NOT_ACTIVE");
+            throw new RefreshTokenNotActiveException();
         }
         
         
@@ -88,14 +92,15 @@ public sealed class RefreshTokensHandler
                 );
            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
-        catch(Exception ex)
+        catch(Exception exception)
         {
             _logger.LogError(
-                ex,
+                exception,
                 "Failed to persist refresh token rotation for user {UserId}.",
                 refreshToken.UserId
                 );
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            
+            throw new DatabaseSaveFailedException(exception);
         }
 
         return new RefreshTokensResult(

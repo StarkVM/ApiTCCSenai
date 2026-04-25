@@ -97,7 +97,7 @@ public sealed class ResetPasswordHandler
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to save password reset changes for email {Email}", email);
-            throw new InvalidOperationException("DB_SAVE_FAILED", ex);
+            return new ResetPasswordResult(true);
         }
         
         return new ResetPasswordResult(true);
@@ -108,34 +108,35 @@ public sealed class ResetPasswordHandler
         //Password validation
         if (string.IsNullOrWhiteSpace(newPassword))
         {
-            throw new ArgumentException("PASSWORD_REQUIRED");
+            throw new ArgumentException("Password is required.");
         }
-        if (newPassword.Length < 8 || newPassword.Length > 50 )
+        if (newPassword.Length < 8 )
         {
-            throw new ArgumentException("PASSWORD_INVALID_LENGTH");
+            throw new ArgumentException("Password must be at least 8 characters long.");
+        }
+
+        if (newPassword.Length > 50)
+        {
+            throw new ArgumentException("Password must be at most 50 characters long.");
         }
         //Email validation
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("EMAIL_REQUIRED");
-        }
-        if (email.Length < 5 || email.Length > 255 )
-        {
-            throw new ArgumentException("EMAIL_INVALID_LENGTH");
+            throw new ArgumentException("Email is required.");
         }
 
         if (!email.EmailIsValid())
         {
-            throw new ArgumentException("EMAIL_INVALID");
+            throw new ArgumentException("Invalid email format.");
         }
         //Code validation
         if (string.IsNullOrWhiteSpace(code))
         {
-            throw new ArgumentException("CODE_IS_REQUIRED");
+            throw new ArgumentException("Verification code is required.");
         }
         if (code.Length != 6)
         {
-            throw new ArgumentException("CODE_INVALID_LENGTH");
+            throw new ArgumentException("Verification code must be exactly 6 characters.");
         }
     }
 }

@@ -3,7 +3,7 @@ using UserAccess.Domain.Enums;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Results;
 
-namespace UserAccess.Application.Auth.VerificationCodes;
+namespace UserAccess.Application.Auth.Services.VerificationCodesServices;
 
 public sealed class VerificationCodeService : IVerificationCodeService
 {

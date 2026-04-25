@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <Folder Include="CurrentUser\" />
-    <Folder Include="Auth\AuthServices\" />
+    <Folder Include="Auth\Services\" />
   </ItemGroup>
 
   <ItemGroup>
