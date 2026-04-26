@@ -125,6 +125,15 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
             
+            CpfValidationFailedException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
             AuthAddressNotFoundException ex => Results.Json(
                 statusCode: StatusCodes.Status404NotFound,
                 data: new ApiErrorResponse

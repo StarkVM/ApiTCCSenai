@@ -7,7 +7,7 @@ using UserAccess.Domain.Entities;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Infrastructure.Auth.Options;
 
-namespace UserAccess.Infrastructure.Auth;
+namespace UserAccess.Infrastructure.Auth.Generators;
 
 public class AccessTokenGenerator : IAccessTokenGenerator
 {

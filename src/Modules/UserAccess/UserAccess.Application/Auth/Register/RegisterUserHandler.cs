@@ -21,10 +21,11 @@ public sealed class RegisterUserHandler
     private readonly ILogger<RegisterUserHandler> _logger;
     private readonly IAddressRepository _addressRepository;
     private readonly IVerificationCodeSender _verificationCodeSender;
+    private readonly ICpfValidator _cpfValidator;
     
     public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ICpfHasher cpfHasher, 
         IClock clock, IUnitOfWork unitOfWork, ILogger<RegisterUserHandler> logger,
-        IAddressRepository addressRepository, IVerificationCodeSender  verificationCodeSender)
+        IAddressRepository addressRepository, IVerificationCodeSender  verificationCodeSender, ICpfValidator cpfValidator)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -34,6 +35,7 @@ public sealed class RegisterUserHandler
         _logger = logger;
         _addressRepository = addressRepository;
         _verificationCodeSender = verificationCodeSender;
+        _cpfValidator = cpfValidator;
     }
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
@@ -150,6 +152,21 @@ public sealed class RegisterUserHandler
             _logger.LogInformation("Creating new pending user registration for email {Email}", email);
             
             await _userRepository.AddAsync(user, cancellationToken);
+        }
+        
+        var fullName = $"{firstName} {lastName}";
+
+        var validData = await _cpfValidator.ValidateAsync(
+            cpf!,
+            fullName,
+            birthDate,
+            cancellationToken
+        );
+
+        if (!validData)
+        {
+            _logger.LogWarning("Registration blocked because cpf validation failed.");
+            throw new CpfValidationFailedException();
         }
         
         try

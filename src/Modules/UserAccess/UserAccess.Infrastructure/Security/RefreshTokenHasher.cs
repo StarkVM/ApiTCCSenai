@@ -2,7 +2,7 @@ using System.Text;
 using System.Security.Cryptography;
 using UserAccess.Domain.Interfaces;
 
-namespace UserAccess.Infrastructure.Auth;
+namespace UserAccess.Infrastructure.Security;
 
 public sealed class RefreshTokenHasher : IRefreshTokenHasher
 {   

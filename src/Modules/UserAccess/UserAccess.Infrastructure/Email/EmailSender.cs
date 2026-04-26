@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Options;
 using UserAccess.Domain.Interfaces;
 using Resend;
 

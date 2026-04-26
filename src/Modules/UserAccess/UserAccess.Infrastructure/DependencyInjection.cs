@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Infrastructure.Auth;
 using UserAccess.Infrastructure.Email;
@@ -10,6 +11,9 @@ using UserAccess.Infrastructure.Security;
 using UserAccess.Infrastructure.Time;
 using UserAccess.Infrastructure.Auth.Options;
 using Resend;
+using UserAccess.Infrastructure.Auth.Generators;
+using UserAccess.Infrastructure.CpfIdentityVerification;
+using UserAccess.Infrastructure.CpfIdentityVerification.Options;
 
 namespace UserAccess.Infrastructure;
 
@@ -47,6 +51,29 @@ public static class DependencyInjection
         services.AddScoped<IClock, SystemClock>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
+        services.Configure<ApiCpfOptions>(
+            configuration.GetSection("ApiCpf"));
+
+        services.AddHttpClient<ICpfValidator, CpfValidator>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<ApiCpfOptions>>().Value;
+
+            if (string.IsNullOrWhiteSpace(options.BaseUrl))
+            {
+                throw new InvalidOperationException("ApiCpf BaseUrl is not configured.");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.ApiKey))
+            {
+                throw new InvalidOperationException("ApiCpf ApiKey is not configured.");
+            }
+
+            client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(10);
+
+            client.DefaultRequestHeaders.Add("X-API-KEY", options.ApiKey);
+        });
         
         var cpfSecretKey = configuration["Security:CpfProtectionKey"];
 

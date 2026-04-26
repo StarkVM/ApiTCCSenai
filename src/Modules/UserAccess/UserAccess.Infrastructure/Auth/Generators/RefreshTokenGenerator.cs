@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using UserAccess.Domain.Interfaces;
 
-namespace UserAccess.Infrastructure.Auth;
+namespace UserAccess.Infrastructure.Auth.Generators;
 
 public sealed class RefreshTokenGenerator : IRefreshTokenGenerator
 {
