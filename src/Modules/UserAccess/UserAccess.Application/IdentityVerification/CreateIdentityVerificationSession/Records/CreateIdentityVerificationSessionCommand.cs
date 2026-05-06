@@ -1,0 +1,5 @@
+
+
+namespace UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession.Records;
+
+public record CreateIdentityVerificationSessionCommand(Guid Id);

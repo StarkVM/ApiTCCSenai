@@ -18,4 +18,8 @@
     <None Remove="Interfaces\ValueObjects\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\Auth\" />
+  </ItemGroup>
+
 </Project>

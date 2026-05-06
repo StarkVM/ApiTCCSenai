@@ -1,6 +1,6 @@
 
 
-namespace UserAccess.Domain.Exceptions.Auth;
+namespace UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 /// <summary>
 /// Exception thrown when the refresh token is not found.

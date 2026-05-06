@@ -3,8 +3,7 @@ using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.RefreshTokens.Records;
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
-using UserAccess.Domain.Exceptions.Auth;
-using UserAccess.Domain.Exceptions.Users;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 namespace UserAccess.Application.Auth.RefreshTokens;
 
@@ -66,7 +65,7 @@ public sealed class RefreshTokensHandler
         {
             _logger.LogWarning(
                 "Invalid User. Token: {Token}", refreshTokenString);
-            throw new AuthInvalidUserException();
+            throw new InvalidUserException();
         }
 
         if (!refreshToken.IsActive(nowUtc))

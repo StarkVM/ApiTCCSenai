@@ -12,6 +12,8 @@ public class UserAccessDbContext : DbContext
      public DbSet<EmailVerificationCode> EmailVerificationCodes =>  Set<EmailVerificationCode>();
      
      public DbSet<RefreshToken> RefreshTokens =>  Set<RefreshToken>();
+     
+     public DbSet<IdentityVerificationSession> IdentityVerificationSessions =>  Set<IdentityVerificationSession>();
 
      protected override void OnModelCreating(ModelBuilder modelBuilder) =>
          modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserAccessDbContext).Assembly);

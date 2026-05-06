@@ -6,8 +6,7 @@ using UserAccess.Domain.Helpers;
 using UserAccess.Application.Auth.Register.Records;
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
-using UserAccess.Domain.Exceptions.Auth;
-using UserAccess.Domain.Exceptions.Users;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 namespace UserAccess.Application.Auth.Register;
 
@@ -115,7 +114,7 @@ public sealed class RegisterUserHandler
             if (existingAddress is null)
             {
                 _logger.LogWarning("Registration blocked because Addrress was not found. UserId {UserId}", existingUser.Id );
-                throw new AuthAddressNotFoundException();
+                throw new AddressNotFoundException();
             }
             
             existingAddress!.Update(address.State,address.City,address.District,address.Street,address.ZipCode, nowUtc);

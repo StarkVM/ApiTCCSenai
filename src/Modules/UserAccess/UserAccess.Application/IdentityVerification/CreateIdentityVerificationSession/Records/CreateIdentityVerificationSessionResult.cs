@@ -1,0 +1,3 @@
+namespace UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession.Records;
+
+public record CreateIdentityVerificationSessionResult(string VerificationUrl);

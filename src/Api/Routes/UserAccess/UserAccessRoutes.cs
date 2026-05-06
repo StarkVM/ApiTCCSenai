@@ -18,6 +18,7 @@ public static class UserAccessRoutes
 
         group.MapAuthRoutes();
         group.MapUserRoutes();
+        group.MapIdentityVerificationRoutes();
 
         group.MapGet("/health/db", async (HttpContext httpContext,UserAccessDbContext db, ILoggerFactory loggerFactory) =>
         {

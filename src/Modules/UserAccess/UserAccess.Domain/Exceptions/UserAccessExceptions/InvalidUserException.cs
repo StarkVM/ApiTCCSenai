@@ -1,14 +1,14 @@
 
 
-namespace UserAccess.Domain.Exceptions.Users;
+namespace UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 /// <summary>
 /// Exception thrown when the user is invalid.
 /// / Exceção lançada quando o usuário é inválido.
 /// </summary>
-public sealed class AuthInvalidUserException : AppException
+public sealed class InvalidUserException : AppException
 {
-    public AuthInvalidUserException()
+    public InvalidUserException()
         : base(
             code: "INVALID_USER",
             message: "User is invalid.")

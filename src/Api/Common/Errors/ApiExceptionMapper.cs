@@ -1,7 +1,6 @@
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Exceptions;
-using UserAccess.Domain.Exceptions.Auth;
-using UserAccess.Domain.Exceptions.Users;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 namespace Api.Common.Errors;
 
@@ -89,7 +88,7 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
 
-            AuthInvalidUserIdException ex => Results.Json(
+            InvalidUserIdException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
                 data: new ApiErrorResponse
                 {
@@ -98,7 +97,7 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
             
-            AuthInvalidUserException ex => Results.Json(
+            InvalidUserException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
                 data: new ApiErrorResponse
                 {
@@ -107,23 +106,7 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
             
-            UsersInvalidUserException ex => Results.Json(
-                statusCode: StatusCodes.Status400BadRequest,
-                data: new ApiErrorResponse
-                {
-                    Code = ex.Code,
-                    Message = ex.Message,
-                    RequestId = requestId
-                }),
             
-            UsersInvalidUserIdException ex => Results.Json(
-                statusCode: StatusCodes.Status400BadRequest,
-                data: new ApiErrorResponse
-                {
-                    Code = ex.Code,
-                    Message = ex.Message,
-                    RequestId = requestId
-                }),
             
             CpfValidationFailedException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
@@ -134,16 +117,7 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
             
-            AuthAddressNotFoundException ex => Results.Json(
-                statusCode: StatusCodes.Status404NotFound,
-                data: new ApiErrorResponse
-                {
-                    Code = ex.Code,
-                    Message = ex.Message,
-                    RequestId = requestId
-                }),
-            
-            UsersAddressNotFoundException ex => Results.Json(
+            AddressNotFoundException ex => Results.Json(
                 statusCode: StatusCodes.Status404NotFound,
                 data: new ApiErrorResponse
                 {

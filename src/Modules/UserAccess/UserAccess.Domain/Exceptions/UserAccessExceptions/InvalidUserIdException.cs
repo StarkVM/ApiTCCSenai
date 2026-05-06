@@ -1,12 +1,14 @@
-namespace UserAccess.Domain.Exceptions.Users;
+
+
+namespace UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 /// <summary>
 /// Exception thrown when the user id is invalid.
 /// / Exceção lançada quando o identificador do usuário é inválido.
 /// </summary>
-public sealed class UsersInvalidUserIdException : AppException
+public sealed class InvalidUserIdException : AppException
 {
-    public UsersInvalidUserIdException()
+    public InvalidUserIdException()
         : base(
             code: "INVALID_USER_ID",
             message: "User id is not valid.")

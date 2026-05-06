@@ -99,6 +99,52 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                     b.ToTable("email_verification_codes", (string)null);
                 });
 
+            modelBuilder.Entity("UserAccess.Domain.Entities.IdentityVerificationSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ProviderSessionId")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("ProviderSessionUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderSessionId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Provider", "ProviderSessionId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "Status");
+
+                    b.ToTable("identity_verification_sessions", (string)null);
+                });
+
             modelBuilder.Entity("UserAccess.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -215,6 +261,17 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("UserAccess.Domain.Entities.EmailVerificationCode", b =>
+                {
+                    b.HasOne("UserAccess.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UserAccess.Domain.Entities.IdentityVerificationSession", b =>
                 {
                     b.HasOne("UserAccess.Domain.Entities.User", "User")
                         .WithMany()

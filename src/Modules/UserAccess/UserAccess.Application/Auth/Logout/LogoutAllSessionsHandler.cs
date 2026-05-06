@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Logout.Records;
 using UserAccess.Application.Common.Exceptions;
-using UserAccess.Domain.Exceptions.Auth;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 using UserAccess.Domain.Helpers;
 using UserAccess.Domain.Interfaces;
 
@@ -36,7 +36,7 @@ public sealed class LogoutAllSessionsHandler
         if (!userId.GuidIdIsValid())
         {
             _logger.LogWarning("Logout failed: invalid user id.");
-            throw new AuthInvalidUserIdException();
+            throw new InvalidUserIdException();
         }
         
         

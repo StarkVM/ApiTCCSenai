@@ -2,7 +2,7 @@ using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Senders;
 using UserAccess.Domain.Entities;
 using UserAccess.Domain.Enums;
-using UserAccess.Domain.Exceptions.Auth;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 using UserAccess.Domain.Interfaces;
 using UserAccess.Domain.Helpers;
 

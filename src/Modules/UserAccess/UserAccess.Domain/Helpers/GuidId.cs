@@ -12,6 +12,10 @@ public static class GuidId
         {
             return false;
         }
+        if (!Guid.TryParse(id.ToString(), out Guid guidId))
+        {
+            return false;
+        }
         return true;
     }
 }

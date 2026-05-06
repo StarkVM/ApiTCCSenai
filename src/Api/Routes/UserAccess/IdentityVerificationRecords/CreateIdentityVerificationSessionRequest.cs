@@ -1,0 +1,3 @@
+namespace Api.Routes.UserAccess.IdentityVerificationRecords;
+
+public record CreateIdentityVerificationSessionRequest(Guid UserId);

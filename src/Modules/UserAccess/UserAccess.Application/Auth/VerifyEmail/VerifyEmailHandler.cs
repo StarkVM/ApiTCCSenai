@@ -1,9 +1,10 @@
-using System.Security.Authentication;
+
 using UserAccess.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.VerifyEmail.Records;
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Enums;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 using UserAccess.Domain.Helpers;
 
 namespace UserAccess.Application.Auth.VerifyEmail;
@@ -55,7 +56,7 @@ public sealed class VerifyEmailHandler
             _logger.LogWarning("User not found");
             // Não revelar que o usuário não existe
             // Do not reveal user existence
-            throw new InvalidCredentialException();
+            throw new InvalidCredentialsException();
         }
         
         if (user.Status != UserStatus.PendingEmailVerification)
@@ -63,7 +64,7 @@ public sealed class VerifyEmailHandler
             _logger.LogWarning("User {Email} is not pending email verification.", email);
             // Não revelar que o usuário existe mas nao eh valido
             // Do not reveal that user exist but is not valid
-            throw new InvalidCredentialException();
+            throw new InvalidCredentialsException();
         }
 
         var validation = await _verificationCodeService.ValidateAsync(
@@ -77,7 +78,7 @@ public sealed class VerifyEmailHandler
         {
             _logger.LogWarning("User {Email} is not pending email verification.", email);
             //Invalid code
-            throw new InvalidCredentialException();
+            throw new InvalidCredentialsException();
         }
 
         var verificationCode = validation.Code;

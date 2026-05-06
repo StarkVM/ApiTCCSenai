@@ -7,7 +7,7 @@ using Api.Common.Errors;
 
 namespace Api.Routes.UserAccess;
 
-public static class UserRoutes
+public static class UsersRoutes
 {
     public static RouteGroupBuilder MapUserRoutes(this RouteGroupBuilder group)
     {
@@ -29,7 +29,7 @@ public static class UserRoutes
         CancellationToken cancellationToken
     )
     {
-        var logger = loggerFactory.CreateLogger(typeof(UserRoutes).FullName!);
+        var logger = loggerFactory.CreateLogger(typeof(UsersRoutes).FullName!);
         
         logger.LogInformation("Starting Request Me flow. RequestId: {RequestId}", httpContext.TraceIdentifier);
 

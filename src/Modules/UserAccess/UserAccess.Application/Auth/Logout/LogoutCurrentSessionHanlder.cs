@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using UserAccess.Application.Auth.Logout.Records;
 using UserAccess.Application.Common.Exceptions;
-using UserAccess.Domain.Exceptions.Auth;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Application.Auth.Logout;

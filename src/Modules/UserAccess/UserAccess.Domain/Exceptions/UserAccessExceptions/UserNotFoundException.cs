@@ -1,5 +1,5 @@
 
-namespace UserAccess.Domain.Exceptions.Users;
+namespace UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 /// <summary>
 /// Exception thrown when the user is not found.

@@ -10,6 +10,8 @@ using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.Logout;
 using UserAccess.Application.Auth.RefreshTokens;
 using UserAccess.Application.CurrentUser.Me;
+using UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession;
+
 namespace UserAccess.Application;
 
 public static class DependencyInjection
@@ -17,6 +19,8 @@ public static class DependencyInjection
     public static IServiceCollection AddUserAccessApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<RefreshTokensHandler>();
+        
+        services.AddScoped<CreateIdentityVerificationSessionHandler>();
         
         services.AddScoped<RegisterUserHandler>();
         services.AddScoped<VerifyEmailHandler>();

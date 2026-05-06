@@ -25,10 +25,11 @@ public class VerificationCodeRepository  : IVerificationCodeRepository
         CancellationToken cancellationToken)
     {
         return await _userAccessDbContext.EmailVerificationCodes.Where
-        (x => x.UserId == userId &&
-              x.Purpose == purpose &&
-              x.ConsumedAt == null &&
-              x.ExpiresAt >= _clock.UtcNow)
+        (x => 
+            x.UserId == userId &&
+            x.Purpose == purpose &&
+            x.ConsumedAt == null &&
+            x.ExpiresAt >= _clock.UtcNow)
             .OrderByDescending(x => x.ExpiresAt)
             .FirstOrDefaultAsync(cancellationToken);
     }

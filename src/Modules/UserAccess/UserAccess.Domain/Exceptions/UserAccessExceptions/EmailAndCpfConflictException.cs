@@ -1,5 +1,5 @@
 
-namespace UserAccess.Domain.Exceptions.Auth;
+namespace UserAccess.Domain.Exceptions.UserAccessExceptions;
 
 /// <summary>
 /// Exception thrown when both email and CPF are already registered.
