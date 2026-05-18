@@ -16,6 +16,7 @@ public static class ApiExceptionMapper
 
         return exception switch
         {
+            
             InvalidCredentialsException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
                 data: new ApiErrorResponse
@@ -69,8 +70,35 @@ public static class ApiExceptionMapper
                     Message = ex.Message,
                     RequestId = requestId
                 }),
-
+            
             RefreshTokenNotActiveException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
+            InvalidGuidIdException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
+            WebhookInvalidPayloadException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
+            WebhookInvalidSignatureException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
                 data: new ApiErrorResponse
                 {

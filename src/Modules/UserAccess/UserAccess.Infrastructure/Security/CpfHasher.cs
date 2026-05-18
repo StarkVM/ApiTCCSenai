@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using UserAccess.Domain.Helpers;
 using UserAccess.Domain.Interfaces;
 
 namespace UserAccess.Infrastructure.Security;
@@ -31,5 +32,22 @@ public class CpfHasher : ICpfHasher
         var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(normalizeCpf));
 
         return Convert.ToHexString(hashBytes);
+    }
+
+    public bool Verify(string cpf, string hash)
+    {
+        cpf.Clean();
+        var normalizeCpf = new string(cpf.Where(char.IsDigit).ToArray());
+        var newHash = Hash(normalizeCpf);
+
+        if (string.Equals(
+                hash,
+                newHash,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        
+        return false;
     }
 }

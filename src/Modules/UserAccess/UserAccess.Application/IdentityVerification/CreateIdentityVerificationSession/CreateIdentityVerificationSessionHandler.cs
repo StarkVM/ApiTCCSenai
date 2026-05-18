@@ -75,7 +75,9 @@ public sealed class CreateIdentityVerificationSessionHandler
             IdentityVerificationProvider.Didit,
             nowUtc
         );
-
+        
+        await _sessionRepository.AddAsync(localSession, cancellationToken);
+    
         var providerRequest = new CreateProviderIdentityVerificationSessionRequest(
             localSession.Id,
             user.FirstName,
@@ -83,6 +85,8 @@ public sealed class CreateIdentityVerificationSessionHandler
             user.BirthDate,
             user.Email
         );
+        
+        
 
         try
         {
@@ -102,9 +106,10 @@ public sealed class CreateIdentityVerificationSessionHandler
         catch (Exception ex)
         {
             _logger.LogError(
-                "Registration data saved failed for UserId: {UserId}, LocalSessionId: {LocalSessionId}",
+                "Registration data saved failed for UserId: {UserId}, LocalSessionId: {LocalSessionId}, Error: {Error}",
                 user.Id,
-                localSession.Id);
+                localSession.Id,
+                ex.Message);
             throw new DatabaseSaveFailedException(ex);
         }
     }

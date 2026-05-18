@@ -93,4 +93,6 @@ public sealed class User
 
     public void Disable() => Status = UserStatus.Disabled;
     
+    public void MarkIdentityDenied() => Status = UserStatus.IdentityDenied;
+    
 }

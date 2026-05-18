@@ -12,17 +12,17 @@ public class DiditOptions
     /// API Key used to authenticate requests.
     /// / API Key usada para autenticar requisições.
     /// </summary>
-    public string ApiKey { get; set; } = default!;
+    public string ApiKey { get; init; } = default!;
 
     /// <summary>
     /// Secret key used to validate webhook signatures.
     /// / Chave secreta usada para validar assinaturas do webhook.
     /// </summary>
-    public string WebhookSecret { get; set; } = default!;
+    public string WebhookSecret { get; init; } = default!;
 
     /// <summary>
     /// Workflow identifier in Didit.
     /// / Identificador do workflow na Didit.
     /// </summary>
-    public string WorkflowId { get; set; } = default!;
+    public string WorkflowId { get; init; } = default!;
 }

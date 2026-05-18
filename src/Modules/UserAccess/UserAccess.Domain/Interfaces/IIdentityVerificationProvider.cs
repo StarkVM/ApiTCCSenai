@@ -8,4 +8,8 @@ public interface IIdentityVerificationProvider
     Task<CreateProviderIdentityVerificationSessionResult> CreateSessionAsync(
         CreateProviderIdentityVerificationSessionRequest request,
         CancellationToken cancellationToken);
+    
+    Task<VerifyProviderIdentityResult> VerifyIdentityAsync(
+        VerifyProviderIdentityRequest request,
+        CancellationToken cancellationToken);
 }

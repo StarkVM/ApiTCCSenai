@@ -18,6 +18,7 @@ public class IdentityVerificationSession
     public IdentityVerificationProvider? Provider { get; private set; }
     
     public DateTime CreatedAtUtc { get; private set; }
+    
     public DateTime? CompletedAtUtc { get; private set; }
     
     private IdentityVerificationSession(){}
@@ -56,6 +57,11 @@ public class IdentityVerificationSession
     public void MarkFailed(DateTime completedAtUtc)
     {
         Status = IdentityVerificationStatus.Failed;
+        CompletedAtUtc = completedAtUtc;
+    }
+    public void MarkExpired(DateTime completedAtUtc)
+    {
+        Status = IdentityVerificationStatus.Expired;
         CompletedAtUtc = completedAtUtc;
     }
 }

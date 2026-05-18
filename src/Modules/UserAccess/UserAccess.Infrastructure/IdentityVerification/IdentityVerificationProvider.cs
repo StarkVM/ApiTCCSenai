@@ -11,4 +11,9 @@ public class IdentityVerificationProvider : IIdentityVerificationProvider
     {
         throw new NotImplementedException();
     }
+
+    public Task<VerifyProviderIdentityResult> VerifyIdentityAsync(VerifyProviderIdentityRequest request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

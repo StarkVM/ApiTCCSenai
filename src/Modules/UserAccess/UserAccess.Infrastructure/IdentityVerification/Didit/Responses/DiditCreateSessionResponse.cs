@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace UserAccess.Infrastructure.IdentityVerification.Didit.Responses;
 
-public class DiditCreateSessionResponse
+public sealed record DiditCreateSessionResponse
 {
     [JsonPropertyName("session_id")]
     public string SessionId { get; init; } = string.Empty;
@@ -19,3 +19,4 @@ public class DiditCreateSessionResponse
     [JsonPropertyName("verification_url")]
     public string? VerificationUrl { get; init; }
 }
+

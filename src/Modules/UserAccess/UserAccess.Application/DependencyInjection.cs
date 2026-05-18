@@ -11,6 +11,7 @@ using UserAccess.Application.Auth.Logout;
 using UserAccess.Application.Auth.RefreshTokens;
 using UserAccess.Application.CurrentUser.Me;
 using UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession;
+using UserAccess.Application.IdentityVerification.ProcessIdentityVerificationWebhook;
 
 namespace UserAccess.Application;
 
@@ -20,6 +21,8 @@ public static class DependencyInjection
     {
         services.AddScoped<RefreshTokensHandler>();
         
+        
+        services.AddScoped<ProcessIdentityVerificationWebhookHandler>();
         services.AddScoped<CreateIdentityVerificationSessionHandler>();
         
         services.AddScoped<RegisterUserHandler>();

@@ -16,6 +16,8 @@ using UserAccess.Infrastructure.CpfIdentityVerification.Options;
 using UserAccess.Infrastructure.IdentityVerification;
 using UserAccess.Infrastructure.IdentityVerification.Didit;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Options;
+using UserAccess.Infrastructure.IdentityVerification.Didit.Payloads;
+using UserAccess.Infrastructure.IdentityVerification.Didit.SignatureValidator;
 
 namespace UserAccess.Infrastructure;
 
@@ -81,7 +83,7 @@ public static class DependencyInjection
         services.Configure<DiditOptions>(
             configuration.GetSection("Didit"));
 
-        services.AddHttpClient<DiditClient>((sp, client) =>
+        services.AddHttpClient<IIdentityVerificationProvider,DiditClient>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<DiditOptions>>().Value;
 
@@ -96,8 +98,9 @@ public static class DependencyInjection
 
             client.DefaultRequestHeaders.Add("X-API-KEY", options.ApiKey);
         });
-
-        services.AddScoped<IIdentityVerificationProvider, DiditClient>();
+        
+        services.AddScoped<IIdentityVerificationWebhookParser, IdentityVerificationWebhookParser>();
+        services.AddScoped<IIdentityVerificationWebhookAuthenticator, DiditWebhookSignatureValidator>();
         
         var cpfSecretKey = configuration["Security:CpfProtectionKey"];
 
