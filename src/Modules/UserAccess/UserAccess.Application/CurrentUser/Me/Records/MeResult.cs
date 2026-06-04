@@ -10,5 +10,6 @@ public record MeResult(
     string Email,
     UserStatus Status,
     UserType Type,
+    DateTime CreatedAt,
     AddressResult Address
     );

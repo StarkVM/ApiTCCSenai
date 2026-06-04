@@ -69,6 +69,7 @@ public sealed class MeHandler
             user.Email,
             user.Status,
             user.Type,
+            user.CreatedAt,
                 address
         );
     }

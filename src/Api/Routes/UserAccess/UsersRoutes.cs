@@ -78,6 +78,7 @@ public static class UsersRoutes
                     email = result.Email,
                     status = result.Status,
                     type = result.Type,
+                    createdAt = result.CreatedAt,
                     address = result.Address,
                 });
         }
