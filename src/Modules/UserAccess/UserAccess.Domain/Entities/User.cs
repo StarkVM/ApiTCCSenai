@@ -1,5 +1,5 @@
 using UserAccess.Domain.Enums;
-using UserAccess.Domain.Interfaces;
+using UserAccess.Domain.Exceptions.UserAccessExceptions; 
 
 namespace UserAccess.Domain.Entities;
 
@@ -24,7 +24,11 @@ public sealed class User
     
     public UserStatus Status { get; private set; } = UserStatus.PendingEmailVerification;
     
+    public DateTime? DisabledAt { get; private set; }
+    
     public UserType Type { get; private set; } = UserType.Renter;
+    
+    public DateTime? BecomeProviderAt { get; private set; }
 
     public Address? Address { get; private set; }
 
@@ -72,10 +76,20 @@ public sealed class User
         PasswordHash = newPasswordHash;
         PasswordChangedAt = changedAtUtc;
     }
-
-    public void MarkAsProvider()
+    public void BecomeProvider(DateTime becomeProviderAtUtc)
     {
-        Type =  UserType.Provider;
+        if (Status != UserStatus.Active)
+        {
+            throw new UserMustBeActiveToBecomeProviderException();
+        }
+
+        if (Type == UserType.Provider)
+        {
+            return;
+        }
+
+        Type = UserType.Provider;
+        BecomeProviderAt = becomeProviderAtUtc;
     }
     
     public void MarkEmailVerified(DateTime verifiedAt)
@@ -91,7 +105,25 @@ public sealed class User
     
     public bool IsEmailVerified() => EmailVerifiedAt.HasValue;
 
-    public void Disable() => Status = UserStatus.Disabled;
+    /// <summary>
+    /// Marks the user as deleted.
+    /// / Marca o usuário como deletado.
+    /// </summary>
+    public void Disable(DateTime disabledUtcAtUtc)
+    {
+        if (Status == UserStatus.PendingEmailVerification)
+        {
+            throw new UserEmailMustBeVerifiedToDeleteException();
+        }
+
+        if (Status == UserStatus.Disabled)
+        {
+            return;
+        }
+
+        Status = UserStatus.Disabled;
+        DisabledAt = disabledUtcAtUtc;
+    }
     
     public void MarkIdentityDenied() => Status = UserStatus.IdentityDenied;
     

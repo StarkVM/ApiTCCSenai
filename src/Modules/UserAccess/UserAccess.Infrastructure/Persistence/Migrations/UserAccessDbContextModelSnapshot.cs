@@ -194,6 +194,9 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime?>("BecomeProviderAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
 
@@ -203,6 +206,9 @@ namespace UserAccess.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(64)");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DisabledAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")

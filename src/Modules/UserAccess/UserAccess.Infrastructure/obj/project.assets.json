@@ -1136,6 +1136,16 @@
           "bin/placeholder/UserAccess.Application.dll": {}
         }
       },
+      "UserAccess.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/UserAccess.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UserAccess.Contracts.dll": {}
+        }
+      },
       "UserAccess.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -2873,6 +2883,11 @@
       "path": "../UserAccess.Application/UserAccess.Application.csproj",
       "msbuildProject": "../UserAccess.Application/UserAccess.Application.csproj"
     },
+    "UserAccess.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../UserAccess.Contracts/UserAccess.Contracts.csproj",
+      "msbuildProject": "../UserAccess.Contracts/UserAccess.Contracts.csproj"
+    },
     "UserAccess.Domain/1.0.0": {
       "type": "project",
       "path": "../UserAccess.Domain/UserAccess.Domain.csproj",
@@ -2891,6 +2906,7 @@
       "Resend >= 0.2.2",
       "System.IdentityModel.Tokens.Jwt >= 8.17.0",
       "UserAccess.Application >= 1.0.0",
+      "UserAccess.Contracts >= 1.0.0",
       "UserAccess.Domain >= 1.0.0"
     ]
   },
@@ -2921,6 +2937,9 @@
           "projectReferences": {
             "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj": {
               "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Application\\UserAccess.Application.csproj"
+            },
+            "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Contracts\\UserAccess.Contracts.csproj": {
+              "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Contracts\\UserAccess.Contracts.csproj"
             },
             "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj": {
               "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\UserAccess\\UserAccess.Domain\\UserAccess.Domain.csproj"

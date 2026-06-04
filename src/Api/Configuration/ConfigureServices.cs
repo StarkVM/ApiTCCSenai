@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Api.Configuration.Specific;
 using UserAccess.Application;
+using Listings.Application;
+using Listings.Infrastructure;
 
 namespace Api.Configuration;
 
@@ -46,6 +48,8 @@ public static class ConfigureServices
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
         builder.Services.AddUserAccessApplication(builder.Configuration);
         
+        builder.Services.AddListingsInfrastructure(builder.Configuration);
+        builder.Services.AddListingsApplication(builder.Configuration);
         
         //Add the Access Token Settings
         builder.AddAccessTokenConfiguration();

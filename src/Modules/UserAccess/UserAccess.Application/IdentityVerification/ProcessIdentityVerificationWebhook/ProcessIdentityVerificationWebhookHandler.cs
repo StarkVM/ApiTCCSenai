@@ -177,7 +177,6 @@ public class ProcessIdentityVerificationWebhookHandler
 
         if (!result.IsValid)
         {
-            user.MarkIdentityDenied();
             session.MarkDenied(_clock.UtcNow);
             
             await SaveChangesAsync(cancellationToken);

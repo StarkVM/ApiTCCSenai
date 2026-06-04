@@ -18,6 +18,7 @@
           "Resend": "0.2.2",
           "System.IdentityModel.Tokens.Jwt": "8.17.0",
           "UserAccess.Application": "1.0.0",
+          "UserAccess.Contracts": "1.0.0",
           "UserAccess.Domain": "1.0.0"
         },
         "runtime": {
@@ -755,6 +756,14 @@
           }
         }
       },
+      "UserAccess.Contracts/1.0.0": {
+        "runtime": {
+          "UserAccess.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "UserAccess.Domain/1.0.0": {
         "runtime": {
           "UserAccess.Domain.dll": {
@@ -1157,6 +1166,11 @@
       "hashPath": "system.threading.channels.6.0.0.nupkg.sha512"
     },
     "UserAccess.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserAccess.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

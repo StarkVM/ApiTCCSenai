@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\UserAccess.Application\UserAccess.Application.csproj" />
     <ProjectReference Include="..\UserAccess.Domain\UserAccess.Domain.csproj" />
+    <ProjectReference Include="..\UserAccess.Contracts\UserAccess.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -115,6 +115,22 @@ public static class ApiExceptionMapper
                     Message = ex.Message,
                     RequestId = requestId
                 }),
+            UserEmailMustBeVerifiedToDeleteException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            UserMustBeActiveToBecomeProviderException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
 
             InvalidUserIdException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,

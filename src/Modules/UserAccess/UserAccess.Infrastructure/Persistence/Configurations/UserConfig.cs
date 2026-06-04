@@ -27,6 +27,8 @@ public class UserConfig : IEntityTypeConfiguration<User>
         b.Property(x => x.CreatedAt).IsRequired();
         b.Property(x => x.Status).HasConversion<int>().IsRequired();
         b.Property(x => x.Type).HasConversion<int>().IsRequired();
+        b.Property(x => x.DisabledAt).IsRequired(false);
+        b.Property(x => x.BecomeProviderAt).IsRequired(false);
         
         b.HasOne(x => x.Address)
             .WithOne(x => x.User)

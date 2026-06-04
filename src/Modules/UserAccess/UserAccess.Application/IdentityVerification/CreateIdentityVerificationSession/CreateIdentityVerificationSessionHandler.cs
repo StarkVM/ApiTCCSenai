@@ -59,7 +59,9 @@ public sealed class CreateIdentityVerificationSessionHandler
         
         var existingSession = await _sessionRepository.GetLatestByUserIdAsync(user.Id, cancellationToken);
 
-        if (existingSession is not null && !string.IsNullOrWhiteSpace(existingSession.ProviderSessionUrl))
+        if (existingSession is not null && 
+            !string.IsNullOrWhiteSpace(existingSession.ProviderSessionUrl) &&
+            existingSession.CreatedAtUtc.AddMinutes(5) > nowUtc)
         {
             _logger.LogInformation(
                 "Reusing pending identity verification session. UserId: {UserId}, LocalSessionId: {LocalSessionId}",

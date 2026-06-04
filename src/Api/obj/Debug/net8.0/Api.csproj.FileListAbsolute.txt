@@ -177,3 +177,5 @@ C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Resend.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.pdb

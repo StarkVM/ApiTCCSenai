@@ -2,10 +2,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Listings.Domain\Listings.Domain.csproj" />
+    <ProjectReference Include="..\..\UserAccess\UserAccess.Contracts\UserAccess.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
   </ItemGroup>
 
   <PropertyGroup>

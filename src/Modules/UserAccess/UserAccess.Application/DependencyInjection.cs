@@ -9,6 +9,8 @@ using UserAccess.Application.Auth.Services.TokensServices;
 using UserAccess.Application.Auth.Login;
 using UserAccess.Application.Auth.Logout;
 using UserAccess.Application.Auth.RefreshTokens;
+using UserAccess.Application.CurrentUser.BecomeProvider;
+using UserAccess.Application.CurrentUser.DisableUser;
 using UserAccess.Application.CurrentUser.Me;
 using UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession;
 using UserAccess.Application.IdentityVerification.ProcessIdentityVerificationWebhook;
@@ -21,7 +23,9 @@ public static class DependencyInjection
     {
         services.AddScoped<RefreshTokensHandler>();
         
-        
+        services.AddScoped<BecomeProviderHandler>();
+        services.AddScoped<DisableUserHandler>();
+            
         services.AddScoped<ProcessIdentityVerificationWebhookHandler>();
         services.AddScoped<CreateIdentityVerificationSessionHandler>();
         

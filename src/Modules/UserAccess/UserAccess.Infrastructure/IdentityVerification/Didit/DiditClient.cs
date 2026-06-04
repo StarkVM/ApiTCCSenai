@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using UserAccess.Domain.Interfaces;
@@ -13,6 +14,8 @@ using UserAccess.Infrastructure.IdentityVerification.Didit.Options;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Requests;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Responses;
 
+
+
 namespace UserAccess.Infrastructure.IdentityVerification.Didit;
 
 public class DiditClient : IIdentityVerificationProvider
@@ -20,15 +23,18 @@ public class DiditClient : IIdentityVerificationProvider
     private readonly ICpfHasher _cpfHasher;
     private readonly HttpClient _httpClient;
     private readonly DiditOptions _options;
+    private readonly ILogger<DiditClient> _logger;
 
     public DiditClient(
         HttpClient httpClient,
         ICpfHasher cpfHasher,
-        IOptions<DiditOptions> options)
+        IOptions<DiditOptions> options,
+        ILogger<DiditClient> logger)
     {
         _cpfHasher  = cpfHasher;
         _httpClient = httpClient;
         _options = options.Value;
+        _logger = logger;
     }
     
     public async Task<CreateProviderIdentityVerificationSessionResult> CreateSessionAsync
@@ -152,6 +158,9 @@ public class DiditClient : IIdentityVerificationProvider
             request.ProviderSessionId,
             StringComparison.Ordinal))
     {
+        _logger.LogInformation(
+            "111");
+        
         return new VerifyProviderIdentityResult(false, null, null);
     }
 
@@ -160,11 +169,15 @@ public class DiditClient : IIdentityVerificationProvider
             "user",
             StringComparison.OrdinalIgnoreCase))
     {
+        _logger.LogInformation(
+            "222");
         return new VerifyProviderIdentityResult(false, null, null);
     }
 
     if (!ProviderStatusIsApproved(diditDecision.Status))
     {
+        _logger.LogInformation(
+            "333");
         return new VerifyProviderIdentityResult(false, null, null);
     }
 
@@ -174,6 +187,8 @@ public class DiditClient : IIdentityVerificationProvider
 
     if (approvedIdVerification is null)
     {
+        _logger.LogInformation(
+            "444");
         return new VerifyProviderIdentityResult(false, null, null);
     }
 
@@ -194,6 +209,9 @@ public class DiditClient : IIdentityVerificationProvider
         nameMatches &&
         birthDateMatches &&
         cpfMatches;
+    
+    _logger.LogInformation(
+        "Cpf: {cpf}, Data: {data}, Nome: {nome}", cpfMatches, birthDateMatches, nameMatches);
 
     return new VerifyProviderIdentityResult(identityIsValid, null, null);
     
@@ -320,6 +338,7 @@ public class DiditClient : IIdentityVerificationProvider
 
         foreach (var candidate in cpfCandidates)
         {
+            
             var cleanCpf = ExtractCleanCpfOrNull(candidate);
 
             if (cleanCpf is null)

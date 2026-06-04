@@ -41,7 +41,7 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         
         if (independentCode is not null)
         {
-            if (independentCode.CreatedAt > utcNow.AddMinutes(-2))
+            if (independentCode.CreatedAt > utcNow.AddMinutes(-1))
             {
                 throw new TooManyAttemptsException();
             }

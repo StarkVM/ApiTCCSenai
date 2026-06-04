@@ -1080,7 +1080,10 @@
       "System.Threading.Channels/6.0.0": {},
       "Listings.Application/1.0.0": {
         "dependencies": {
-          "Listings.Domain": "1.0.0"
+          "Listings.Domain": "1.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.5",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.6",
+          "UserAccess.Contracts": "1.0.0"
         },
         "runtime": {
           "Listings.Application.dll": {
@@ -1100,7 +1103,9 @@
       "Listings.Infrastructure/1.0.0": {
         "dependencies": {
           "Listings.Application": "1.0.0",
-          "Listings.Domain": "1.0.0"
+          "Listings.Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "8.0.25",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11"
         },
         "runtime": {
           "Listings.Infrastructure.dll": {
@@ -1186,6 +1191,14 @@
           }
         }
       },
+      "UserAccess.Contracts/1.0.0": {
+        "runtime": {
+          "UserAccess.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "UserAccess.Domain/1.0.0": {
         "runtime": {
           "UserAccess.Domain.dll": {
@@ -1204,6 +1217,7 @@
           "Resend": "0.2.2",
           "System.IdentityModel.Tokens.Jwt": "8.17.0",
           "UserAccess.Application": "1.0.0",
+          "UserAccess.Contracts": "1.0.0",
           "UserAccess.Domain": "1.0.0"
         },
         "runtime": {
@@ -1855,6 +1869,11 @@
       "sha512": ""
     },
     "UserAccess.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UserAccess.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

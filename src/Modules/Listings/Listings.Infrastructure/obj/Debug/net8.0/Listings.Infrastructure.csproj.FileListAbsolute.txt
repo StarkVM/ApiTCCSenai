@@ -16,3 +16,7 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\o
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\obj\Debug\net8.0\refint\Listings.Infrastructure.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\obj\Debug\net8.0\Listings.Infrastructure.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\obj\Debug\net8.0\ref\Listings.Infrastructure.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\bin\Debug\net8.0\Listings.Infrastructure.runtimeconfig.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\obj\Debug\net8.0\Listings.Infrastructure.genruntimeconfig.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\bin\Debug\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Infrastructure\bin\Debug\net8.0\UserAccess.Contracts.pdb

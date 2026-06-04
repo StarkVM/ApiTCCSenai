@@ -14,3 +14,5 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\obj\
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\obj\Debug\net8.0\refint\Listings.Application.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\obj\Debug\net8.0\Listings.Application.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\obj\Debug\net8.0\ref\Listings.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\bin\Debug\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Listings\Listings.Application\bin\Debug\net8.0\UserAccess.Contracts.pdb
