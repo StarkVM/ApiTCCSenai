@@ -24,5 +24,8 @@ public enum ListingStatus
     /// Listing was disabled by the system or moderation.
     /// / Anúncio foi desativado pelo sistema ou pela moderação.
     /// </summary>
-    Disabled = 3
+    Disabled = 3,
+    
+    
+    Deleted  = 4
 }

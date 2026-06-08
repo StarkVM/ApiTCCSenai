@@ -89,6 +89,15 @@ public static class ApiExceptionMapper
                     RequestId = requestId
                 }),
             
+            ListingNotFoundException ex => Results.Json(
+            statusCode: StatusCodes.Status404NotFound,
+            data: new ApiErrorResponse
+            {
+                Code = ex.Code,
+                Message = ex.Message,
+                RequestId = requestId
+            }),
+            
             RefreshTokenNotActiveException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,
                 data: new ApiErrorResponse

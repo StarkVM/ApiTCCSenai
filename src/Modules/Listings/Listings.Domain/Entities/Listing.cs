@@ -324,4 +324,10 @@ public IReadOnlyCollection<ListingImage> Images => _images.AsReadOnly();
             throw new InvalidOperationException("A listing must contain at least one image.");
         }
     }
+
+    public void Delete(DateTime updatedAtUtc)
+    {
+        Status = ListingStatus.Deleted;
+        UpdatedAtUtc = updatedAtUtc;
+    }
 }

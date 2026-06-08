@@ -3,6 +3,8 @@ using System.Security.Claims;
 using Api.Common.Errors;
 using Listings.Application.CreateListing;
 using Listings.Application.CreateListings.Records;
+using Listings.Application.DeleteListing;
+using Listings.Application.DeleteListing.Records;
 using Listings.Domain.Enums;
 
 namespace Api.Routes.Listings;
@@ -20,8 +22,82 @@ public static class ListingsRoutes
             .RequireRateLimiting("public")
             .WithName("CreateListing")
             .WithTags("Listings");
+        
+        group.MapDelete("/{listingId:guid}", DeleteListingAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("public")
+            .WithName("DeleteListing")
+            .WithTags("Listings");
 
         return endpoints;
+    }
+    
+    /// <summary>
+/// Disables a listing using soft delete.
+/// / Desativa um anúncio usando exclusão lógica.
+/// </summary>
+    private static async Task<IResult> DeleteListingAsync(
+        Guid listingId,
+        HttpContext httpContext,
+        DeleteListingHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(typeof(ListingsRoutes).FullName!);
+
+        logger.LogInformation(
+            "Starting delete listing endpoint flow. ListingId: {ListingId}, RequestId: {RequestId}",
+            listingId,
+            httpContext.TraceIdentifier);
+
+        var requesterId = GetAuthenticatedUserId(httpContext);
+
+        if (requesterId is null)
+        {
+            logger.LogWarning(
+                "Delete listing failed because authenticated user id was not found. ListingId: {ListingId}, RequestId: {RequestId}",
+                listingId,
+                httpContext.TraceIdentifier);
+
+            return Results.Unauthorized();
+        }
+
+        try
+        {
+            var command = new DeleteListingCommand(
+                listingId,
+                requesterId.Value);
+
+            var result = await handler.HandleAsync(
+                command,
+                cancellationToken);
+
+            logger.LogInformation(
+                "Delete listing endpoint flow completed successfully. ListingId: {ListingId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                result.ListingId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return Results.Ok(new
+            {
+                id = result.ListingId,
+                status = result.Status.ToString(),
+                updatedAtUtc = result.UpdatedAtUtc
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Delete listing failed. ListingId: {ListingId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                listingId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
 
     private static async Task<IResult> CreateListingAsync(

@@ -1,4 +1,5 @@
 using Listings.Application.CreateListing;
+using Listings.Application.DeleteListing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<DeleteListingHandler>();
         services.AddScoped<CreateListingHandler>();
         
         return services;
