@@ -1,6 +1,10 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using Listings.Domain.Interfaces;
 using Listings.Infrastructure.Persistence;
 using Listings.Infrastructure.Persistence.Repositories;
+using Listings.Infrastructure.Storage.S3;
+using Listings.Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +34,32 @@ public static class DependencyInjection
 
         services.AddDbContext<ListingsDbContext>(options =>
             options.UseNpgsql(listingsConnectionString));
-        
+
+        services.Configure<S3StorageOptions>(
+            configuration.GetSection(S3StorageOptions.SectionName));
+
+        var awsOptions = configuration.GetAWSOptions();
+
+        var awsAccessKey = configuration["AWS:AccessKey"];
+        var awsSecretKey = configuration["AWS:SecretKey"];
+
+        if (!string.IsNullOrWhiteSpace(awsAccessKey) &&
+            !string.IsNullOrWhiteSpace(awsSecretKey))
+        {
+            awsOptions.Credentials = new BasicAWSCredentials(
+                awsAccessKey,
+                awsSecretKey);
+        }
+
+        services.AddDefaultAWSOptions(awsOptions);
+        services.AddAWSService<IAmazonS3>();
+
         services.AddScoped<IListingRepository, ListingRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IListingImageStorage, S3ListingImageStorage>();
+
+        services.AddScoped<IClock, SystemClock>();
 
         return services;
     }

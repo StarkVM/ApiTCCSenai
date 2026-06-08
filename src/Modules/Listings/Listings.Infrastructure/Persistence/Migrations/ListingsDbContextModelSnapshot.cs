@@ -28,6 +28,9 @@ namespace Listings.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -39,6 +42,9 @@ namespace Listings.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
+
+                    b.Property<bool>("IsFleet")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
@@ -62,6 +68,8 @@ namespace Listings.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Category");
 
                     b.HasIndex("OwnerId");
 
@@ -101,6 +109,116 @@ namespace Listings.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("listing_images", (string)null);
+                });
+
+            modelBuilder.Entity("Listings.Domain.Entities.Listing", b =>
+                {
+                    b.OwnsOne("Listings.Domain.ValueObjects.FreightOption", "FreightOption", b1 =>
+                        {
+                            b1.Property<Guid>("ListingId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("FixedPrice")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("freight_fixed_price");
+
+                            b1.Property<bool>("IsAvailable")
+                                .HasColumnType("boolean")
+                                .HasColumnName("freight_available");
+
+                            b1.HasKey("ListingId");
+
+                            b1.ToTable("listings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ListingId");
+                        });
+
+                    b.OwnsOne("Listings.Domain.ValueObjects.OperatorOption", "OperatorOption", b1 =>
+                        {
+                            b1.Property<Guid>("ListingId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("AdditionalDailyPrice")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("operator_daily_price");
+
+                            b1.Property<bool>("IsAvailable")
+                                .HasColumnType("boolean")
+                                .HasColumnName("operator_available");
+
+                            b1.HasKey("ListingId");
+
+                            b1.ToTable("listings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ListingId");
+                        });
+
+                    b.OwnsOne("Listings.Domain.ValueObjects.PickupAddress", "PickupAddress", b1 =>
+                        {
+                            b1.Property<Guid>("ListingId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("pickup_city");
+
+                            b1.Property<string>("Complement")
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)")
+                                .HasColumnName("pickup_complement");
+
+                            b1.Property<string>("District")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("pickup_district");
+
+                            b1.Property<string>("Number")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("pickup_number");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasColumnName("pickup_state");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(150)
+                                .HasColumnType("character varying(150)")
+                                .HasColumnName("pickup_street");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(8)
+                                .HasColumnType("character varying(8)")
+                                .HasColumnName("pickup_zip_code");
+
+                            b1.HasKey("ListingId");
+
+                            b1.ToTable("listings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ListingId");
+                        });
+
+                    b.Navigation("FreightOption")
+                        .IsRequired();
+
+                    b.Navigation("OperatorOption")
+                        .IsRequired();
+
+                    b.Navigation("PickupAddress")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Listings.Domain.Entities.ListingImage", b =>

@@ -2,57 +2,7 @@
   "version": 3,
   "targets": {
     "net8.0": {
-      "AWS.Logger.Core/4.0.2": {
-        "type": "package",
-        "dependencies": {
-          "AWSSDK.CloudWatchLogs": "4.0.8.4"
-        },
-        "compile": {
-          "lib/net8.0/AWS.Logger.Core.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/AWS.Logger.Core.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
-      "AWS.Logger.SeriLog/4.0.2": {
-        "type": "package",
-        "dependencies": {
-          "AWS.Logger.Core": "4.0.2",
-          "Microsoft.Extensions.Configuration.Abstractions": "1.0.2",
-          "Serilog": "2.6.0"
-        },
-        "compile": {
-          "lib/net8.0/AWS.Logger.SeriLog.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/AWS.Logger.SeriLog.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
-      "AWSSDK.CloudWatchLogs/4.0.8.4": {
-        "type": "package",
-        "dependencies": {
-          "AWSSDK.Core": "[4.0.0.32, 5.0.0)"
-        },
-        "compile": {
-          "lib/net8.0/AWSSDK.CloudWatchLogs.dll": {
-            "related": ".pdb;.xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/AWSSDK.CloudWatchLogs.dll": {
-            "related": ".pdb;.xml"
-          }
-        }
-      },
-      "AWSSDK.Core/4.0.0.32": {
+      "AWSSDK.Core/3.7.501.1": {
         "type": "package",
         "compile": {
           "lib/net8.0/AWSSDK.Core.dll": {
@@ -61,6 +11,41 @@
         },
         "runtime": {
           "lib/net8.0/AWSSDK.Core.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "AWSSDK.Extensions.NETCore.Setup/3.7.400.2": {
+        "type": "package",
+        "dependencies": {
+          "AWSSDK.Core": "3.7.402",
+          "Microsoft.Extensions.Configuration.Abstractions": "2.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "2.0.0"
+        },
+        "compile": {
+          "lib/net8.0/AWSSDK.Extensions.NETCore.Setup.dll": {
+            "related": ".pdb"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.Extensions.NETCore.Setup.dll": {
+            "related": ".pdb"
+          }
+        }
+      },
+      "AWSSDK.S3/3.7.511.8": {
+        "type": "package",
+        "dependencies": {
+          "AWSSDK.Core": "[3.7.501.1, 4.0.0)"
+        },
+        "compile": {
+          "lib/net8.0/AWSSDK.S3.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.S3.dll": {
             "related": ".pdb;.xml"
           }
         }
@@ -620,7 +605,7 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.6": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.8": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
@@ -835,11 +820,11 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/10.0.5": {
+      "Microsoft.Extensions.Logging.Abstractions/10.0.8": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.5",
-          "System.Diagnostics.DiagnosticSource": "10.0.5"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.8",
+          "System.Diagnostics.DiagnosticSource": "10.0.8"
         },
         "compile": {
           "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
@@ -1460,7 +1445,7 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
-      "System.Diagnostics.DiagnosticSource/10.0.5": {
+      "System.Diagnostics.DiagnosticSource/10.0.8": {
         "type": "package",
         "compile": {
           "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
@@ -1633,7 +1618,8 @@
         "dependencies": {
           "Listings.Domain": "1.0.0",
           "Microsoft.Extensions.Configuration.Abstractions": "10.0.5",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.5",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
           "UserAccess.Contracts": "1.0.0"
         },
         "compile": {
@@ -1657,9 +1643,12 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "AWSSDK.Extensions.NETCore.Setup": "3.0.0",
+          "AWSSDK.S3": "3.0.0",
           "Listings.Application": "1.0.0",
           "Listings.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.25",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "8.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11"
         },
         "compile": {
@@ -1805,95 +1794,23 @@
     }
   },
   "libraries": {
-    "AWS.Logger.Core/4.0.2": {
-      "sha512": "XJeElW1CZpVGCVhZDN/msB5YT9Z3Jvg/N6JDvdwn5sRQ4d7ghLMxCVwwsrf3Qhmz2IoVEUIUULla/9GvSrnohw==",
+    "AWSSDK.Core/3.7.501.1": {
+      "sha512": "VZR0LRAawpn5FQwXNPzhOO8DHhfffhBSvcSZT1d0ctcZ+kmsz3tzTArZnTQ9Haf/TNEqNLzKupHfjV2ndWAL4A==",
       "type": "package",
-      "path": "aws.logger.core/4.0.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "README.md",
-        "aws.logger.core.4.0.2.nupkg.sha512",
-        "aws.logger.core.nuspec",
-        "icon.png",
-        "lib/net472/AWS.Logger.Core.dll",
-        "lib/net472/AWS.Logger.Core.pdb",
-        "lib/net472/AWS.Logger.Core.xml",
-        "lib/net8.0/AWS.Logger.Core.dll",
-        "lib/net8.0/AWS.Logger.Core.pdb",
-        "lib/net8.0/AWS.Logger.Core.xml",
-        "lib/netstandard2.0/AWS.Logger.Core.dll",
-        "lib/netstandard2.0/AWS.Logger.Core.pdb",
-        "lib/netstandard2.0/AWS.Logger.Core.xml"
-      ]
-    },
-    "AWS.Logger.SeriLog/4.0.2": {
-      "sha512": "GDrtufMxnnyw4HBuNjvLpPZadBFZm7/NioGkS5XoULmZezq7xBo0H14rcXJ7CYt9SlbmHsF1fu6XeBAC7qPbvg==",
-      "type": "package",
-      "path": "aws.logger.serilog/4.0.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE",
-        "README.md",
-        "aws.logger.serilog.4.0.2.nupkg.sha512",
-        "aws.logger.serilog.nuspec",
-        "icon.png",
-        "lib/net472/AWS.Logger.SeriLog.dll",
-        "lib/net472/AWS.Logger.SeriLog.pdb",
-        "lib/net472/AWS.Logger.SeriLog.xml",
-        "lib/net8.0/AWS.Logger.SeriLog.dll",
-        "lib/net8.0/AWS.Logger.SeriLog.pdb",
-        "lib/net8.0/AWS.Logger.SeriLog.xml",
-        "lib/netstandard2.0/AWS.Logger.SeriLog.dll",
-        "lib/netstandard2.0/AWS.Logger.SeriLog.pdb",
-        "lib/netstandard2.0/AWS.Logger.SeriLog.xml"
-      ]
-    },
-    "AWSSDK.CloudWatchLogs/4.0.8.4": {
-      "sha512": "KnyLCC3tpEDgVkRmVG1PD129hpvwtq68SHW3KX9CFRwC00yIUxC5LHv9kwZPu6YzjQ0JmEmeHE6v/qFMeCVMOA==",
-      "type": "package",
-      "path": "awssdk.cloudwatchlogs/4.0.8.4",
+      "path": "awssdk.core/3.7.501.1",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "analyzers/dotnet/cs/AWSSDK.CloudWatchLogs.CodeAnalysis.dll",
-        "analyzers/dotnet/cs/SharedAnalysisCode.dll",
-        "awssdk.cloudwatchlogs.4.0.8.4.nupkg.sha512",
-        "awssdk.cloudwatchlogs.nuspec",
-        "images/AWSLogo.png",
-        "lib/net472/AWSSDK.CloudWatchLogs.dll",
-        "lib/net472/AWSSDK.CloudWatchLogs.pdb",
-        "lib/net472/AWSSDK.CloudWatchLogs.xml",
-        "lib/net8.0/AWSSDK.CloudWatchLogs.dll",
-        "lib/net8.0/AWSSDK.CloudWatchLogs.pdb",
-        "lib/net8.0/AWSSDK.CloudWatchLogs.xml",
-        "lib/netcoreapp3.1/AWSSDK.CloudWatchLogs.dll",
-        "lib/netcoreapp3.1/AWSSDK.CloudWatchLogs.pdb",
-        "lib/netcoreapp3.1/AWSSDK.CloudWatchLogs.xml",
-        "lib/netstandard2.0/AWSSDK.CloudWatchLogs.dll",
-        "lib/netstandard2.0/AWSSDK.CloudWatchLogs.pdb",
-        "lib/netstandard2.0/AWSSDK.CloudWatchLogs.xml",
-        "tools/install.ps1",
-        "tools/uninstall.ps1"
-      ]
-    },
-    "AWSSDK.Core/4.0.0.32": {
-      "sha512": "n6F8wdQA0ss0rxEUivp5U3L2RRmU1KLIUCmPEFwPsyIiUPS/XtsPaN4W3Ru09p7C9RCghbqmHLQchMARwGpfgQ==",
-      "type": "package",
-      "path": "awssdk.core/4.0.0.32",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "awssdk.core.4.0.0.32.nupkg.sha512",
+        "awssdk.core.3.7.501.1.nupkg.sha512",
         "awssdk.core.nuspec",
         "images/AWSLogo.png",
-        "lib/net472/AWSSDK.Core.dll",
-        "lib/net472/AWSSDK.Core.pdb",
-        "lib/net472/AWSSDK.Core.xml",
+        "lib/net35/AWSSDK.Core.dll",
+        "lib/net35/AWSSDK.Core.pdb",
+        "lib/net35/AWSSDK.Core.xml",
+        "lib/net45/AWSSDK.Core.dll",
+        "lib/net45/AWSSDK.Core.pdb",
+        "lib/net45/AWSSDK.Core.xml",
         "lib/net8.0/AWSSDK.Core.dll",
         "lib/net8.0/AWSSDK.Core.pdb",
         "lib/net8.0/AWSSDK.Core.xml",
@@ -1904,6 +1821,56 @@
         "lib/netstandard2.0/AWSSDK.Core.pdb",
         "lib/netstandard2.0/AWSSDK.Core.xml",
         "tools/account-management.ps1"
+      ]
+    },
+    "AWSSDK.Extensions.NETCore.Setup/3.7.400.2": {
+      "sha512": "E32qzett6rGaes90k1/8ciaGyxkbZSr1IvbRFSc96vhreKTKMb+Qm3NFORB69yAwgq9vt3isP/QAhteCZjn5Cw==",
+      "type": "package",
+      "path": "awssdk.extensions.netcore.setup/3.7.400.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "awssdk.extensions.netcore.setup.3.7.400.2.nupkg.sha512",
+        "awssdk.extensions.netcore.setup.nuspec",
+        "images/AWSLogo.png",
+        "lib/net8.0/AWSSDK.Extensions.NETCore.Setup.dll",
+        "lib/net8.0/AWSSDK.Extensions.NETCore.Setup.pdb",
+        "lib/netcoreapp3.1/AWSSDK.Extensions.NETCore.Setup.dll",
+        "lib/netcoreapp3.1/AWSSDK.Extensions.NETCore.Setup.pdb",
+        "lib/netstandard2.0/AWSSDK.Extensions.NETCore.Setup.dll",
+        "lib/netstandard2.0/AWSSDK.Extensions.NETCore.Setup.pdb"
+      ]
+    },
+    "AWSSDK.S3/3.7.511.8": {
+      "sha512": "QLHt7ucegMurWnwB3GomMeP6DiCG033aEittRiabMGnTOMZ5xyu7tbmTkqs3ZU5tBz4AK53Ak8WJkF+kk+s4Tw==",
+      "type": "package",
+      "path": "awssdk.s3/3.7.511.8",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/AWSSDK.S3.CodeAnalysis.dll",
+        "analyzers/dotnet/cs/SharedAnalysisCode.dll",
+        "awssdk.s3.3.7.511.8.nupkg.sha512",
+        "awssdk.s3.nuspec",
+        "images/AWSLogo.png",
+        "lib/net35/AWSSDK.S3.dll",
+        "lib/net35/AWSSDK.S3.pdb",
+        "lib/net35/AWSSDK.S3.xml",
+        "lib/net45/AWSSDK.S3.dll",
+        "lib/net45/AWSSDK.S3.pdb",
+        "lib/net45/AWSSDK.S3.xml",
+        "lib/net8.0/AWSSDK.S3.dll",
+        "lib/net8.0/AWSSDK.S3.pdb",
+        "lib/net8.0/AWSSDK.S3.xml",
+        "lib/netcoreapp3.1/AWSSDK.S3.dll",
+        "lib/netcoreapp3.1/AWSSDK.S3.pdb",
+        "lib/netcoreapp3.1/AWSSDK.S3.xml",
+        "lib/netstandard2.0/AWSSDK.S3.dll",
+        "lib/netstandard2.0/AWSSDK.S3.pdb",
+        "lib/netstandard2.0/AWSSDK.S3.xml",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
       ]
     },
     "BCrypt.Net-Next/4.0.3": {
@@ -2949,10 +2916,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.6": {
-      "sha512": "w+dX4SIr1X9yegX2yX2dU1XtP4JAUVNdvOG/Evn+H+ndn96YzfIPX52FALXChrRNWFR9l77FQyg1mB7WQo6iOA==",
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.8": {
+      "sha512": "21nbDV60SRPWGIivsyl6lqBeEJNG1sginhhfWgRrr3Ais7aQ12To25OAHQxgoiJkjqy1aQ6RxpZBGYuTi7Ge6A==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.6",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2975,7 +2942,7 @@
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "microsoft.extensions.dependencyinjection.abstractions.10.0.6.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.10.0.8.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3238,10 +3205,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/10.0.5": {
-      "sha512": "9HOdqlDtPptVcmKAjsQ/Nr5Rxfq6FMYLdhvZh1lVmeKR738qeYecQD7+ldooXf+u2KzzR1kafSphWngIM3C6ug==",
+    "Microsoft.Extensions.Logging.Abstractions/10.0.8": {
+      "sha512": "fdVadZmsC8jRP0KvKy8mO8f6GV/HyBvElfcSxEhd+5FM5boAw/01iSaCto5G3G37ApJira4A3pNaVvBv8cUiLQ==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/10.0.5",
+      "path": "microsoft.extensions.logging.abstractions/10.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3305,7 +3272,7 @@
         "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.10.0.5.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.10.0.8.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4156,10 +4123,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Diagnostics.DiagnosticSource/10.0.5": {
-      "sha512": "CCbzHQ26L3jskdwHh+4bxxW84lUMIrAAmeSlpO69AlrQV0DKbj1/I+feLaLSuZeqXPr9UlSy0OcgZoXOk2a6/g==",
+    "System.Diagnostics.DiagnosticSource/10.0.8": {
+      "sha512": "rQHsK7Xr8Uz3449860ayVXp/CaLmrhHlMPxbpT/ibOPtp/dTTsr6+f/SxaGO2NzxHf+0siLE0UfdVN5z1I0EgQ==",
       "type": "package",
-      "path": "system.diagnostics.diagnosticsource/10.0.5",
+      "path": "system.diagnostics.diagnosticsource/10.0.8",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4179,7 +4146,7 @@
         "lib/net9.0/System.Diagnostics.DiagnosticSource.xml",
         "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.dll",
         "lib/netstandard2.0/System.Diagnostics.DiagnosticSource.xml",
-        "system.diagnostics.diagnosticsource.10.0.5.nupkg.sha512",
+        "system.diagnostics.diagnosticsource.10.0.8.nupkg.sha512",
         "system.diagnostics.diagnosticsource.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4530,7 +4497,6 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "AWS.Logger.SeriLog >= 4.0.2",
       "Listings.Application >= 1.0.0",
       "Listings.Infrastructure >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.25",
@@ -4560,11 +4526,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj",
+      "projectUniqueName": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\api\\Api.csproj",
       "projectName": "Api",
-      "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\Api.csproj",
+      "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\api\\Api.csproj",
       "packagesPath": "C:\\Users\\vitor\\.nuget\\packages\\",
-      "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Api\\obj\\",
+      "outputPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\vitor\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4621,10 +4587,6 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
-          "AWS.Logger.SeriLog": {
-            "target": "Package",
-            "version": "[4.0.2, )"
-          },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
             "version": "[8.0.25, )"
@@ -4679,12 +4641,6 @@
             "target": "Package",
             "version": "[6.6.*, )"
           }
-        },
-        "centralPackageVersions": {
-          "Microsoft.EntityFrameworkCore": "8.0.24",
-          "Microsoft.EntityFrameworkCore.Design": "8.0.24",
-          "Microsoft.EntityFrameworkCore.Relational": "8.0.24",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.4"
         },
         "imports": [
           "net461",

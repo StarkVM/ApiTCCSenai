@@ -63,8 +63,8 @@ public sealed class MeHandler
 
         return new MeResult(
             user.Id,
-            user.FirstName,
-            user.LastName,
+            user.FirstName.ToUpperInvariant(),
+            user.LastName.ToUpperInvariant(),
             user.BirthDate,
             user.Email,
             user.Status,

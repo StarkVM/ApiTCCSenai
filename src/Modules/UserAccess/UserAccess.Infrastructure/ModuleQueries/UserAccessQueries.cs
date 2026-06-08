@@ -18,11 +18,6 @@ public sealed class UserAccessQueries : IUserAccessQueries
     {
         _userAccessDbContext = userAccessDbContext;
     }
-
-    /// <summary>
-    /// Gets the minimal access information of a user for internal module communication.
-    /// / Obtém as informações mínimas de acesso de um usuário para comunicação interna entre módulos.
-    /// </summary>
     public Task<UserAccessSnapshot?> GetUserAccessSnapshotAsync(
         Guid userId,
         CancellationToken cancellationToken)

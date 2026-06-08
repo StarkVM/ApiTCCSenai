@@ -158,9 +158,6 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\System.IO.Pipelines.d
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\System.Text.Encodings.Web.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\System.Text.Json.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
-C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWS.Logger.Core.dll
-C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWS.Logger.SeriLog.dll
-C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.CloudWatchLogs.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Api\bin\Debug\net8.0\AWSSDK.Core.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
@@ -179,3 +176,5 @@ C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityMod
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\AWSSDK.S3.dll

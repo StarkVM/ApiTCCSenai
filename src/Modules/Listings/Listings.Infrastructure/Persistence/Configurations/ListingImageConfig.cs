@@ -36,6 +36,5 @@ public sealed class ListingImageConfig : IEntityTypeConfiguration<ListingImage>
 
         b.Property(x => x.CreatedAtUtc)
             .IsRequired();
-
     }
 }

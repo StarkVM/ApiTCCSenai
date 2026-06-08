@@ -1,3 +1,4 @@
+using Listings.Application.CreateListing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<CreateListingHandler>();
+        
         return services;
     }
 }

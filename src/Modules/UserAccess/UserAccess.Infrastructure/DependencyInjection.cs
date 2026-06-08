@@ -10,6 +10,7 @@ using UserAccess.Infrastructure.Security;
 using UserAccess.Infrastructure.Time;
 using UserAccess.Infrastructure.Auth.Options;
 using Resend;
+using UserAccess.Contracts.Users.Interfaces;
 using UserAccess.Infrastructure.Auth.Generators;
 using UserAccess.Infrastructure.CpfIdentityVerification;
 using UserAccess.Infrastructure.CpfIdentityVerification.Options;
@@ -18,6 +19,7 @@ using UserAccess.Infrastructure.IdentityVerification.Didit;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Options;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Payloads;
 using UserAccess.Infrastructure.IdentityVerification.Didit.SignatureValidator;
+using UserAccess.Infrastructure.ModuleQueries;
 
 namespace UserAccess.Infrastructure;
 
@@ -35,6 +37,8 @@ public static class DependencyInjection
         
         services.AddDbContext<UserAccessDbContext>(opt =>
             opt.UseNpgsql(userAccessConnectionString));
+        
+        services.AddScoped<IUserAccessQueries, UserAccessQueries>();
         
         services.Configure<RefreshTokenOptions>(configuration.GetSection(RefreshTokenOptions.SectionName));
         

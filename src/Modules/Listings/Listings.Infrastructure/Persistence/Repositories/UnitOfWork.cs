@@ -14,11 +14,7 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         _listingsDbContext = listingsDbContext;
     }
-
-    /// <summary>
-    /// Persists all pending changes in the Listings database context.
-    /// / Persiste todas as alterações pendentes no contexto de banco de anúncios.
-    /// </summary>
+    
     public Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         return _listingsDbContext.SaveChangesAsync(cancellationToken);

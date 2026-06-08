@@ -6,6 +6,7 @@ using Api.Infrastructure.Logging;
 using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Api.Configuration.Specific;
+using Api.Routes.Listings;
 using UserAccess.Application;
 using Listings.Application;
 using Listings.Infrastructure;
@@ -126,6 +127,7 @@ public static class ConfigureServices
         // Module endpoints (when you implement them):
         // app.MapUserAccessRoutes();
         v1.MapUserAccessRoutes();
+        v1.MapListingsRoutes();
         
         return app;
     }

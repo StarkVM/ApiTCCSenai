@@ -1,3 +1,4 @@
+using Listings.Domain.Exceptions.ListingsExceptions;
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Exceptions;
 using UserAccess.Domain.Exceptions.UserAccessExceptions;
@@ -16,6 +17,23 @@ public static class ApiExceptionMapper
 
         return exception switch
         {
+            InvalidListingOwnerException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+                
+            InvalidListingImagesException ex => Results.Json(
+            statusCode: StatusCodes.Status400BadRequest,
+            data: new ApiErrorResponse
+            {
+                Code = ex.Code,
+                Message = ex.Message,
+                RequestId = requestId
+            }),
             
             InvalidCredentialsException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,

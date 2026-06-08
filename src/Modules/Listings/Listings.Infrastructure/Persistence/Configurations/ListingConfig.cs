@@ -29,6 +29,12 @@ public sealed class ListingConfig : IEntityTypeConfiguration<Listing>
             .HasMaxLength(2000)
             .IsRequired();
 
+        b.Property(x => x.Category)
+            .HasConversion<int>()
+            .IsRequired();
+
+        b.HasIndex(x => x.Category);
+
         b.Property(x => x.DailyPrice)
             .HasPrecision(18, 2)
             .IsRequired();
@@ -51,6 +57,80 @@ public sealed class ListingConfig : IEntityTypeConfiguration<Listing>
         b.Property(x => x.RejectionReason)
             .HasMaxLength(500)
             .IsRequired(false);
+        
+        b.Property(x => x.IsFleet)
+            .IsRequired();
+
+        b.OwnsOne(x => x.PickupAddress, pickupAddress =>
+        {
+            pickupAddress.Property(x => x.State)
+                .HasColumnName("pickup_state")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.City)
+                .HasColumnName("pickup_city")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.District)
+                .HasColumnName("pickup_district")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.Street)
+                .HasColumnName("pickup_street")
+                .HasMaxLength(150)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.Number)
+                .HasColumnName("pickup_number")
+                .HasMaxLength(20)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.ZipCode)
+                .HasColumnName("pickup_zip_code")
+                .HasMaxLength(8)
+                .IsRequired();
+
+            pickupAddress.Property(x => x.Complement)
+                .HasColumnName("pickup_complement")
+                .HasMaxLength(150)
+                .IsRequired(false);
+        });
+
+        b.Navigation(x => x.PickupAddress)
+            .IsRequired();
+
+        b.OwnsOne(x => x.OperatorOption, operatorOption =>
+        {
+            operatorOption.Property(x => x.IsAvailable)
+                .HasColumnName("operator_available")
+                .IsRequired();
+
+            operatorOption.Property(x => x.AdditionalDailyPrice)
+                .HasColumnName("operator_daily_price")
+                .HasPrecision(18, 2)
+                .IsRequired();
+        });
+
+        b.Navigation(x => x.OperatorOption)
+            .IsRequired();
+
+        b.OwnsOne(x => x.FreightOption, freightOption =>
+        {
+            freightOption.Property(x => x.IsAvailable)
+                .HasColumnName("freight_available")
+                .IsRequired();
+
+            freightOption.Property(x => x.FixedPrice)
+                .HasColumnName("freight_fixed_price")
+                .HasPrecision(18, 2)
+                .IsRequired();
+        });
+
+        b.Navigation(x => x.FreightOption)
+            .IsRequired();
 
         b.HasMany(x => x.Images)
             .WithOne(x => x.Listing)

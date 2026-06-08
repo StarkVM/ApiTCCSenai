@@ -39,8 +39,8 @@ public sealed class RegisterUserHandler
     
     public async Task<RegisterUserResult> HandleAsync(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        var firstName = command.FirstName?.Trim();
-        var lastName = command.LastName?.Trim();
+        var firstName = command.FirstName?.Trim().ToUpperInvariant();
+        var lastName = command.LastName?.Trim().ToUpperInvariant();
         var email = command.Email?.Trim().ToLowerInvariant();
         var cpf = command.Cpf?.Clean().Trim();
         var password = command.Password?.Trim();

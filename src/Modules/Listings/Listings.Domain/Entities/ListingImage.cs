@@ -1,41 +1,16 @@
 namespace Listings.Domain.Entities;
 
-public class ListingImage
+/// <summary>
+/// Represents an image stored in S3 and linked to a listing.
+/// / Representa uma imagem armazenada no S3 e vinculada a um anúncio.
+/// </summary>
+public sealed class ListingImage
 {
-    /// <summary>
-    /// Unique identifier of the image record.
-    /// / Identificador único do registro da imagem.
-    /// </summary>
     public Guid Id { get; private set; }
-
-    /// <summary>
-    /// Identifier of the listing that owns the image.
-    /// / Identificador do anúncio ao qual a imagem pertence.
-    /// </summary>
     public Guid ListingId { get; private set; }
-
-    /// <summary>
-    /// Navigation property to the listing.
-    /// / Propriedade de navegação para o anúncio.
-    /// </summary>
     public Listing Listing { get; private set; } = default!;
-
-    /// <summary>
-    /// Object key/path used to locate the image in S3.
-    /// / Chave/caminho usado para localizar a imagem no S3.
-    /// </summary>
     public string StorageKey { get; private set; } = default!;
-
-    /// <summary>
-    /// Display order of the image inside the listing gallery.
-    /// / Ordem de exibição da imagem dentro da galeria do anúncio.
-    /// </summary>
     public int DisplayOrder { get; private set; }
-
-    /// <summary>
-    /// UTC date when the image record was created.
-    /// / Data UTC em que o registro da imagem foi criado.
-    /// </summary>
     public DateTime CreatedAtUtc { get; private set; }
 
     private ListingImage()
@@ -49,6 +24,11 @@ public class ListingImage
         int displayOrder,
         DateTime createdAtUtc)
     {
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentException("Image id cannot be empty.");
+        }
+
         if (listingId == Guid.Empty)
         {
             throw new ArgumentException("Listing id cannot be empty.");
@@ -57,6 +37,11 @@ public class ListingImage
         if (string.IsNullOrWhiteSpace(storageKey))
         {
             throw new ArgumentException("Storage key cannot be empty.");
+        }
+
+        if (displayOrder is < 1 or > 5)
+        {
+            throw new ArgumentException("Display order must be between 1 and 5.");
         }
 
         Id = id;
