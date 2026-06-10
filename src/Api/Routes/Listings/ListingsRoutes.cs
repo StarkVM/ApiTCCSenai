@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Claims;
 using Api.Common.Errors;
+using Api.Routes.Listings.Records;
 using Api.Routes.Listings.Requests;
 using Listings.Application.CreateListing;
 using Listings.Application.CreateListings.Records;
@@ -10,7 +11,12 @@ using Listings.Application.GetListingById;
 using Listings.Application.GetListingById.Records;
 using Listings.Application.GetListings;
 using Listings.Application.GetListings.Records;
+using Listings.Application.UpdateListing;
+using Listings.Application.UpdateListing.Records;
+using Listings.Application.UpdateListingImages;
+using Listings.Application.UpdateListingImages.Records;
 using Listings.Domain.Enums;
+using Listings.Domain.Files;
 
 namespace Api.Routes.Listings;
 
@@ -48,8 +54,183 @@ public static class ListingsRoutes
             .WithTags("Listings")
             .Produces<ListingResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
+        
+        group.MapPut("/{listingId:guid}", UpdateListingAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("public")
+            .WithName("UpdateListing")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict);
+        
+        group.MapPut("/{listingId:guid}/images", UpdateListingImagesAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("burst")
+            .WithName("UpdateListingImages")
+            .WithTags("Listings")
+            .DisableAntiforgery()
+            .Produces<UpdateListingImagesResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict);
 
         return endpoints;
+    }
+    
+    /// <summary>
+/// Replaces all images of a listing owned by the authenticated provider.
+/// / Substitui todas as imagens de um anúncio pertencente ao fornecedor autenticado.
+/// </summary>
+
+    private static async Task<IResult> UpdateListingImagesAsync(
+        Guid listingId,
+        HttpContext httpContext,
+        UpdateListingImagesHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(ListingsRoutes).FullName!);
+
+        var requesterId = GetAuthenticatedUserId(
+            httpContext);
+
+        if (requesterId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        if (!httpContext.Request.HasFormContentType)
+        {
+            return Results.BadRequest(new
+            {
+                code = "MULTIPART_FORM_DATA_REQUIRED",
+                message = "The request must use multipart/form-data.",
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+
+        try
+        {
+            var form = await httpContext.Request.ReadFormAsync(
+                cancellationToken);
+
+            var images = form.Files
+                .GetFiles("images")
+                .Select(file => new ListingImageUpload(
+                    file.FileName,
+                    file.ContentType,
+                    file.Length,
+                    file.OpenReadStream))
+                .ToArray();
+
+            var command = new UpdateListingImagesCommand(
+                listingId,
+                requesterId.Value,
+                images);
+
+            var result = await handler.HandleAsync(
+                command,
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                id = result.ListingId,
+                status = result.Status.ToString(),
+                updatedAtUtc = result.UpdatedAtUtc,
+                images = result.Images,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Update listing images endpoint failed. ListingId: {ListingId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                listingId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
+    }
+    
+        /// <summary>
+    /// Updates a listing owned by the authenticated provider.
+    /// / Atualiza um anúncio pertencente ao fornecedor autenticado.
+    /// </summary>
+    private static async Task<IResult> UpdateListingAsync(
+        Guid listingId,
+        UpdateListingRequest request,
+        HttpContext httpContext,
+        UpdateListingHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(ListingsRoutes).FullName!);
+
+        var requesterId = GetAuthenticatedUserId(httpContext);
+
+        if (requesterId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        try
+        {
+            var command = new UpdateListingCommand(
+                listingId,
+                requesterId.Value,
+                request.Title,
+                request.Description,
+                request.Category,
+                request.DailyPrice,
+                new UpdateListingPickupAddressCommand(
+                    request.PickupAddress.State,
+                    request.PickupAddress.City,
+                    request.PickupAddress.District,
+                    request.PickupAddress.Street,
+                    request.PickupAddress.Number,
+                    request.PickupAddress.ZipCode,
+                    request.PickupAddress.Complement),
+                new UpdateListingOperatorOptionCommand(
+                    request.OperatorOption.IsAvailable,
+                    request.OperatorOption.AdditionalDailyPrice),
+                new UpdateListingFreightOptionCommand(
+                    request.FreightOption.IsAvailable,
+                    request.FreightOption.FixedPrice));
+
+            var result = await handler.HandleAsync(
+                command,
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                id = result.ListingId,
+                status = result.Status.ToString(),
+                updatedAtUtc = result.UpdatedAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Update listing endpoint failed. ListingId: {ListingId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                listingId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
     /// <summary>

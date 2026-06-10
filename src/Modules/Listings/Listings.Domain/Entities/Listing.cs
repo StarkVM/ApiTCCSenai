@@ -1,4 +1,5 @@
 using Listings.Domain.Enums;
+using Listings.Domain.Exceptions.ListingsExceptions;
 using Listings.Domain.ValueObjects;
 
 namespace Listings.Domain.Entities;
@@ -369,5 +370,202 @@ public IReadOnlyCollection<ListingImage> Images => _images.AsReadOnly();
 
         Status = ListingStatus.Approved;
         UpdatedAtUtc = releasedAtUtc;
+    }
+    
+    public void UpdateDetails(
+        string title,
+        string description,
+        ListingCategory category,
+        decimal dailyPrice,
+        PickupAddress pickupAddress,
+        OperatorOption operatorOption,
+        FreightOption freightOption,
+        DateTime updatedAtUtc)
+    {
+        if (Status == ListingStatus.Deleted)
+        {
+            throw new ListingCannotBeEditedException(
+                "DISABLED_LISTING_CANNOT_BE_EDITED",
+                "A disabled listing cannot be edited.");
+        }
+
+        if (Status == ListingStatus.Suspended)
+        {
+            throw new ListingCannotBeEditedException(
+                "SUSPENDED_LISTING_CANNOT_BE_EDITED",
+                "A suspended listing cannot be edited while it has an active rental.");
+        }
+
+        if (Status != ListingStatus.PendingReview &&
+            Status != ListingStatus.Approved &&
+            Status != ListingStatus.Rejected)
+        {
+            throw new ListingCannotBeEditedException(
+                "LISTING_STATUS_DOES_NOT_ALLOW_EDITING",
+                "The listing cannot be edited in its current status.");
+        }
+
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            throw new ArgumentException("LISTING_TITLE_REQUIRED");
+        }
+
+        if (title.Trim().Length > 150)
+        {
+            throw new ArgumentException("LISTING_TITLE_TOO_LONG");
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException("LISTING_DESCRIPTION_REQUIRED");
+        }
+
+        if (description.Trim().Length > 2000)
+        {
+            throw new ArgumentException("LISTING_DESCRIPTION_TOO_LONG");
+        }
+
+        if (!Enum.IsDefined(category))
+        {
+            throw new ArgumentException("LISTING_CATEGORY_INVALID");
+        }
+
+        if (dailyPrice <= 0)
+        {
+            throw new ArgumentException(
+                "LISTING_DAILY_PRICE_MUST_BE_GREATER_THAN_ZERO");
+        }
+
+        ArgumentNullException.ThrowIfNull(pickupAddress);
+        ArgumentNullException.ThrowIfNull(operatorOption);
+        ArgumentNullException.ThrowIfNull(freightOption);
+
+        if (updatedAtUtc == default)
+        {
+            throw new ArgumentException("UPDATED_AT_REQUIRED");
+        }
+
+        Title = title.Trim();
+        Description = description.Trim();
+        Category = category;
+        DailyPrice = dailyPrice;
+        PickupAddress = pickupAddress;
+        OperatorOption = operatorOption;
+        FreightOption = freightOption;
+        
+        Status = ListingStatus.PendingReview;
+        ReviewedAtUtc = null;
+        RejectionReason = null;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+    
+        /// <summary>
+    /// Replaces all listing images and sends the listing back to review.
+    /// / Substitui todas as imagens do anúncio e envia o anúncio novamente para análise.
+    /// </summary>
+    /// <summary>
+    /// Replaces all listing images and sends the listing back to review.
+    /// / Substitui todas as imagens do anúncio e envia o anúncio novamente para análise.
+    /// </summary>
+    public void ReplaceImages(
+        IReadOnlyCollection<string> storageKeys,
+        DateTime updatedAtUtc)
+    {
+        if (Status == ListingStatus.Deleted)
+        {
+            throw new ListingCannotBeEditedException(
+                "DISABLED_LISTING_CANNOT_BE_EDITED",
+                "A disabled listing cannot be edited.");
+        }
+
+        if (Status == ListingStatus.Suspended)
+        {
+            throw new ListingCannotBeEditedException(
+                "SUSPENDED_LISTING_CANNOT_BE_EDITED",
+                "A suspended listing cannot be edited while it has an active rental.");
+        }
+
+        if (Status != ListingStatus.PendingReview &&
+            Status != ListingStatus.Approved &&
+            Status != ListingStatus.Rejected)
+        {
+            throw new ListingCannotBeEditedException(
+                "LISTING_STATUS_DOES_NOT_ALLOW_EDITING",
+                "The listing cannot be edited in its current status.");
+        }
+
+        if (storageKeys.Count == 0)
+        {
+            throw new ArgumentException(
+                "LISTING_MUST_HAVE_AT_LEAST_ONE_IMAGE");
+        }
+
+        if (storageKeys.Count > MaxImages)
+        {
+            throw new ArgumentException(
+                "LISTING_IMAGE_LIMIT_EXCEEDED");
+        }
+
+        _images.Clear();
+
+        var displayOrder = 1;
+
+        foreach (var storageKey in storageKeys)
+        {
+            if (string.IsNullOrWhiteSpace(storageKey))
+            {
+                throw new ArgumentException(
+                    "LISTING_IMAGE_STORAGE_KEY_REQUIRED");
+            }
+
+            _images.Add(new ListingImage(
+                Guid.NewGuid(),
+                Id,
+                storageKey,
+                displayOrder,
+                updatedAtUtc));
+
+            displayOrder++;
+        }
+
+        Status = ListingStatus.PendingReview;
+        ReviewedAtUtc = null;
+        RejectionReason = null;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+        
+    /// <summary>
+    /// Marks the listing as changed after replacing its images.
+    /// / Marca o anúncio como alterado após a substituição das imagens.
+    /// </summary>
+    public void MarkImagesReplaced(DateTime updatedAtUtc)
+    {
+        if (Status == ListingStatus.Deleted)
+        {
+            throw new ListingCannotBeEditedException(
+                "DISABLED_LISTING_CANNOT_BE_EDITED",
+                "A disabled listing cannot be edited.");
+        }
+
+        if (Status == ListingStatus.Suspended)
+        {
+            throw new ListingCannotBeEditedException(
+                "SUSPENDED_LISTING_CANNOT_BE_EDITED",
+                "A suspended listing cannot be edited while it has an active rental.");
+        }
+
+        if (Status != ListingStatus.PendingReview &&
+            Status != ListingStatus.Approved &&
+            Status != ListingStatus.Rejected)
+        {
+            throw new ListingCannotBeEditedException(
+                "LISTING_STATUS_DOES_NOT_ALLOW_EDITING",
+                "The listing cannot be edited in its current status.");
+        }
+
+        Status = ListingStatus.PendingReview;
+        ReviewedAtUtc = null;
+        RejectionReason = null;
+        UpdatedAtUtc = updatedAtUtc;
     }
 }

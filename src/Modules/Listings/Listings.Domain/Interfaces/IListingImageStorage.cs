@@ -1,3 +1,5 @@
+using Listings.Domain.Files;
+
 namespace Listings.Domain.Interfaces;
 
 /// <summary>
@@ -16,5 +18,11 @@ public interface IListingImageStorage
     
     Task DeleteAsync(
         string storageKey,
+        CancellationToken cancellationToken);
+    
+    Task<string> UpdateAsync(
+        Guid listingId,
+        ListingImageUpload image,
+        int displayOrder,
         CancellationToken cancellationToken);
 }

@@ -32,9 +32,20 @@ namespace Rentals.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("approved_at_utc");
 
+                    b.Property<decimal>("CancellationPenaltyAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasDefaultValue(0m)
+                        .HasColumnName("cancellation_penalty_amount");
+
                     b.Property<DateTime?>("CancelledAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("cancelled_at_utc");
+
+                    b.Property<Guid?>("CancelledByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cancelled_by_user_id");
 
                     b.Property<DateTime?>("CompletedAtUtc")
                         .HasColumnType("timestamp with time zone")
@@ -129,6 +140,9 @@ namespace Rentals.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CancelledByUserId")
+                        .HasDatabaseName("ix_rentals_cancelled_by_user_id");
+
                     b.HasIndex("CompletedByUserId")
                         .HasDatabaseName("ix_rentals_completed_by_user_id");
 
@@ -159,6 +173,8 @@ namespace Rentals.Infrastructure.Persistence.Migrations
                     b.ToTable("rentals", null, t =>
                         {
                             t.HasCheckConstraint("ck_rentals_amounts_non_negative", "machine_subtotal > 0 AND total_amount > 0");
+
+                            t.HasCheckConstraint("ck_rentals_cancellation_penalty_non_negative", "cancellation_penalty_amount >= 0");
 
                             t.HasCheckConstraint("ck_rentals_freight_prices_non_negative", "freight_fixed_price_snapshot >= 0 AND freight_subtotal >= 0");
 

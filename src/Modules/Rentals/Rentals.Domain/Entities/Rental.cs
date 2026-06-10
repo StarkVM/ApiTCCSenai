@@ -30,6 +30,10 @@ public sealed class Rental
     public DateTime ApprovedAtUtc { get; private set; }
     public DateTime UpdatedAtUtc { get; private set; }
     public Guid? CompletedByUserId { get; private set; }
+    
+    public Guid? CancelledByUserId { get; private set; }
+
+    public decimal CancellationPenaltyAmount { get; private set; }
     public DateTime? StartedAtUtc { get; private set; }
     public DateTime? CompletedAtUtc { get; private set; }
     public DateTime? CancelledAtUtc { get; private set; }
@@ -292,5 +296,59 @@ public sealed class Rental
         CompletedByUserId = requesterId;
         CompletedAtUtc = completedAtUtc;
         UpdatedAtUtc = completedAtUtc;
+    }
+    
+    /// <summary>
+    /// Cancels the rental and registers the cancellation penalty.
+    /// / Cancela o aluguel e registra a multa de cancelamento.
+    /// </summary>
+    public void Cancel(
+        Guid requesterId,
+        DateTime cancelledAtUtc)
+    {
+        const decimal cancellationPenaltyRate = 0.20m;
+
+        if (requesterId == Guid.Empty)
+        {
+            throw new ArgumentException(
+                "Requester id cannot be empty.");
+        }
+
+        if (requesterId != ProviderId &&
+            requesterId != RenterId)
+        {
+            throw new InvalidOperationException(
+                "Only the rental provider or renter can cancel the rental.");
+        }
+
+        // Keeps the operation idempotent.
+        // / Mantém a operação idempotente.
+        if (Status == RentalStatus.Cancelled)
+        {
+            return;
+        }
+
+        if (Status == RentalStatus.Completed)
+        {
+            throw new InvalidOperationException(
+                "A completed rental cannot be cancelled.");
+        }
+
+        if (Status != RentalStatus.Approved &&
+            Status != RentalStatus.InProgress)
+        {
+            throw new InvalidOperationException(
+                "The rental cannot be cancelled in its current status.");
+        }
+
+        CancellationPenaltyAmount = decimal.Round(
+            TotalAmount * cancellationPenaltyRate,
+            2,
+            MidpointRounding.AwayFromZero);
+
+        Status = RentalStatus.Cancelled;
+        CancelledByUserId = requesterId;
+        CancelledAtUtc = cancelledAtUtc;
+        UpdatedAtUtc = cancelledAtUtc;
     }
 }

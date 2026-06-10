@@ -17,7 +17,7 @@ public sealed class ListingImage
     {
     }
 
-    internal ListingImage(
+    public ListingImage(
         Guid id,
         Guid listingId,
         string storageKey,

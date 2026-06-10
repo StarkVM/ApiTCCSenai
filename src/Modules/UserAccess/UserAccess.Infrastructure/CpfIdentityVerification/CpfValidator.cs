@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using Microsoft.Extensions.Options;
 using UserAccess.Domain.Helpers;
 using UserAccess.Domain.Interfaces;
@@ -51,15 +53,44 @@ public class CpfValidator : ICpfValidator
         {
             return false;
         }
+
+        var resultName = RemoveAccents(Normalize(result.Data.Name));
+        var fullNameNormalized = RemoveAccents(Normalize(fullName));
         
         return 
             result.Data.Cpf.Clean() == cleanCpf &&
-            Normalize(result.Data.Name) == Normalize(fullName) &&
+            resultName == fullNameNormalized &&
             result.Data.BirthDate == birthDate;
     }
 
     private static string Normalize(string name)
     {
         return name.Trim().ToUpperInvariant();
+    }
+
+    public static string RemoveAccents(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var normalizedValue = value.Normalize(NormalizationForm.FormD);
+        var result = new StringBuilder();
+
+        foreach (var character in normalizedValue)
+        {
+            var unicodeCategory =
+                CharUnicodeInfo.GetUnicodeCategory(character);
+
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            {
+                result.Append(character);
+            }
+        }
+
+        return result
+            .ToString()
+            .Normalize(NormalizationForm.FormC);
     }
 }

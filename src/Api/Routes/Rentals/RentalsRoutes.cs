@@ -6,6 +6,8 @@ using Rentals.Application.CompleteRental.Records;
 using Rentals.Application.CreateRental;
 using Rentals.Application.CreateRental.Records;
 using Api.Routes.Rentals.Requests;
+using Rentals.Application.CancelRental;
+using Rentals.Application.CancelRental.Records;
 using Rentals.Application.GetRentalById;
 using Rentals.Application.GetRentalById.Records;
 using Rentals.Application.GetRentals;
@@ -62,8 +64,84 @@ public static class RentalsRoutes
             .Produces<RentalResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound);
+        
+        group.MapPost("/{rentalId:guid}/cancel", CancelRentalAsync)
+            .WithName("CancelRental")
+            .Produces<CancelRentalResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status409Conflict);
 
         return endpoints;
+    }
+    
+    /// <summary>
+    /// Cancels a rental when requested by its provider or renter.
+    /// / Cancela um aluguel quando solicitado pelo fornecedor ou locatário.
+    /// </summary>
+    private static async Task<IResult> CancelRentalAsync(
+        Guid rentalId,
+        HttpContext httpContext,
+        CancelRentalHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(RentalsRoutes).FullName!);
+
+        var requesterId = GetAuthenticatedUserId(
+            httpContext);
+
+        if (requesterId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        logger.LogInformation(
+            "Starting cancel rental endpoint flow. RentalId: {RentalId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+            rentalId,
+            requesterId.Value,
+            httpContext.TraceIdentifier);
+
+        try
+        {
+            var command = new CancelRentalCommand(
+                rentalId,
+                requesterId.Value);
+
+            var result = await handler.HandleAsync(
+                command,
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                id = result.RentalId,
+                listingId = result.ListingId,
+                providerId = result.ProviderId,
+                renterId = result.RenterId,
+                status = result.Status.ToString(),
+                cancelledByUserId = result.CancelledByUserId,
+                cancellationPenaltyAmount =
+                    result.CancellationPenaltyAmount,
+                cancelledAtUtc = result.CancelledAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Cancel rental endpoint flow failed. RentalId: {RentalId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                rentalId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
         /// <summary>

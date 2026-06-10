@@ -41,6 +41,10 @@ public sealed class RentalConfig : IEntityTypeConfiguration<Rental>
             table.HasCheckConstraint(
                 "ck_rentals_total_amount_consistency",
                 "total_amount = machine_subtotal + operator_subtotal + freight_subtotal");
+            
+            table.HasCheckConstraint(
+                "ck_rentals_cancellation_penalty_non_negative",
+                "cancellation_penalty_amount >= 0");
         });
 
         b.HasKey(x => x.Id);
@@ -152,6 +156,16 @@ public sealed class RentalConfig : IEntityTypeConfiguration<Rental>
         b.Property(x => x.CompletedByUserId)
             .HasColumnName("completed_by_user_id")
             .IsRequired(false);
+        
+        b.Property(x => x.CancelledByUserId)
+            .HasColumnName("cancelled_by_user_id")
+            .IsRequired(false);
+
+        b.Property(x => x.CancellationPenaltyAmount)
+            .HasColumnName("cancellation_penalty_amount")
+            .HasPrecision(18, 2)
+            .HasDefaultValue(0m)
+            .IsRequired();
 
         b.Property(x => x.CancelledAtUtc)
             .HasColumnName("cancelled_at_utc")
@@ -184,5 +198,8 @@ public sealed class RentalConfig : IEntityTypeConfiguration<Rental>
         
         b.HasIndex(x => x.CompletedByUserId)
             .HasDatabaseName("ix_rentals_completed_by_user_id");
+        
+        b.HasIndex(x => x.CancelledByUserId)
+            .HasDatabaseName("ix_rentals_cancelled_by_user_id");
     }
 }

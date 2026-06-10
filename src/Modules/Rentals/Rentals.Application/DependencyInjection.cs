@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rentals.Application.CancelRental;
 using Rentals.Application.CompleteRental;
 using Rentals.Application.CreateRental;
 using Rentals.Application.GetRentalById;
@@ -25,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<CompleteRentalHandler>();
         services.AddScoped<GetRentalsHandler>();
         services.AddScoped<GetRentalByIdHandler>();
+        services.AddScoped<CancelRentalHandler>();
 
         return services;
     }

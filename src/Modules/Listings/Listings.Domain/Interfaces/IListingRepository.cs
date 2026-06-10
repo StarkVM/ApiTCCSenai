@@ -23,4 +23,42 @@ public interface IListingRepository
     Task<Listing?> GetByIdAsync(
         Guid listingId,
         CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Gets the storage keys of listing images.
+    /// / Obtém as chaves de armazenamento das imagens do anúncio.
+    /// </summary>
+    Task<IReadOnlyCollection<string>> GetImageStorageKeysAsync(
+        Guid listingId,
+        CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Deletes all listing images from the database.
+    /// / Remove todas as imagens do anúncio do banco de dados.
+    /// </summary>
+    Task DeleteImagesAsync(
+        Guid listingId,
+        CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Gets a listing without loading its images.
+    /// / Obtém um anúncio sem carregar suas imagens.
+    /// </summary>
+    Task<Listing?> GetByIdForImageUpdateAsync(
+        Guid listingId,
+        CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Deletes listing image rows by their storage keys.
+    /// / Remove registros de imagens do anúncio pelas chaves de armazenamento.
+    /// </summary>
+    Task DeleteImagesByStorageKeysAsync(
+        Guid listingId,
+        IReadOnlyCollection<string> storageKeys,
+        CancellationToken cancellationToken);
+    
+    Task<IReadOnlyCollection<ListingImage>> ReplaceImageRowsAndSaveAsync(
+        Listing listing,
+        IReadOnlyCollection<string> storageKeys,
+        CancellationToken cancellationToken);
 }
