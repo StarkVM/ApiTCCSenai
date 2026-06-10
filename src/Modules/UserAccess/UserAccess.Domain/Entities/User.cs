@@ -9,6 +9,8 @@ public sealed class User
 
     public string FirstName { get; private set; } = default!;
     public string LastName { get; private set; } = default!;
+    
+    public string? ProfilePhotoStorageKey { get; private set; }
     public DateOnly BirthDate { get; private set; }
 
     public string Email { get; private set; } = default!;
@@ -29,6 +31,8 @@ public sealed class User
     public UserType Type { get; private set; } = UserType.Renter;
     
     public DateTime? BecomeProviderAt { get; private set; }
+    
+    public DateTime? ProfilePhotoUpdatedAtUtc { get; private set; }
 
     public Address? Address { get; private set; }
 
@@ -126,5 +130,27 @@ public sealed class User
     }
     
     public void MarkIdentityDenied() => Status = UserStatus.IdentityDenied;
+    
+    public string? ReplaceProfilePhoto(
+        string storageKey,
+        DateTime updatedAtUtc)
+    {
+        if (string.IsNullOrWhiteSpace(storageKey))
+        {
+            throw new ArgumentException("PROFILE_PHOTO_STORAGE_KEY_REQUIRED");
+        }
+
+        if (updatedAtUtc == default)
+        {
+            throw new ArgumentException("UPDATED_AT_REQUIRED");
+        }
+
+        var oldStorageKey = ProfilePhotoStorageKey;
+
+        ProfilePhotoStorageKey = storageKey;
+        ProfilePhotoUpdatedAtUtc = updatedAtUtc;
+
+        return oldStorageKey;
+    }
     
 }

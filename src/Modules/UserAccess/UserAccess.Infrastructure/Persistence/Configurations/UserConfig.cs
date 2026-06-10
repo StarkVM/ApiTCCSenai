@@ -13,6 +13,14 @@ public class UserConfig : IEntityTypeConfiguration<User>
         
         b.Property(x => x.FirstName).HasMaxLength(100).IsRequired();
         b.Property(x => x.LastName).HasMaxLength(100).IsRequired();
+        
+        b.Property(user => user.ProfilePhotoStorageKey)
+            .HasMaxLength(500)
+            .IsRequired(false);
+
+        b.Property(user => user.ProfilePhotoUpdatedAtUtc)
+            .IsRequired(false);
+        
         b.Property(x => x.BirthDate).IsRequired();
         
         b.Property(x => x.Email).HasMaxLength(255).IsRequired();

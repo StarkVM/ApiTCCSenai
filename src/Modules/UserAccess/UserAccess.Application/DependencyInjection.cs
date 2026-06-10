@@ -14,6 +14,8 @@ using UserAccess.Application.CurrentUser.DisableUser;
 using UserAccess.Application.CurrentUser.Me;
 using UserAccess.Application.IdentityVerification.CreateIdentityVerificationSession;
 using UserAccess.Application.IdentityVerification.ProcessIdentityVerificationWebhook;
+using UserAccess.Application.ProfilePhotos.GetProfilePhoto;
+using UserAccess.Application.ProfilePhotos.UpdateProfilePhoto;
 
 namespace UserAccess.Application;
 
@@ -47,6 +49,9 @@ public static class DependencyInjection
         
         services.AddScoped<LogoutCurrentSessionHandler>();
         services.AddScoped<LogoutAllSessionsHandler>();
+        
+        services.AddScoped<UpdateProfilePhotoHandler>();
+        services.AddScoped<GetProfilePhotoHandler>();
         
         services.AddScoped<MeHandler>();
         

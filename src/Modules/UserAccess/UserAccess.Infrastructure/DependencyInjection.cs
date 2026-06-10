@@ -10,6 +10,7 @@ using UserAccess.Infrastructure.Security;
 using UserAccess.Infrastructure.Time;
 using UserAccess.Infrastructure.Auth.Options;
 using Resend;
+using UserAccess.Application.Abstractions;
 using UserAccess.Contracts.Users.Interfaces;
 using UserAccess.Infrastructure.Auth.Generators;
 using UserAccess.Infrastructure.CpfIdentityVerification;
@@ -19,6 +20,7 @@ using UserAccess.Infrastructure.IdentityVerification.Didit.Options;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Payloads;
 using UserAccess.Infrastructure.IdentityVerification.Didit.SignatureValidator;
 using UserAccess.Infrastructure.ModuleQueries;
+using UserAccess.Infrastructure.Storage;
 
 namespace UserAccess.Infrastructure;
 
@@ -36,6 +38,12 @@ public static class DependencyInjection
         
         services.AddDbContext<UserAccessDbContext>(opt =>
             opt.UseNpgsql(userAccessConnectionString));
+
+        services.Configure<UserProfilePhotoStorageOptions>(
+            configuration.GetSection("UserAccess:ProfilePhotos:S3"));
+
+        services.AddScoped<IUserProfilePhotoStorage, S3UserProfilePhotoStorage>();
+        services.AddScoped<IUserProfilePhotoUrlProvider, S3UserProfilePhotoUrlProvider>();
         
         services.AddScoped<IUserAccessQueries, UserAccessQueries>();
         

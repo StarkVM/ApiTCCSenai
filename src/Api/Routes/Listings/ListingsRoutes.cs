@@ -67,7 +67,7 @@ public static class ListingsRoutes
         
         group.MapPut("/{listingId:guid}/images", UpdateListingImagesAsync)
             .RequireAuthorization()
-            .RequireRateLimiting("burst")
+            .RequireRateLimiting("public")
             .WithName("UpdateListingImages")
             .WithTags("Listings")
             .DisableAntiforgery()

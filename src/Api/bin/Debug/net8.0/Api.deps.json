@@ -1220,9 +1220,12 @@
       },
       "UserAccess.Infrastructure/1.0.0": {
         "dependencies": {
+          "AWSSDK.Extensions.NETCore.Setup": "3.7.400.2",
+          "AWSSDK.S3": "3.7.511.8",
           "BCrypt.Net-Next": "4.0.3",
           "Microsoft.EntityFrameworkCore": "8.0.25",
           "Microsoft.Extensions.Http": "10.0.5",
+          "Microsoft.Extensions.Options": "10.0.6",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.5",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
           "Resend": "0.2.2",

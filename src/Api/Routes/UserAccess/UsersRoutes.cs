@@ -7,6 +7,12 @@ using UserAccess.Application.CurrentUser.BecomeProvider;
 using UserAccess.Application.CurrentUser.BecomeProvider.Records;
 using UserAccess.Application.CurrentUser.DisableUser;
 using UserAccess.Application.CurrentUser.DisableUser.Records;
+using UserAccess.Application.ProfilePhotos.GetProfilePhoto;
+using UserAccess.Application.ProfilePhotos.GetProfilePhoto.Records;
+using UserAccess.Application.ProfilePhotos.UpdateProfilePhoto;
+using UserAccess.Application.ProfilePhotos.UpdateProfilePhoto.Records;
+using UserAccess.Domain.Exceptions.UserAccessExceptions;
+using UserAccess.Domain.Files;
 
 
 namespace Api.Routes.UserAccess;
@@ -34,8 +40,146 @@ public static class UsersRoutes
             .RequireRateLimiting("public")
             .WithName("DeleteUser")
             .WithTags("User");
+        
+        group.MapPost("/profile/photo", UpdateProfilePhotoAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("public")
+            .DisableAntiforgery()
+            .WithName("UpdateProfilePhoto")
+            .WithTags("User")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
+
+        group.MapGet("/profile/photo", GetProfilePhotoAsync)
+            .RequireAuthorization()
+            .RequireRateLimiting("public")
+            .WithName("GetProfilePhoto")
+            .WithTags("User")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         return group;
+    }
+    
+    /// <summary>
+    /// Gets the authenticated user's profile photo.
+    /// / Obtém a foto de perfil do usuário autenticado.
+    /// </summary>
+    private static async Task<IResult> GetProfilePhotoAsync(
+        HttpContext httpContext,
+        GetProfilePhotoHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetAuthenticatedUserId(
+            httpContext);
+
+        if (userId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        try
+        {
+            var query = new GetProfilePhotoQuery(
+                userId.Value);
+
+            var result = await handler.HandleAsync(
+                query,
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                userId = result.UserId,
+                hasPhoto = result.HasPhoto,
+                url = result.Url,
+                urlExpiresAtUtc = result.UrlExpiresAtUtc,
+                updatedAtUtc = result.UpdatedAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (Exception exception)
+        {
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
+    }
+    
+    /// <summary>
+    /// Updates the authenticated user's profile photo.
+    /// / Atualiza a foto de perfil do usuário autenticado.
+    /// </summary>
+    private static async Task<IResult> UpdateProfilePhotoAsync(
+        HttpContext httpContext,
+        UpdateProfilePhotoHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetAuthenticatedUserId(
+            httpContext);
+
+        if (userId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        if (!httpContext.Request.HasFormContentType)
+        {
+            return Results.BadRequest(new
+            {
+                code = "MULTIPART_FORM_DATA_REQUIRED",
+                message = "The request must use multipart/form-data.",
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+
+        var form = await httpContext.Request.ReadFormAsync(
+            cancellationToken);
+
+        var file = form.Files.GetFile("photo");
+
+        if (file is null)
+        {
+            return Results.BadRequest(new
+            {
+                code = "PROFILE_PHOTO_REQUIRED",
+                message = "Profile photo is required.",
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+
+        try
+        {
+            var photo = new UserProfilePhotoUpload(
+                file.FileName,
+                file.ContentType,
+                file.Length,
+                file.OpenReadStream);
+
+            var command = new UpdateProfilePhotoCommand(
+                userId.Value,
+                photo);
+
+            var result = await handler.HandleAsync(
+                command,
+                cancellationToken);
+
+            return Results.Ok(new
+            {
+                userId = result.UserId,
+                hasPhoto = result.HasPhoto,
+                url = result.Url,
+                urlExpiresAtUtc = result.UrlExpiresAtUtc,
+                updatedAtUtc = result.UpdatedAtUtc,
+                requestId = httpContext.TraceIdentifier
+            });
+        }
+        catch (Exception exception)
+        {
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
 
     private static async Task<IResult> MeRequest(
@@ -178,5 +322,19 @@ public static class UsersRoutes
 
             return ApiExceptionMapper.Map(exception, httpContext);
         }
+    }
+    
+    private static Guid? GetAuthenticatedUserId(HttpContext httpContext)
+    {
+        var userIdClaim =
+            httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+            httpContext.User.FindFirstValue("sub");
+
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            throw new InvalidUserIdException();
+        }
+
+        return userId;
     }
 }
