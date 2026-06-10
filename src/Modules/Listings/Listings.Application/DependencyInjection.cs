@@ -1,5 +1,6 @@
 using Listings.Application.CreateListing;
 using Listings.Application.DeleteListing;
+using Listings.Application.GetListingById;
 using Listings.Application.GetListings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<DeleteListingHandler>();
         services.AddScoped<CreateListingHandler>();
         services.AddScoped<GetListingsHandler>();
+        services.AddScoped<GetListingByIdHandler>();
         
         return services;
     }

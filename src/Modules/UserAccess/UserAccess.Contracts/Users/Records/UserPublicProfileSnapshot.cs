@@ -7,7 +7,8 @@ namespace UserAccess.Contracts.Users.Records;
 public sealed record UserPublicProfileSnapshot(
     Guid UserId,
     string FirstName,
-    string LastName)
+    string LastName,
+    bool IsActive)
 {
     public string FullName => $"{FirstName} {LastName}".Trim();
 }

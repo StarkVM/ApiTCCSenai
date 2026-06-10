@@ -11,4 +11,9 @@ public interface IListingReadService
     Task<ListingSearchPage> SearchAsync(
         ListingSearchCriteria criteria,
         CancellationToken cancellationToken);
+    
+    Task<ListingReadModel?> GetPublicByIdAsync(
+        Guid listingId,
+        CancellationToken cancellationToken);
+    
 }

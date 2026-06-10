@@ -187,4 +187,84 @@ public sealed class ListingReadService : IListingReadService
         string StorageKey,
         int DisplayOrder
     );
+    
+    public async Task<ListingReadModel?> GetPublicByIdAsync(
+        Guid listingId,
+        CancellationToken cancellationToken)
+    {
+        if (listingId == Guid.Empty)
+        {
+            return null;
+        }
+
+        var listing = await _listingsDbContext.Listings
+            .AsNoTracking()
+            .Where(currentListing =>
+                currentListing.Id == listingId &&
+                currentListing.Status == ListingStatus.Approved)
+            .Select(currentListing => new ListingRow(
+                currentListing.Id,
+                currentListing.OwnerId,
+                currentListing.Title,
+                currentListing.Description,
+                currentListing.Category,
+                currentListing.DailyPrice,
+                currentListing.IsFleet,
+                currentListing.Status,
+                currentListing.OperatorOption.IsAvailable,
+                currentListing.OperatorOption.AdditionalDailyPrice,
+                currentListing.FreightOption.IsAvailable,
+                currentListing.FreightOption.FixedPrice,
+                currentListing.PickupAddress.State,
+                currentListing.PickupAddress.City,
+                currentListing.PickupAddress.District,
+                currentListing.PickupAddress.Street,
+                currentListing.PickupAddress.Number,
+                currentListing.PickupAddress.ZipCode,
+                currentListing.PickupAddress.Complement,
+                currentListing.RejectionReason,
+                currentListing.CreatedAtUtc,
+                currentListing.UpdatedAtUtc))
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (listing is null)
+        {
+            return null;
+        }
+
+        var images = await _listingsDbContext.ListingImages
+            .AsNoTracking()
+            .Where(image => image.ListingId == listingId)
+            .OrderBy(image => image.DisplayOrder)
+            .Select(image => new ListingImageReadModel(
+                image.Id,
+                image.StorageKey,
+                image.DisplayOrder))
+            .ToArrayAsync(cancellationToken);
+
+        return new ListingReadModel(
+            listing.ListingId,
+            listing.OwnerId,
+            listing.Title,
+            listing.Description,
+            listing.Category,
+            listing.DailyPrice,
+            listing.IsFleet,
+            listing.Status,
+            listing.OperatorAvailable,
+            listing.OperatorDailyPrice,
+            listing.FreightAvailable,
+            listing.FreightFixedPrice,
+            listing.PickupState,
+            listing.PickupCity,
+            listing.PickupDistrict,
+            listing.PickupStreet,
+            listing.PickupNumber,
+            listing.PickupZipCode,
+            listing.PickupComplement,
+            listing.RejectionReason,
+            listing.CreatedAtUtc,
+            listing.UpdatedAtUtc,
+            images);
+    }
 }

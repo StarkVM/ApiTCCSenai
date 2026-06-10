@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserAccess.Contracts.Users.Interfaces;
 using UserAccess.Contracts.Users.Records;
+using UserAccess.Domain.Enums;
 using UserAccess.Infrastructure.Persistence;
 
 namespace UserAccess.Infrastructure.ModuleQueries;
@@ -39,7 +40,9 @@ public sealed class UserPublicProfileQueries : IUserPublicProfileQueries
             .Select(user => new UserPublicProfileSnapshot(
                 user.Id,
                 user.FirstName,
-                user.LastName))
+                user.LastName,
+                user.Status == UserStatus.Active
+                ))
             .ToArrayAsync(cancellationToken);
     }
 }

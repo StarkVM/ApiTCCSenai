@@ -6,6 +6,8 @@ using Listings.Application.CreateListing;
 using Listings.Application.CreateListings.Records;
 using Listings.Application.DeleteListing;
 using Listings.Application.DeleteListing.Records;
+using Listings.Application.GetListingById;
+using Listings.Application.GetListingById.Records;
 using Listings.Application.GetListings;
 using Listings.Application.GetListings.Records;
 using Listings.Domain.Enums;
@@ -39,8 +41,63 @@ public static class ListingsRoutes
             .Produces<GetListingsResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
+        
+        group.MapGet("/{listingId:guid}", GetListingByIdAsync)
+            .AllowAnonymous()
+            .WithName("GetListingById")
+            .WithTags("Listings")
+            .Produces<ListingResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
+    }
+    
+    /// <summary>
+    /// Gets a publicly available listing by its identifier.
+    /// / Obtém um anúncio publicamente disponível pelo identificador.
+    /// </summary>
+    private static async Task<IResult> GetListingByIdAsync(
+        Guid listingId,
+        HttpContext httpContext,
+        GetListingByIdHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(ListingsRoutes).FullName!);
+
+        logger.LogInformation(
+            "Starting get listing by id endpoint flow. ListingId: {ListingId}, RequestId: {RequestId}",
+            listingId,
+            httpContext.TraceIdentifier);
+
+        try
+        {
+            var query = new GetListingByIdQuery(listingId);
+
+            var result = await handler.HandleAsync(
+                query,
+                cancellationToken);
+
+            logger.LogInformation(
+                "Get listing by id endpoint flow completed successfully. ListingId: {ListingId}, RequestId: {RequestId}",
+                listingId,
+                httpContext.TraceIdentifier);
+
+            return Results.Ok(result);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Get listing by id endpoint flow failed. ListingId: {ListingId}, RequestId: {RequestId}",
+                listingId,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
     /// <summary>

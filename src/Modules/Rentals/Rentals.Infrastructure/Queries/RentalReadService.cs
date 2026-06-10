@@ -106,4 +106,51 @@ public sealed class RentalReadService : IRentalReadService
             items,
             totalCount);
     }
+    
+    public Task<RentalReadModel?> GetByIdForParticipantAsync(
+        Guid rentalId,
+        Guid participantId,
+        CancellationToken cancellationToken)
+    {
+        if (rentalId == Guid.Empty ||
+            participantId == Guid.Empty)
+        {
+            return Task.FromResult<RentalReadModel?>(null);
+        }
+
+        return _rentalsDbContext.Rentals
+            .AsNoTracking()
+            .Where(rental =>
+                rental.Id == rentalId &&
+                (
+                    rental.ProviderId == participantId ||
+                    rental.RenterId == participantId
+                ))
+            .Select(rental => new RentalReadModel(
+                rental.Id,
+                rental.ListingId,
+                rental.ProviderId,
+                rental.RenterId,
+                rental.Status,
+                rental.StartDate,
+                rental.EndDate,
+                rental.TotalDays,
+                rental.IncludeOperator,
+                rental.IncludeFreight,
+                rental.ListingDailyPriceSnapshot,
+                rental.OperatorDailyPriceSnapshot,
+                rental.FreightFixedPriceSnapshot,
+                rental.MachineSubtotal,
+                rental.OperatorSubtotal,
+                rental.FreightSubtotal,
+                rental.TotalAmount,
+                rental.CreatedAtUtc,
+                rental.ApprovedAtUtc,
+                rental.UpdatedAtUtc,
+                rental.StartedAtUtc,
+                rental.CompletedAtUtc,
+                rental.CancelledAtUtc,
+                rental.CompletedByUserId))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
 }

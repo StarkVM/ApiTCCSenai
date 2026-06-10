@@ -6,6 +6,8 @@ using Rentals.Application.CompleteRental.Records;
 using Rentals.Application.CreateRental;
 using Rentals.Application.CreateRental.Records;
 using Api.Routes.Rentals.Requests;
+using Rentals.Application.GetRentalById;
+using Rentals.Application.GetRentalById.Records;
 using Rentals.Application.GetRentals;
 using Rentals.Application.GetRentals.Enums;
 using Rentals.Application.GetRentals.Records;
@@ -54,8 +56,80 @@ public static class RentalsRoutes
             .Produces<GetRentalsResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized);
+        
+        group.MapGet("/{rentalId:guid}", GetRentalByIdAsync)
+            .WithName("GetRentalById")
+            .Produces<RentalResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status404NotFound);
 
         return endpoints;
+    }
+    
+        /// <summary>
+    /// Gets a rental when the authenticated user is its provider or renter.
+    /// / Obtém um aluguel quando o usuário autenticado é seu fornecedor ou locatário.
+    /// </summary>
+    private static async Task<IResult> GetRentalByIdAsync(
+        Guid rentalId,
+        HttpContext httpContext,
+        GetRentalByIdHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(RentalsRoutes).FullName!);
+
+        var requesterId = GetAuthenticatedUserId(
+            httpContext);
+
+        if (requesterId is null)
+        {
+            logger.LogWarning(
+                "Get rental by id request rejected because authenticated user id is invalid. RentalId: {RentalId}, RequestId: {RequestId}",
+                rentalId,
+                httpContext.TraceIdentifier);
+
+            return Results.Unauthorized();
+        }
+
+        logger.LogInformation(
+            "Starting get rental by id endpoint flow. RentalId: {RentalId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+            rentalId,
+            requesterId.Value,
+            httpContext.TraceIdentifier);
+
+        try
+        {
+            var query = new GetRentalByIdQuery(
+                rentalId,
+                requesterId.Value);
+
+            var result = await handler.HandleAsync(
+                query,
+                cancellationToken);
+
+            logger.LogInformation(
+                "Get rental by id endpoint flow completed successfully. RentalId: {RentalId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                rentalId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return Results.Ok(result);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Get rental by id endpoint flow failed. RentalId: {RentalId}, RequesterId: {RequesterId}, RequestId: {RequestId}",
+                rentalId,
+                requesterId.Value,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
     /// <summary>

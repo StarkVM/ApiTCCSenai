@@ -11,4 +11,9 @@ public interface IRentalReadService
     Task<RentalSearchPage> SearchAsync(
         RentalSearchCriteria criteria,
         CancellationToken cancellationToken);
+    
+    Task<RentalReadModel?> GetByIdForParticipantAsync(
+        Guid rentalId,
+        Guid participantId,
+        CancellationToken cancellationToken);
 }
