@@ -5,6 +5,10 @@ using Rentals.Application.CompleteRental;
 using Rentals.Application.CompleteRental.Records;
 using Rentals.Application.CreateRental;
 using Rentals.Application.CreateRental.Records;
+using Api.Routes.Rentals.Requests;
+using Rentals.Application.GetRentals;
+using Rentals.Application.GetRentals.Enums;
+using Rentals.Application.GetRentals.Records;
 
 namespace Api.Routes.Rentals;
 
@@ -44,8 +48,72 @@ public static class RentalsRoutes
             .Produces(StatusCodes.Status403Forbidden)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status409Conflict);
+        
+        group.MapGet("/", GetRentalsAsync)
+            .WithName("GetRentals")
+            .Produces<GetRentalsResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         return endpoints;
+    }
+    
+    /// <summary>
+    /// Gets rentals in which the authenticated user is provider or renter.
+    /// / Obtém aluguéis nos quais o usuário autenticado é fornecedor ou locatário.
+    /// </summary>
+    private static async Task<IResult> GetRentalsAsync(
+        [AsParameters] GetRentalsRequest request,
+        HttpContext httpContext,
+        GetRentalsHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(RentalsRoutes).FullName!);
+
+        var userId = GetAuthenticatedUserId(httpContext);
+
+        if (userId is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        var status = request.Status ??
+                     RentalStatusFilter.All;
+
+        var page = request.Page ?? 1;
+        var pageSize = request.PageSize ?? 20;
+
+        try
+        {
+            var query = new GetRentalsQuery(
+                userId.Value,
+                request.Role,
+                status,
+                page,
+                pageSize);
+
+            var result = await handler.HandleAsync(
+                query,
+                cancellationToken);
+
+            return Results.Ok(result);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Get rentals flow failed. UserId: {UserId}, Role: {Role}, Status: {Status}, RequestId: {RequestId}",
+                userId.Value,
+                request.Role,
+                status,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
         /// <summary>

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rentals.Application.CompleteRental;
 using Rentals.Application.CreateRental;
+using Rentals.Application.GetRentals;
 
 namespace Rentals.Application;
 
@@ -21,6 +22,7 @@ public static class DependencyInjection
     {
         services.AddScoped<CreateRentalHandler>();
         services.AddScoped<CompleteRentalHandler>();
+        services.AddScoped<GetRentalsHandler>();
 
         return services;
     }

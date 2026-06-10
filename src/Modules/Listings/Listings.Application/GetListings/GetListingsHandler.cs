@@ -108,10 +108,17 @@ public sealed class GetListingsHandler
             })
             .ToArray();
 
-        var totalPages = searchPage.TotalCount == 0
-            ? 0
-            : (int)Math.Ceiling(
+        int totalPages;
+
+        if (searchPage.TotalCount == 0)
+        {
+            totalPages = 0;
+        }
+        else
+        {
+            totalPages = (int)Math.Ceiling(
                 searchPage.TotalCount / (double)query.PageSize);
+        }
 
         _logger.LogInformation(
             "Listings search completed. Mine: {Mine}, RequesterId: {RequesterId}, Name: {Name}, Category: {Category}, Status: {Status}, Page: {Page}, PageSize: {PageSize}, TotalCount: {TotalCount}",

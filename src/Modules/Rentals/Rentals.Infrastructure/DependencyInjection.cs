@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Rentals.Application.Abstractions;
 using Rentals.Domain.Interfaces;
 using Rentals.Infrastructure.Persistence;
 using Rentals.Infrastructure.Persistence.Repositories;
+using Rentals.Infrastructure.Queries;
 using Rentals.Infrastructure.Time;
 
 namespace Rentals.Infrastructure;
@@ -37,6 +39,7 @@ public static class DependencyInjection
         services.AddScoped<IRentalRepository, RentalRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IClock, SystemClock>();
+        services.AddScoped<IRentalReadService, RentalReadService>();
 
         return services;
     }

@@ -81,20 +81,20 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         
         if (command.Purpose == VerificationCodePurpose.EmailVerification)
         {
-            subject = "Verify your email – your code is inside";
+            subject = "Verifique seu e-mail – seu código está aqui";
 
             body = $"""
                     <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
                       
                       <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 8px;">
                         
-                        <h2 style="margin-top: 0;">Verify your email</h2>
+                        <h2 style="margin-top: 0;">Verifique seu e-mail</h2>
 
-                        <p>Hello,</p>
+                        <p>Olá,</p>
 
-                        <p>Thanks for signing up to <strong>HeavyRent</strong>.</p>
+                        <p>Obrigado por se cadastrar na <strong>HeavyRent</strong>.</p>
 
-                        <p>Your verification code is:</p>
+                        <p>Seu código de verificação é:</p>
 
                         <div style="
                             font-size: 28px;
@@ -106,20 +106,20 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
                             {code}
                         </div>
 
-                        <p>This code will expire in <strong>5 minutes</strong>.</p>
+                        <p>Este código expirará em <strong>5 minutos</strong>.</p>
 
                         <p style="color: #555;">
-                          If you didn’t request this, you can safely ignore this email.
+                          Caso você não tenha solicitado este código, pode ignorar este e-mail com segurança.
                         </p>
 
                         <p style="font-size: 12px; color: #888;">
-                          For security reasons, do not share this code with anyone.
+                          Por motivos de segurança, não compartilhe este código com ninguém.
                         </p>
 
                         <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
 
                         <p style="font-size: 12px; color: #888; text-align: center;">
-                          — HeavyRent Team
+                          — Equipe HeavyRent
                         </p>
 
                       </div>
@@ -129,52 +129,20 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
         }
         else if (command.Purpose == VerificationCodePurpose.PasswordReset)
         {
-            subject = "Reset your password – your code is inside";
+            subject = "Redefina sua senha – seu código está aqui";
 
-            body = body = $"""
-                           <div style="font-family: Arial, sans-serif; padding: 20px;">
-                             <h2>Reset your password</h2>
-
-                             <p>We received a request to reset your password.</p>
-
-                             <p>Your password reset code is:</p>
-
-                             <div style="font-size: 28px; font-weight: bold; letter-spacing: 4px; margin: 20px 0;">
-                               {code}
-                             </div>
-
-                             <p>This code will expire in 5 minutes.</p>
-
-                             <p style="color: gray;">
-                               If you didn’t request this, you can safely ignore this email.
-                             </p>
-
-                             <p style="font-size: 12px; color: gray;">
-                               For security reasons, never share this code with anyone.
-                             </p>
-
-                             <br/>
-
-                             <p>— HeavyRent Team</p>
-                           </div>
-                           """;
-        }
-        else
-        {
-            subject = "Verify your email – your code is inside";
-            
             body = $"""
                     <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
                       
                       <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 8px;">
                         
-                        <h2 style="margin-top: 0;">Verify your login</h2>
+                        <h2 style="margin-top: 0;">Redefina sua senha</h2>
 
-                        <p>Hello,</p>
+                        <p>Olá,</p>
 
-                        <p>We detected a login attempt to your <strong>HeavyRent</strong> account.</p>
+                        <p>Recebemos uma solicitação para redefinir a senha da sua conta na <strong>HeavyRent</strong>.</p>
 
-                        <p>Use the verification code below to continue:</p>
+                        <p>Seu código de redefinição de senha é:</p>
 
                         <div style="
                             font-size: 28px;
@@ -186,24 +154,72 @@ public sealed class VerificationCodeSender : IVerificationCodeSender
                             {code}
                         </div>
 
-                        <p>This code will expire in <strong>5 minutes</strong>.</p>
+                        <p>Este código expirará em <strong>5 minutos</strong>.</p>
 
                         <p style="color: #555;">
-                          If this was you, enter the code to complete your login.
-                        </p>
-
-                        <p style="color: #555;">
-                          If you did not attempt to log in, you can safely ignore this email. Your account remains secure.
+                          Caso você não tenha solicitado a redefinição, pode ignorar este e-mail com segurança.
                         </p>
 
                         <p style="font-size: 12px; color: #888;">
-                          For security reasons, never share this code with anyone.
+                          Por motivos de segurança, nunca compartilhe este código com ninguém.
                         </p>
 
                         <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
 
                         <p style="font-size: 12px; color: #888; text-align: center;">
-                          — HeavyRent Team
+                          — Equipe HeavyRent
+                        </p>
+
+                      </div>
+
+                    </div>
+                    """;
+        }
+        else
+        {
+            subject = "Verifique seu login – seu código está aqui";
+
+            body = $"""
+                    <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+                      
+                      <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 24px; border-radius: 8px;">
+                        
+                        <h2 style="margin-top: 0;">Verifique seu login</h2>
+
+                        <p>Olá,</p>
+
+                        <p>Detectamos uma tentativa de login em sua conta da <strong>HeavyRent</strong>.</p>
+
+                        <p>Use o código de verificação abaixo para continuar:</p>
+
+                        <div style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            letter-spacing: 6px;
+                            text-align: center;
+                            margin: 20px 0;
+                        ">
+                            {code}
+                        </div>
+
+                        <p>Este código expirará em <strong>5 minutos</strong>.</p>
+
+                        <p style="color: #555;">
+                          Caso tenha sido você, informe o código para concluir o login.
+                        </p>
+
+                        <p style="color: #555;">
+                          Caso você não tenha tentado entrar em sua conta, pode ignorar este e-mail com segurança. Sua conta continuará protegida.
+                        </p>
+
+                        <p style="font-size: 12px; color: #888;">
+                          Por motivos de segurança, nunca compartilhe este código com ninguém.
+                        </p>
+
+                        <hr style="margin: 24px 0; border: none; border-top: 1px solid #eee;" />
+
+                        <p style="font-size: 12px; color: #888; text-align: center;">
+                          — Equipe HeavyRent
                         </p>
 
                       </div>
