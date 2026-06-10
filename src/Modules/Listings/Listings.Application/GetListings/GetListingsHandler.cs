@@ -3,6 +3,7 @@ using Listings.Application.GetListings.ReadModels;
 using Listings.Application.GetListings.Records;
 using Listings.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using UserAccess.Contracts.Users.Interfaces;
 
 namespace Listings.Application.GetListings;
 
@@ -17,15 +18,18 @@ public sealed class GetListingsHandler
     private readonly IListingReadService _listingReadService;
     private readonly IListingImageUrlProvider _imageUrlProvider;
     private readonly ILogger<GetListingsHandler> _logger;
+    private readonly IUserPublicProfileQueries _userPublicProfileQueries;
 
     public GetListingsHandler(
         IListingReadService listingReadService,
         IListingImageUrlProvider imageUrlProvider,
-        ILogger<GetListingsHandler> logger)
+        ILogger<GetListingsHandler> logger,
+        IUserPublicProfileQueries userPublicProfileQueries)
     {
         _listingReadService = listingReadService;
         _imageUrlProvider = imageUrlProvider;
         _logger = logger;
+        _userPublicProfileQueries = userPublicProfileQueries;
     }
 
     /// <summary>
@@ -75,9 +79,33 @@ public sealed class GetListingsHandler
         var searchPage = await _listingReadService.SearchAsync(
             criteria,
             cancellationToken);
+        
+        var ownerIds = searchPage.Items
+            .Select(listing => listing.OwnerId)
+            .Distinct()
+            .ToArray();
+
+        var providerProfiles =
+            await _userPublicProfileQueries.GetByIdsAsync(
+                ownerIds,
+                cancellationToken);
+
+        var providersById = providerProfiles
+            .ToDictionary(
+                profile => profile.UserId,
+                profile => profile.FullName);
 
         var items = searchPage.Items
-            .Select(MapListing)
+            .Select(listing =>
+            {
+                providersById.TryGetValue(
+                    listing.OwnerId,
+                    out var providerName);
+
+                return MapListing(
+                    listing,
+                    providerName);
+            })
             .ToArray();
 
         var totalPages = searchPage.TotalCount == 0
@@ -104,7 +132,7 @@ public sealed class GetListingsHandler
             totalPages);
     }
 
-    private ListingResult MapListing(ListingReadModel listing)
+    private ListingResult MapListing(ListingReadModel listing, string? providerName)
     {
         var images = listing.Images
             .OrderBy(image => image.DisplayOrder)
@@ -124,6 +152,7 @@ public sealed class GetListingsHandler
         return new ListingResult(
             listing.ListingId,
             listing.OwnerId,
+            providerName?.ToUpperInvariant(),
             listing.Title,
             listing.Description,
             listing.Category,

@@ -14,7 +14,6 @@ using UserAccess.Contracts.Users.Interfaces;
 using UserAccess.Infrastructure.Auth.Generators;
 using UserAccess.Infrastructure.CpfIdentityVerification;
 using UserAccess.Infrastructure.CpfIdentityVerification.Options;
-using UserAccess.Infrastructure.IdentityVerification;
 using UserAccess.Infrastructure.IdentityVerification.Didit;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Options;
 using UserAccess.Infrastructure.IdentityVerification.Didit.Payloads;
@@ -49,6 +48,8 @@ public static class DependencyInjection
         services.AddSingleton<IRefreshTokenGenerator, RefreshTokenGenerator>();
         services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
         services.AddSingleton<IRefreshTokenHasher, RefreshTokenHasher>();
+        
+        services.AddScoped<IUserPublicProfileQueries, UserPublicProfileQueries>();
         
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAddressRepository, AddressRepository>();

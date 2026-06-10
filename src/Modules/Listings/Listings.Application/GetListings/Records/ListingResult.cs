@@ -9,6 +9,7 @@ namespace Listings.Application.GetListings.Records;
 public sealed record ListingResult(
     Guid ListingId,
     Guid OwnerId,
+    string? ProviderName,
     string Title,
     string Description,
     ListingCategory Category,
