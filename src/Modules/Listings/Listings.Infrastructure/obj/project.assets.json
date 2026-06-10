@@ -955,6 +955,19 @@
           "bin/placeholder/Listings.Application.dll": {}
         }
       },
+      "Listings.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Listings.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Listings.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Listings.Contracts.dll": {}
+        }
+      },
       "Listings.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -2462,6 +2475,11 @@
       "path": "../Listings.Application/Listings.Application.csproj",
       "msbuildProject": "../Listings.Application/Listings.Application.csproj"
     },
+    "Listings.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Listings.Contracts/Listings.Contracts.csproj",
+      "msbuildProject": "../Listings.Contracts/Listings.Contracts.csproj"
+    },
     "Listings.Domain/1.0.0": {
       "type": "project",
       "path": "../Listings.Domain/Listings.Domain.csproj",
@@ -2478,6 +2496,7 @@
       "AWSSDK.Extensions.NETCore.Setup >= 3.*",
       "AWSSDK.S3 >= 3.*",
       "Listings.Application >= 1.0.0",
+      "Listings.Contracts >= 1.0.0",
       "Listings.Domain >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 8.0.25",
       "Microsoft.EntityFrameworkCore.Design >= 8.0.25",
@@ -2513,6 +2532,9 @@
           "projectReferences": {
             "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj": {
               "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Application\\Listings.Application.csproj"
+            },
+            "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Contracts\\Listings.Contracts.csproj": {
+              "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Contracts\\Listings.Contracts.csproj"
             },
             "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj": {
               "projectPath": "C:\\TCC Senai\\Projeto\\Back\\Projeto\\src\\Modules\\Listings\\Listings.Domain\\Listings.Domain.csproj"

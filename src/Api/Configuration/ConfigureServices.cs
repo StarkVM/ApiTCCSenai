@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Api.Configuration.Specific;
 using Api.Routes.Listings;
+using Api.Routes.Rentals;
 using UserAccess.Application;
 using Listings.Application;
 using Listings.Infrastructure;
+using Rentals.Application;
+using Rentals.Infrastructure;
 
 namespace Api.Configuration;
 
@@ -46,11 +49,14 @@ public static class ConfigureServices
         
         // Módulos (cada módulo registra sua própria infra)
         // Modules (each module registers its own infrastructure)
+        builder.Services.AddRentalsInfrastructure(builder.Configuration);
         builder.Services.AddUserAccessInfrastructure(builder.Configuration);
         builder.Services.AddUserAccessApplication(builder.Configuration);
         
         builder.Services.AddListingsInfrastructure(builder.Configuration);
         builder.Services.AddListingsApplication(builder.Configuration);
+            
+        builder.Services.AddRentalsApplication(builder.Configuration);
         
         //Add the Access Token Settings
         builder.AddAccessTokenConfiguration();
@@ -128,6 +134,7 @@ public static class ConfigureServices
         // app.MapUserAccessRoutes();
         v1.MapUserAccessRoutes();
         v1.MapListingsRoutes();
+        v1.MapRentalsRoutes();
         
         return app;
     }

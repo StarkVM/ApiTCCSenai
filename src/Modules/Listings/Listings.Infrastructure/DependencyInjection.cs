@@ -1,8 +1,13 @@
 using Amazon.Runtime;
 using Amazon.S3;
+using Listings.Application.Abstractions;
+using Listings.Contracts.Listings.Interfaces;
 using Listings.Domain.Interfaces;
+using Listings.Infrastructure.ModuleCommands;
+using Listings.Infrastructure.ModuleQueries;
 using Listings.Infrastructure.Persistence;
 using Listings.Infrastructure.Persistence.Repositories;
+using Listings.Infrastructure.Queries;
 using Listings.Infrastructure.Storage.S3;
 using Listings.Infrastructure.Time;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +61,13 @@ public static class DependencyInjection
 
         services.AddScoped<IListingRepository, ListingRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
+        services.AddScoped<IListingRentalQueries, ListingRentalQueries>();
+        services.AddScoped<IListingRentalCommands, ListingRentalCommands>();
+        
+        services.AddScoped<IListingReadService, ListingReadService>();
+
+        services.AddScoped<IListingImageUrlProvider, S3ListingImageUrlProvider>();
 
         services.AddScoped<IListingImageStorage, S3ListingImageStorage>();
 

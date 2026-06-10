@@ -1,10 +1,13 @@
 using System.Globalization;
 using System.Security.Claims;
 using Api.Common.Errors;
+using Api.Routes.Listings.Requests;
 using Listings.Application.CreateListing;
 using Listings.Application.CreateListings.Records;
 using Listings.Application.DeleteListing;
 using Listings.Application.DeleteListing.Records;
+using Listings.Application.GetListings;
+using Listings.Application.GetListings.Records;
 using Listings.Domain.Enums;
 
 namespace Api.Routes.Listings;
@@ -28,8 +31,76 @@ public static class ListingsRoutes
             .RequireRateLimiting("public")
             .WithName("DeleteListing")
             .WithTags("Listings");
+        
+        group.MapGet("/", GetListingsAsync)
+            .AllowAnonymous()
+            .WithName("GetListings")
+            .WithTags("Listings")
+            .Produces<GetListingsResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
 
         return endpoints;
+    }
+    
+    /// <summary>
+    /// Searches public listings or the authenticated user's listings.
+    /// / Pesquisa anúncios públicos ou os anúncios do usuário autenticado.
+    /// </summary>
+    private static async Task<IResult> GetListingsAsync(
+        [AsParameters] GetListingsRequest request,
+        HttpContext httpContext,
+        GetListingsHandler handler,
+        ILoggerFactory loggerFactory,
+        CancellationToken cancellationToken)
+    {
+        var logger = loggerFactory.CreateLogger(
+            typeof(ListingsRoutes).FullName!);
+
+        var requesterId = GetAuthenticatedUserId(httpContext);
+
+        var mine = request.Mine ?? false;
+        var page = request.Page ?? 1;
+        var pageSize = request.PageSize ?? 20;
+
+        if (mine && requesterId is null)
+        {
+            logger.LogWarning(
+                "Own listings search rejected because the user is not authenticated. RequestId: {RequestId}",
+                httpContext.TraceIdentifier);
+
+            return Results.Unauthorized();
+        }
+
+        try
+        {
+            var query = new GetListingsQuery(
+                requesterId,
+                mine,
+                request.Name,
+                request.Category,
+                request.Status,
+                page,
+                pageSize);
+
+            var result = await handler.HandleAsync(
+                query,
+                cancellationToken);
+
+            return Results.Ok(result);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Get listings flow failed. Mine: {Mine}, RequestId: {RequestId}",
+                mine,
+                httpContext.TraceIdentifier);
+
+            return ApiExceptionMapper.Map(
+                exception,
+                httpContext);
+        }
     }
     
     /// <summary>
@@ -285,9 +356,14 @@ public static class ListingsRoutes
     {
         var value = form[key].ToString();
 
-        return string.IsNullOrWhiteSpace(value)
-            ? null
-            : value.Trim();
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+        else
+        {
+            return value.Trim();
+        }
     }
 
     private static ListingCategory GetRequiredCategory(

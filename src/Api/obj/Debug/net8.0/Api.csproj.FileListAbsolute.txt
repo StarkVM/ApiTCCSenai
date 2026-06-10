@@ -178,3 +178,5 @@ C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\UserAccess.Contracts.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\AWSSDK.Extensions.NETCore.Setup.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\AWSSDK.S3.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Listings.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\api\bin\Debug\net8.0\Listings.Contracts.pdb

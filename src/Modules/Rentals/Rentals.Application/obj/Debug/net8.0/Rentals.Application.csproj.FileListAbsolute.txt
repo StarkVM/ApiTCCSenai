@@ -14,3 +14,9 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\De
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\refint\Rentals.Application.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\Rentals.Application.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\obj\Debug\net8.0\ref\Rentals.Application.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Listings.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Listings.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Listings.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\UserAccess.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Application\bin\Debug\net8.0\Listings.Domain.pdb

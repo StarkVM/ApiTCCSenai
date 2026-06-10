@@ -1629,6 +1629,19 @@
           "bin/placeholder/Listings.Application.dll": {}
         }
       },
+      "Listings.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Listings.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Listings.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Listings.Contracts.dll": {}
+        }
+      },
       "Listings.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
@@ -1646,6 +1659,7 @@
           "AWSSDK.Extensions.NETCore.Setup": "3.0.0",
           "AWSSDK.S3": "3.0.0",
           "Listings.Application": "1.0.0",
+          "Listings.Contracts": "1.0.0",
           "Listings.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.25",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "8.0.0",
@@ -1699,7 +1713,11 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "Rentals.Domain": "1.0.0"
+          "Listings.Contracts": "1.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.2",
+          "Rentals.Domain": "1.0.0",
+          "UserAccess.Contracts": "1.0.0"
         },
         "compile": {
           "bin/placeholder/Rentals.Application.dll": {}
@@ -1722,6 +1740,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.24",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
           "Rentals.Application": "1.0.0",
           "Rentals.Domain": "1.0.0"
         },
@@ -4433,6 +4453,11 @@
       "type": "project",
       "path": "../Modules/Listings/Listings.Application/Listings.Application.csproj",
       "msbuildProject": "../Modules/Listings/Listings.Application/Listings.Application.csproj"
+    },
+    "Listings.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Modules/Listings/Listings.Contracts/Listings.Contracts.csproj",
+      "msbuildProject": "../Modules/Listings/Listings.Contracts/Listings.Contracts.csproj"
     },
     "Listings.Domain/1.0.0": {
       "type": "project",

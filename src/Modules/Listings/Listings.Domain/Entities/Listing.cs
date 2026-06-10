@@ -330,4 +330,44 @@ public IReadOnlyCollection<ListingImage> Images => _images.AsReadOnly();
         Status = ListingStatus.Deleted;
         UpdatedAtUtc = updatedAtUtc;
     }
+    
+    public void SuspendForRental(DateTime suspendedAtUtc)
+    {
+        if (IsFleet)
+        {
+            throw new InvalidOperationException(
+                "Fleet listings must not be suspended after a rental.");
+        }
+
+        if (Status != ListingStatus.Approved)
+        {
+            throw new InvalidOperationException(
+                "Only approved listings can be suspended for rental.");
+        }
+
+        Status = ListingStatus.Suspended;
+        UpdatedAtUtc = suspendedAtUtc;
+    }
+    
+    public void ReleaseAfterRental(DateTime releasedAtUtc)
+    {
+        if (IsFleet)
+        {
+            return;
+        }
+
+        if (Status == ListingStatus.Approved)
+        {
+            return;
+        }
+
+        if (Status != ListingStatus.Suspended)
+        {
+            throw new InvalidOperationException(
+                "Only suspended listings can be released after rental completion.");
+        }
+
+        Status = ListingStatus.Approved;
+        UpdatedAtUtc = releasedAtUtc;
+    }
 }

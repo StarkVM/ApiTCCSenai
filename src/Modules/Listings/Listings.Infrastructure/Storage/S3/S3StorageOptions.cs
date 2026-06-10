@@ -19,4 +19,6 @@ public sealed class S3StorageOptions
     /// / Pasta/prefixo base usado para imagens de anúncios.
     /// </summary>
     public string BasePrefix { get; init; } = "listings";
+    
+    public int ReadUrlExpirationMinutes { get; init; } = 15;
 }

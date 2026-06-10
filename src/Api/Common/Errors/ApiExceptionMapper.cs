@@ -1,4 +1,5 @@
 using Listings.Domain.Exceptions.ListingsExceptions;
+using Rentals.Domain.Exceptions.RentalsExceptions;
 using UserAccess.Application.Common.Exceptions;
 using UserAccess.Domain.Exceptions;
 using UserAccess.Domain.Exceptions.UserAccessExceptions;
@@ -79,6 +80,33 @@ public static class ApiExceptionMapper
                     Message = ex.Message,
                     RequestId = requestId
                 }),
+            
+            RentalNotFoundException ex => Results.Json(
+                statusCode: StatusCodes.Status404NotFound,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
+            InvalidRentalStatusTransitionException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+            
+            UnauthorizedRentalParticipantException ex => Results.Json(
+                statusCode: StatusCodes.Status401Unauthorized,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
 
             RefreshTokenNotFoundException ex => Results.Json(
                 statusCode: StatusCodes.Status404NotFound,
@@ -97,6 +125,78 @@ public static class ApiExceptionMapper
                 Message = ex.Message,
                 RequestId = requestId
             }),
+            
+            CannotRentOwnListingException ex => Results.Json(
+                statusCode: StatusCodes.Status409Conflict,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            InvalidRentalPeriodException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            InvalidRentalRenterException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            InvalidRentalRequestException ex => Results.Json(
+                statusCode: StatusCodes.Status400BadRequest,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            ListingAlreadyHasActiveRentalException ex => Results.Json(
+                statusCode: StatusCodes.Status409Conflict,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            ListingUnavailableForRentalException ex => Results.Json(
+                statusCode: StatusCodes.Status409Conflict,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            RentalListingNotFoundException ex => Results.Json(
+                statusCode: StatusCodes.Status404NotFound,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
+
+            RentalOptionUnavailableException ex => Results.Json(
+                statusCode: StatusCodes.Status409Conflict,
+                data: new ApiErrorResponse
+                {
+                    Code = ex.Code,
+                    Message = ex.Message,
+                    RequestId = requestId
+                }),
             
             RefreshTokenNotActiveException ex => Results.Json(
                 statusCode: StatusCodes.Status400BadRequest,

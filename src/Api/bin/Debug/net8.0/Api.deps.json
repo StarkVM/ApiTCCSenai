@@ -1082,6 +1082,17 @@
           }
         }
       },
+      "Listings.Contracts/1.0.0": {
+        "dependencies": {
+          "Listings.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Listings.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "Listings.Domain/1.0.0": {
         "runtime": {
           "Listings.Domain.dll": {
@@ -1095,6 +1106,7 @@
           "AWSSDK.Extensions.NETCore.Setup": "3.7.400.2",
           "AWSSDK.S3": "3.7.511.8",
           "Listings.Application": "1.0.0",
+          "Listings.Contracts": "1.0.0",
           "Listings.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore": "8.0.25",
           "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.5",
@@ -1140,7 +1152,11 @@
       },
       "Rentals.Application/1.0.0": {
         "dependencies": {
-          "Rentals.Domain": "1.0.0"
+          "Listings.Contracts": "1.0.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.5",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
+          "Rentals.Domain": "1.0.0",
+          "UserAccess.Contracts": "1.0.0"
         },
         "runtime": {
           "Rentals.Application.dll": {
@@ -1159,6 +1175,8 @@
       },
       "Rentals.Infrastructure/1.0.0": {
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": "8.0.25",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
           "Rentals.Application": "1.0.0",
           "Rentals.Domain": "1.0.0"
         },
@@ -1810,6 +1828,11 @@
       "hashPath": "system.threading.channels.6.0.0.nupkg.sha512"
     },
     "Listings.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Listings.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

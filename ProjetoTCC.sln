@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAccess.Contracts", "src\Modules\UserAccess\UserAccess.Contracts\UserAccess.Contracts.csproj", "{45F17281-47C5-4763-A5AC-02A856938E0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Listings.Contracts", "src\Modules\Listings\Listings.Contracts\Listings.Contracts.csproj", "{C28C1A16-0516-476E-B85B-B491F20F418B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,10 @@ Global
 		{45F17281-47C5-4763-A5AC-02A856938E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45F17281-47C5-4763-A5AC-02A856938E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45F17281-47C5-4763-A5AC-02A856938E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28C1A16-0516-476E-B85B-B491F20F418B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28C1A16-0516-476E-B85B-B491F20F418B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28C1A16-0516-476E-B85B-B491F20F418B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28C1A16-0516-476E-B85B-B491F20F418B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2A24821F-F986-4E19-85FD-3D33B9AB6851} = {CCCF34E4-0FE0-4E4F-BE8F-05192C2F77CC}
@@ -138,5 +144,6 @@ Global
 		{1C487E07-2FAA-49F2-BA41-F4698ABB2089} = {226D9B33-FC47-4E81-8CF5-D722533ED816}
 		{9D0C88F9-BA57-42CB-86AE-4656CB7027DE} = {424BD675-8CC1-491B-AA89-D10016EA5C9D}
 		{45F17281-47C5-4763-A5AC-02A856938E0D} = {FFBC0BD7-E17A-49B4-91C4-2A596358FD6B}
+		{C28C1A16-0516-476E-B85B-B491F20F418B} = {BD1C1976-5678-4250-B367-6CE810B810D3}
 	EndGlobalSection
 EndGlobal

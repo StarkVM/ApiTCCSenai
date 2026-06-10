@@ -16,3 +16,11 @@ C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\obj
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\obj\Debug\net8.0\refint\Rentals.Infrastructure.dll
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\obj\Debug\net8.0\Rentals.Infrastructure.pdb
 C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\obj\Debug\net8.0\ref\Rentals.Infrastructure.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\Listings.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\Listings.Domain.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\Listings.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\Listings.Domain.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\UserAccess.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\bin\Debug\net8.0\Rentals.Infrastructure.runtimeconfig.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\Rentals\Rentals.Infrastructure\obj\Debug\net8.0\Rentals.Infrastructure.genruntimeconfig.cache
