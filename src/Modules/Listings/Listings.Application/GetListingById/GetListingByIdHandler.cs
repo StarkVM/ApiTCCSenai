@@ -5,6 +5,7 @@ using Listings.Application.GetListings.Records;
 using Listings.Domain.Exceptions.ListingsExceptions;
 using Microsoft.Extensions.Logging;
 using UserAccess.Contracts.Users.Interfaces;
+using UserAccess.Contracts.Users.Records;
 
 namespace Listings.Application.GetListingById;
 
@@ -35,7 +36,7 @@ public sealed class GetListingByIdHandler
     /// Gets the details of a publicly available listing.
     /// / Obtém os detalhes de um anúncio publicamente disponível.
     /// </summary>
-    public async Task<ListingResult> HandleAsync(
+    public async Task<GetListingByIdResult> HandleAsync(
         GetListingByIdQuery query,
         CancellationToken cancellationToken)
     {
@@ -44,58 +45,28 @@ public sealed class GetListingByIdHandler
             throw new ArgumentException("LISTING_ID_REQUIRED");
         }
 
-        _logger.LogInformation(
-            "Starting public listing details query. ListingId: {ListingId}",
-            query.ListingId);
-
         var listing = await _listingReadService.GetPublicByIdAsync(
             query.ListingId,
             cancellationToken);
 
         if (listing is null)
         {
-            _logger.LogWarning(
-                "Public listing details query failed because listing was not found or is unavailable. ListingId: {ListingId}",
-                query.ListingId);
-
             throw new ListingNotFoundException();
         }
 
-        var providerProfiles =
-            await _userPublicProfileQueries.GetByIdsAsync(
-                new[] { listing.OwnerId },
+        var providerProfile =
+            await _userPublicProfileQueries.GetByIdWithPhotoAsync(
+                listing.OwnerId,
                 cancellationToken);
-        
-        var provider = providerProfiles
-            .FirstOrDefault(profile =>
-                profile.UserId == listing.OwnerId);
-        
-        if (provider is null || !provider.IsActive)
-        {
-            throw new ListingNotFoundException();
-        }
 
-        var providerName = provider.FullName;
-
-        var result = MapListing(
+        return MapListing(
             listing,
-            providerName);
-
-        _logger.LogInformation(
-            "Public listing details query completed successfully. ListingId: {ListingId}, OwnerId: {OwnerId}",
-            listing.ListingId,
-            listing.OwnerId);
-
-        return result;
+            providerProfile);
     }
 
-    /// <summary>
-    /// Maps the listing read model to the public result.
-    /// / Mapeia o modelo de leitura para o resultado público.
-    /// </summary>
-    private ListingResult MapListing(
+    private GetListingByIdResult MapListing(
         ListingReadModel listing,
-        string? providerName)
+        UserPublicProfileWithPhotoSnapshot? providerProfile)
     {
         var images = listing.Images
             .OrderBy(image => image.DisplayOrder)
@@ -112,10 +83,12 @@ public sealed class GetListingByIdHandler
             })
             .ToArray();
 
-        return new ListingResult(
+        return new GetListingByIdResult(
             listing.ListingId,
             listing.OwnerId,
-            providerName?.ToUpperInvariant(),
+            providerProfile?.FullName,
+            providerProfile?.ProfilePhotoUrl,
+            providerProfile?.ProfilePhotoUrlExpiresAtUtc,
             listing.Title,
             listing.Description,
             listing.Category,

@@ -52,7 +52,7 @@ public static class ListingsRoutes
             .AllowAnonymous()
             .WithName("GetListingById")
             .WithTags("Listings")
-            .Produces<ListingResult>(StatusCodes.Status200OK)
+            .Produces<GetListingByIdResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound);
         
         group.MapPut("/{listingId:guid}", UpdateListingAsync)

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UserAccess.Application.Abstractions;
 using UserAccess.Contracts.Users.Interfaces;
 using UserAccess.Contracts.Users.Records;
 using UserAccess.Domain.Enums;
@@ -13,11 +14,14 @@ namespace UserAccess.Infrastructure.ModuleQueries;
 public sealed class UserPublicProfileQueries : IUserPublicProfileQueries
 {
     private readonly UserAccessDbContext _userAccessDbContext;
+    private readonly IUserProfilePhotoUrlProvider _profilePhotoUrlProvider;
 
     public UserPublicProfileQueries(
-        UserAccessDbContext userAccessDbContext)
+        UserAccessDbContext userAccessDbContext,
+        IUserProfilePhotoUrlProvider profilePhotoUrlProvider)
     {
         _userAccessDbContext = userAccessDbContext;
+        _profilePhotoUrlProvider = profilePhotoUrlProvider;
     }
 
     public async Task<IReadOnlyCollection<UserPublicProfileSnapshot>> GetByIdsAsync(
@@ -44,5 +48,51 @@ public sealed class UserPublicProfileQueries : IUserPublicProfileQueries
                 user.Status == UserStatus.Active
                 ))
             .ToArrayAsync(cancellationToken);
+    }
+    
+    public async Task<UserPublicProfileWithPhotoSnapshot?> GetByIdWithPhotoAsync(
+        Guid userId,
+        CancellationToken cancellationToken)
+    {
+        if (userId == Guid.Empty)
+        {
+            return null;
+        }
+
+        var user = await _userAccessDbContext.Users
+            .AsNoTracking()
+            .Where(currentUser => currentUser.Id == userId)
+            .Select(currentUser => new
+            {
+                currentUser.Id,
+                currentUser.FirstName,
+                currentUser.LastName,
+                currentUser.ProfilePhotoStorageKey
+            })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        string? profilePhotoUrl = null;
+        DateTime? profilePhotoUrlExpiresAtUtc = null;
+
+        if (!string.IsNullOrWhiteSpace(user.ProfilePhotoStorageKey))
+        {
+            var accessUrl = _profilePhotoUrlProvider.Generate(
+                user.ProfilePhotoStorageKey);
+
+            profilePhotoUrl = accessUrl.Url;
+            profilePhotoUrlExpiresAtUtc = accessUrl.ExpiresAtUtc;
+        }
+
+        return new UserPublicProfileWithPhotoSnapshot(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            profilePhotoUrl,
+            profilePhotoUrlExpiresAtUtc);
     }
 }
