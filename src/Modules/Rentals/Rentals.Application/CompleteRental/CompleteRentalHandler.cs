@@ -59,8 +59,7 @@ public sealed class CompleteRentalHandler
             throw new RentalNotFoundException();
         }
 
-        if (command.RequesterId != rental.ProviderId &&
-            command.RequesterId != rental.RenterId)
+        if (command.RequesterId != rental.RenterId)
         {
             _logger.LogWarning(
                 "Complete rental failed because requester is not a participant. RentalId: {RentalId}, ProviderId: {ProviderId}, RenterId: {RenterId}, RequesterId: {RequesterId}",
