@@ -100,8 +100,6 @@ public sealed class UpdateListingImagesHandler
             var nowUtc = _clock.UtcNow;
 
             listing.MarkImagesReplaced(nowUtc);
-            
-            listing.Approve(nowUtc);
 
             var newImages =
                 await _listingRepository.ReplaceImageRowsAndSaveAsync(

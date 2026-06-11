@@ -563,7 +563,7 @@ public IReadOnlyCollection<ListingImage> Images => _images.AsReadOnly();
                 "The listing cannot be edited in its current status.");
         }
 
-        Status = ListingStatus.PendingReview;
+        Status = ListingStatus.Approved;
         ReviewedAtUtc = null;
         RejectionReason = null;
         UpdatedAtUtc = updatedAtUtc;

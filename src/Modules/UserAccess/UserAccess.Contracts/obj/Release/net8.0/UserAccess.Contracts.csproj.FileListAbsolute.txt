@@ -1,0 +1,12 @@
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\bin\Release\net8.0\UserAccess.Contracts.deps.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\bin\Release\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\bin\Release\net8.0\UserAccess.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.AssemblyInfoInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.AssemblyInfo.cs
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.csproj.CoreCompileInputs.cache
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.sourcelink.json
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\refint\UserAccess.Contracts.dll
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\UserAccess.Contracts.pdb
+C:\TCC Senai\Projeto\Back\Projeto\src\Modules\UserAccess\UserAccess.Contracts\obj\Release\net8.0\ref\UserAccess.Contracts.dll
